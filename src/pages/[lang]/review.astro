@@ -276,7 +276,13 @@ const counts = {
         Object.entries(byArea).map(([area, items]) => (
           <div class="area">
             <h2 class="area__title">{area}</h2>
-            <ul class="rows" role="list">
+            {/*
+              The audit notes, item names, statuses and file paths are written
+              in English only — they are notes to whoever maintains the site,
+              not site content. Saying so keeps a screen reader on the Chinese
+              build from reading English prose in a Chinese voice.
+            */}
+            <ul class="rows" role="list" lang="en">
               {items.map((r) => (
                 <li class="row" data-status={r.status}>
                   <div class="row__head">

@@ -76,6 +76,31 @@ en_zh_markdown: &en_zh_markdown
     - { name: en, label: 'English', widget: markdown, required: false }
     - { name: zh, label: '中文', widget: markdown, required: false }
 
+# Strict variants: BOTH languages required. The content schema's `bi` type
+# demands both, so a field left half-filled here does not degrade gracefully —
+# it fails the next build, with an error the volunteer who caused it never
+# sees. Used for every bilingual field the schema treats as required.
+en_zh_text_both: &en_zh_text_both
+  widget: object
+  collapsed: false
+  fields:
+    - { name: en, label: 'English', widget: string, required: true }
+    - { name: zh, label: '中文', widget: string, required: true }
+
+en_zh_long_both: &en_zh_long_both
+  widget: object
+  collapsed: false
+  fields:
+    - { name: en, label: 'English', widget: text, required: true }
+    - { name: zh, label: '中文', widget: text, required: true }
+
+en_zh_markdown_both: &en_zh_markdown_both
+  widget: object
+  collapsed: false
+  fields:
+    - { name: en, label: 'English', widget: markdown, required: true }
+    - { name: zh, label: '中文', widget: markdown, required: true }
+
 verification_field: &verification
   name: status
   label: 'Confirmed?'
@@ -106,7 +131,7 @@ collections:
       A one-line notice shown at the very top of every page. It REMOVES ITSELF
       on the date you set, so you never have to remember to take it down.
     fields:
-      - { name: title, label: 'Notice', <<: *en_zh_text }
+      - { name: title, label: 'Notice', <<: *en_zh_text_both }
       - { name: body, label: 'A little more (optional)', <<: *en_zh_long, required: false }
       - name: showUntil
         label: 'Hide it after this date'
@@ -140,8 +165,8 @@ collections:
       You never need to delete a past event. Once its date has passed it stops
       showing under "What's coming up" and moves into the archive by itself.
     fields:
-      - { name: title, label: 'Event name', <<: *en_zh_text }
-      - { name: summary, label: 'One or two sentences', <<: *en_zh_long }
+      - { name: title, label: 'Event name', <<: *en_zh_text_both }
+      - { name: summary, label: 'One or two sentences', <<: *en_zh_long_both }
       - name: start
         label: 'Starts'
         widget: datetime
@@ -207,7 +232,7 @@ collections:
     fields:
       - name: caption
         label: 'Caption'
-        <<: *en_zh_text
+        <<: *en_zh_text_both
         hint: 'Write it the way you would say it out loud. The best captions on this site are the funny ones.'
       - name: image
         label: 'Photograph'
@@ -217,7 +242,7 @@ collections:
           - { name: src, label: 'Image', widget: image }
           - name: alt
             label: 'Describe the photo for blind visitors'
-            <<: *en_zh_text
+            <<: *en_zh_text_both
             hint: 'Say what is in the picture, plainly. "Twelve people around a table making mooncakes."'
           - name: focus
             label: 'Focal point'
@@ -254,7 +279,7 @@ collections:
     summary: '{{date}} — {{title.en}}'
     sortable_fields: ['date']
     fields:
-      - { name: title, label: 'Title', <<: *en_zh_text }
+      - { name: title, label: 'Title', <<: *en_zh_text_both }
       - { name: date, label: 'Date preached', widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, picker_utc: false }
       - { name: speaker, label: 'Speaker', <<: *en_zh_text, required: false }
       - { name: passage, label: 'Bible passage', <<: *en_zh_text, required: false }
@@ -291,9 +316,9 @@ collections:
       The groups where people actually belong. If you know when a group meets,
       please fill it in — a group with no meeting time is one nobody can join.
     fields:
-      - { name: name, label: 'Name', <<: *en_zh_text }
-      - { name: summary, label: 'One or two sentences', <<: *en_zh_long }
-      - { name: audience, label: 'Who it is for', <<: *en_zh_text }
+      - { name: name, label: 'Name', <<: *en_zh_text_both }
+      - { name: summary, label: 'One or two sentences', <<: *en_zh_long_both }
+      - { name: audience, label: 'Who it is for', <<: *en_zh_text_both }
       - { name: meets, label: 'When and where it meets', <<: *en_zh_text, required: false }
       - { <<: *verification, name: meetsStatus, label: 'Is the meeting time confirmed?' }
       - { name: language, label: 'Language used', <<: *en_zh_text, required: false }
@@ -324,8 +349,8 @@ collections:
       Work the church gives itself to. Set "Currently running" so the site can
       be honest about what is happening now versus what happened in the past.
     fields:
-      - { name: name, label: 'Name', <<: *en_zh_text }
-      - { name: summary, label: 'One or two sentences', <<: *en_zh_long }
+      - { name: name, label: 'Name', <<: *en_zh_text_both }
+      - { name: summary, label: 'One or two sentences', <<: *en_zh_long_both }
       - name: state
         label: 'Is this happening now?'
         widget: select
@@ -358,8 +383,8 @@ collections:
       those are hidden from the public site until someone fills them in.
       Answering "Where do I park?" would genuinely help a first-time visitor.
     fields:
-      - { name: question, label: 'Question', <<: *en_zh_text }
-      - { name: answer, label: 'Answer', <<: *en_zh_markdown }
+      - { name: question, label: 'Question', <<: *en_zh_text_both }
+      - { name: answer, label: 'Answer', <<: *en_zh_markdown_both }
       - name: topic
         label: 'Group it under'
         widget: select
@@ -387,8 +412,8 @@ collections:
       site at all. Add people here and it appears. Please only add someone who
       has agreed to have their name published.
     fields:
-      - { name: name, label: 'Name', <<: *en_zh_text }
-      - { name: role, label: 'Role', <<: *en_zh_text }
+      - { name: name, label: 'Name', <<: *en_zh_text_both }
+      - { name: role, label: 'Role', <<: *en_zh_text_both }
       - { name: bio, label: 'A short introduction (optional)', <<: *en_zh_markdown, required: false }
       - { name: email, label: 'Email (optional)', widget: string, required: false, pattern: ['^\S+@\S+\.\S+$', 'That does not look like an email address'] }
       - name: group
@@ -415,9 +440,9 @@ collections:
       Longer passages of writing used on the site. "What we believe" is empty
       and hidden — it needs text the church has actually approved.
     fields:
-      - { name: title, label: 'Heading', <<: *en_zh_text }
+      - { name: title, label: 'Heading', <<: *en_zh_text_both }
       - { name: lede, label: 'Opening line', <<: *en_zh_long, required: false }
-      - { name: body, label: 'Text', <<: *en_zh_markdown }
+      - { name: body, label: 'Text', <<: *en_zh_markdown_both }
       - { <<: *verification }
 
   # ===========================================================================
@@ -442,10 +467,10 @@ collections:
             max: 1
             fields:
               - { name: id, widget: hidden, default: church }
-              - { name: name, label: 'Church name', <<: *en_zh_text }
+              - { name: name, label: 'Church name', <<: *en_zh_text_both }
               - { name: nameVariant, label: 'Alternative spelling', <<: *en_zh_text, required: false }
               - { name: established, label: 'Founded', widget: string }
-              - { name: tagline, label: 'Tagline', <<: *en_zh_text }
+              - { name: tagline, label: 'Tagline', <<: *en_zh_text_both }
 
               - name: address
                 label: 'Address'
@@ -467,14 +492,14 @@ collections:
                 summary: '{{fields.name.en}} — {{fields.day}} {{fields.startTime}}'
                 fields:
                   - { name: id, label: 'Short id', widget: string }
-                  - { name: name, label: 'Name', <<: *en_zh_text }
+                  - { name: name, label: 'Name', <<: *en_zh_text_both }
                   - name: day
                     label: 'Day'
                     widget: select
                     options: [sunday, monday, tuesday, wednesday, thursday, friday, saturday]
                   - { name: startTime, label: 'Starts (24-hour, e.g. 11:00)', widget: string, pattern: ['^\d{2}:\d{2}$', 'Use HH:MM, e.g. 11:00 or 18:00'] }
                   - { name: endTime, label: 'Ends (24-hour)', widget: string, required: false, pattern: ['^\d{2}:\d{2}$', 'Use HH:MM'] }
-                  - { name: location, label: 'Room', <<: *en_zh_text }
+                  - { name: location, label: 'Room', <<: *en_zh_text_both }
                   - name: address
                     label: 'Street address - ONLY if it does not meet at the church'
                     widget: object
@@ -499,7 +524,7 @@ collections:
                     fields:
                       - { name: start, label: 'From', widget: string }
                       - { name: end, label: 'To', widget: string, required: false }
-                      - { name: label, label: 'What', <<: *en_zh_text }
+                      - { name: label, label: 'What', <<: *en_zh_text_both }
                   - name: groups
                     label: 'Groups it splits into'
                     widget: list
@@ -508,8 +533,8 @@ collections:
                     summary: '{{fields.name.en}}'
                     hint: 'The Friday Bible study splits into three. Leave this empty for a gathering that does not split.'
                     fields:
-                      - { name: name, label: 'Group name', <<: *en_zh_text }
-                      - { name: audience, label: 'Who it is for', <<: *en_zh_long }
+                      - { name: name, label: 'Group name', <<: *en_zh_text_both }
+                      - { name: audience, label: 'Who it is for', <<: *en_zh_long_both }
                       - { name: note, label: 'Anything else', <<: *en_zh_long, required: false }
                   - { name: languages, label: 'Language note', <<: *en_zh_long, required: false }
                   - { <<: *verification }
@@ -542,8 +567,8 @@ collections:
                 summary: '{{fields.method.en}}'
                 fields:
                   - { name: id, label: 'Short id', widget: string }
-                  - { name: method, label: 'Method', <<: *en_zh_text }
-                  - { name: detail, label: 'Explanation', <<: *en_zh_long }
+                  - { name: method, label: 'Method', <<: *en_zh_text_both }
+                  - { name: detail, label: 'Explanation', <<: *en_zh_long_both }
                   - name: value
                     label: 'Where the money goes'
                     widget: string
@@ -558,9 +583,9 @@ collections:
                 required: false
                 summary: '{{fields.name.en}}'
                 fields:
-                  - { name: name, label: 'Name', <<: *en_zh_text }
+                  - { name: name, label: 'Name', <<: *en_zh_text_both }
                   - { name: url, label: 'Website', widget: string, required: false, pattern: ['^https?://.+', 'Must start with https:// - paste the whole link out of your browser bar'] }
-                  - { name: relationship, label: 'The relationship', <<: *en_zh_long }
+                  - { name: relationship, label: 'The relationship', <<: *en_zh_long_both }
                   - { name: since, label: 'Since', widget: string, required: false }
 
   - name: timeline
@@ -579,6 +604,6 @@ collections:
               - { name: id, label: 'Short id', widget: string }
               - { name: year, label: 'Year', widget: string, hint: 'Just the number. It is what puts the moments in order.' }
               - { name: label, label: 'Show this instead of the year (optional)', <<: *en_zh_text, required: false, hint: 'For a moment that is not named by its number, e.g. Today.' }
-              - { name: title, label: 'Heading', <<: *en_zh_text }
-              - { name: body, label: 'What happened', <<: *en_zh_markdown }
+              - { name: title, label: 'Heading', <<: *en_zh_text_both }
+              - { name: body, label: 'What happened', <<: *en_zh_markdown_both }
               - { <<: *verification }

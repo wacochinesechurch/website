@@ -55,8 +55,15 @@ const social = church.social.filter((s) => s.status !== 'unverified');
 
           {/* The form posts to ?sent=1. On a static site nothing renders that
               by itself, so the confirmation is pre-rendered hidden and
-              revealed from the query string. role="status" announces it. */}
-          <div class="form-sent" id="form-sent" role="status" hidden>
+              revealed from the query string.
+
+              role="status" alone did NOT announce it. A live region only
+              announces content that changes while it is being watched, and
+              this text is present from the first byte and merely hidden — so
+              a screen reader user submitted the form and was told nothing.
+              Focus is moved to it instead, which is both reliable and what a
+              keyboard user expects after a submit. */}
+          <div class="form-sent" id="form-sent" role="status" tabindex="-1" hidden>
             <p class="form-sent__title">{t('contact.sentTitle')}</p>
             <p class="form-sent__body">{t('contact.sentBody')}</p>
           </div>
@@ -199,15 +206,23 @@ const social = church.social.filter((s) => s.status !== 'unverified');
 
   <script is:inline>
     (function () {
-      try {
-        if (new URLSearchParams(location.search).get('sent') === '1') {
+      function reveal() {
+        try {
+          if (new URLSearchParams(location.search).get('sent') !== '1') return;
           var el = document.getElementById('form-sent');
-          if (el) {
-            el.hidden = false;
-            el.scrollIntoView({ block: 'center' });
-          }
-        }
-      } catch (e) {}
+          if (!el) return;
+          el.hidden = false;
+          el.focus();
+          el.scrollIntoView({ block: 'center' });
+        } catch (e) {}
+      }
+      // Deferred: this script sits mid-document, so at parse time the layout
+      // it scrolls to does not exist yet.
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', reveal, { once: true });
+      } else {
+        reveal();
+      }
     })();
   </script>
 

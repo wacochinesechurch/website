@@ -203,9 +203,14 @@ export const ui = {
     en: 'Awaiting confirmation from church leadership',
     zh: '内容待教会同工确认',
   },
+  /**
+   * Shown to a reader whose OWN language is the one missing. The two strings
+   * were the wrong way round: the English one apologised for a missing Chinese
+   * translation, which is the one thing an English reader is not looking at.
+   */
   'meta.fallbackNotice': {
-    en: 'Chinese translation coming soon — showing English for now.',
-    zh: '英文版本稍后补上 —— 暂时显示中文。',
+    en: 'English translation coming soon — showing Chinese for now.',
+    zh: '中文翻译稍后补上 —— 暂时显示英文。',
   },
   'meta.externalLink': { en: 'Opens in a new tab', zh: '在新标签页打开' },
 } as const satisfies Record<string, Record<Locale, string>>;

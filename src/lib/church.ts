@@ -63,8 +63,27 @@ export function formatTimeRange(
   locale: Locale,
 ): string {
   if (!end) return formatTime(start, locale);
-  const sep = locale === 'zh' ? ' – ' : ' – ';
-  return `${formatTime(start, locale)}${sep}${formatTime(end, locale)}`;
+  return `${formatTime(start, locale)} – ${formatTime(end, locale)}`;
+}
+
+/**
+ * The same clock formatting as formatTime(), for values that arrive as a Date
+ * rather than an "HH:MM" string — event start times, mainly.
+ *
+ * Events used to format their own times with a bare Intl call, which on the
+ * Chinese pages produced "18:30": 24-hour, no 晚上, and unlike every other
+ * time on the site. This routes them through the one place that knows the
+ * church's timezone and how Chinese actually names the parts of a day.
+ */
+export function formatClockTime(date: Date, locale: Locale): string {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: CHURCH_TIMEZONE,
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+  }).formatToParts(date);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00';
+  return formatTime(`${get('hour')}:${get('minute')}`, locale);
 }
 
 const WEEKDAY_INDEX: Record<string, number> = {

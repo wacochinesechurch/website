@@ -1,9 +1,15 @@
 ---
 import { Image } from 'astro:assets';
-import { pick, formatDate, formatDateRange, type Locale } from '@i18n/config';
+import {
+  pick,
+  pickWithFallback,
+  formatDate,
+  formatDateRange,
+  type Locale,
+} from '@i18n/config';
 import { useTranslations } from '@i18n/ui';
 import { resolveImage, focalPosition } from '@lib/images';
-import { endOfDayInChurchTime } from '@lib/church';
+import { endOfDayInChurchTime, formatClockTime } from '@lib/church';
 
 type EventEntry = {
   id: string;
@@ -33,11 +39,7 @@ interface Props {
 const { locale, events, variant = 'upcoming', emptyId } = Astro.props;
 const t = useTranslations(locale);
 
-const timeFmt = new Intl.DateTimeFormat(locale === 'zh' ? 'zh-CN' : 'en-US', {
-  hour: 'numeric',
-  minute: '2-digit',
-  timeZone: 'America/Chicago',
-});
+
 ---
 
 {/*
@@ -67,6 +69,8 @@ const timeFmt = new Intl.DateTimeFormat(locale === 'zh' ? 'zh-CN' : 'en-US', {
         ? e.data.end
         : endOfDayInChurchTime(e.data.end ?? e.data.start);
       const endIso = expiresAt.toISOString();
+      const title = pickWithFallback(e.data.title, locale);
+      const summary = pickWithFallback(e.data.summary, locale);
       const startIso = e.data.start.toISOString();
       return (
         <li
@@ -95,14 +99,33 @@ const timeFmt = new Intl.DateTimeFormat(locale === 'zh' ? 'zh-CN' : 'en-US', {
                   : formatDate(e.data.start, locale)}
               </time>
               {!e.data.allDay && (
-                <span class="event__time">{timeFmt.format(e.data.start)}</span>
+                <span class="event__time">{formatClockTime(e.data.start, locale)}</span>
               )}
             </p>
 
-            <h3 class="event__title">{pick(e.data.title, locale)}</h3>
+            {/*
+              Volunteers create events weekly, and the commonest slip is to
+              fill one language and save. pickWithFallback marks that rather
+              than silently rendering the other language as if it belonged —
+              which matters most for `lang`: without it a screen reader on the
+              Chinese site reads English aloud in a Chinese voice, and the
+              wrong font is chosen for it.
+            */}
+            <h3 class="event__title" lang={title.isFallback ? title.fallbackLocale : undefined}>
+              {title.text}
+            </h3>
 
-            {pick(e.data.summary, locale) && (
-              <p class="event__summary">{pick(e.data.summary, locale)}</p>
+            {summary.text && (
+              <p
+                class="event__summary"
+                lang={summary.isFallback ? summary.fallbackLocale : undefined}
+              >
+                {summary.text}
+              </p>
+            )}
+
+            {(title.isFallback || summary.isFallback) && (
+              <p class="event__fallback ui">{t('meta.fallbackNotice')}</p>
             )}
 
             <div class="event__foot">
@@ -221,6 +244,13 @@ const timeFmt = new Intl.DateTimeFormat(locale === 'zh' ? 'zh-CN' : 'en-US', {
     font-weight: 600;
     color: var(--accent);
     font-variant-numeric: lining-nums;
+  }
+
+  .event__fallback {
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    font-style: italic;
   }
 
   .event__time {

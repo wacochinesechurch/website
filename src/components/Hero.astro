@@ -149,11 +149,18 @@ const heroFocus = focalPosition(heroMoment?.data.image.focus);
     overflow: clip;
     background: var(--c-ink-900);
     color: var(--c-ink-100);
-    /* Pulled up under the sticky header, with matching padding so nothing
-       moves. This replaces the old position:fixed header and its layout
-       shift — the visual result is the same, the CLS is zero. */
-    margin-block-start: calc(var(--header-h) * -1);
     padding-block: calc(var(--header-h) + var(--s-12)) var(--s-16);
+  }
+
+  /* Pulled up under the sticky header, with matching padding so nothing moves.
+     This replaces the old position:fixed header and its layout shift — same
+     visual result, zero CLS.
+
+     Only when the hero is genuinely the first thing in <main>. A published
+     notice sits above it, and pulling up then slid the top of the hero behind
+     the notice instead of behind the header. */
+  .hero:first-child {
+    margin-block-start: calc(var(--header-h) * -1);
   }
 
   /* The warm light behind the doorway. A single radial gradient — cheap,

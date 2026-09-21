@@ -8,6 +8,7 @@ import MomentStrip from '@components/MomentStrip.astro';
 import EventList from '@components/EventList.astro';
 import InviteBlock from '@components/InviteBlock.astro';
 import AnnouncementBar from '@components/AnnouncementBar.astro';
+import { getLiveAnnouncements } from '@lib/church';
 import RichText from '@components/RichText.astro';
 import { LOCALES, localePath, pick, type Locale } from '@i18n/config';
 import { useTranslations } from '@i18n/ui';
@@ -24,12 +25,22 @@ const welcome = await getPage('welcome');
 const upcoming = await getUpcomingEvents(3);
 const timeline = await getTimeline();
 const first = timeline.find((e) => e.data.year === '1993');
+
+/*
+  The transparent header is light text, and it works because the dark hero sits
+  directly beneath it. A published notice goes ABOVE the hero and pushes it
+  down, leaving that light text over the notice's pale background — the whole
+  header, wordmark, language switch and menu button, simply disappeared. So
+  whenever a notice is showing, the header is solid.
+*/
+const hasNotice = (await getLiveAnnouncements()).length > 0;
 ---
 
 <BaseLayout
   locale={locale}
   title={t('site.name')}
   description={t('site.description')}
+  solidHeader={hasNotice}
 >
   <AnnouncementBar locale={locale} />
 
