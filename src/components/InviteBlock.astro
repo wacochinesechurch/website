@@ -1,0 +1,224 @@
+---
+import { localePath, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import {
+  getChurch,
+  formatTime,
+  formatWeekdayName,
+  formatAddress,
+} from '@lib/church';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const church = await getChurch();
+const sunday = church.gatherings.find((g) => g.id === 'sunday');
+---
+
+{/*
+  The closing invitation.
+
+  Every page ends here, with the address, the time, and one sentence that
+  lowers the cost of showing up. The whole site is in service of this being
+  an easy "yes".
+*/}
+<section class="invite" data-surface="ink" aria-labelledby="invite-title">
+  <div class="invite__glow" aria-hidden="true"></div>
+
+  <div class="shell">
+    <div class="invite__inner">
+      <div class="invite__copy" data-reveal>
+        <p class="eyebrow invite__eyebrow">
+          {locale === 'en' ? 'Come and sit at the back' : '来，坐在后排就好'}
+        </p>
+
+        <h2 class="invite__title" id="invite-title">
+          {
+            locale === 'en'
+              ? 'There is a seat here with nothing attached to it.'
+              : '这里有一个位子，没有任何附带条件。'
+          }
+        </h2>
+
+        <p class="invite__body">
+          {
+            locale === 'en'
+              ? 'You do not need to believe anything in particular, know anyone, or bring anything. Turn up on a Sunday, or write first and we will arrange for someone to meet you at the door.'
+              : '你不需要先相信什么，不需要认识谁，也不需要带什么东西来。某个主日直接来就好；或者先写封信给我们，我们会安排人在门口接待你。'
+          }
+        </p>
+
+        <div class="invite__actions cluster">
+          <a class="btn btn--solid btn--lg" href={localePath(locale, '/visit')}>
+            {t('cta.plan')}
+          </a>
+          {
+            church.contact.emailStatus !== 'unverified' && church.contact.email && (
+              <a
+                class="btn btn--outline btn--lg"
+                href={`mailto:${church.contact.email}`}
+              >
+                {t('cta.email')}
+              </a>
+            )
+          }
+        </div>
+      </div>
+
+      <div class="invite__card" data-reveal>
+        {
+          sunday && (
+            <div class="invite__row">
+              <span class="invite__label ui">{t('facts.sunday')}</span>
+              <span class="invite__value">
+                {formatWeekdayName(sunday.day, locale)}{' '}
+                {formatTime(sunday.startTime, locale)}
+              </span>
+            </div>
+          )
+        }
+
+        <div class="invite__row">
+          <span class="invite__label ui">{t('facts.address')}</span>
+          <span class="invite__value">
+            {church.address.line1}
+            <br />
+            {church.address.city}, {church.address.state} {church.address.zip}
+          </span>
+        </div>
+
+        {
+          church.address.note && pick(church.address.note, locale) && (
+            <p class="invite__note">{pick(church.address.note, locale)}</p>
+          )
+        }
+
+        <a
+          class="btn btn--outline btn--block"
+          href={church.address.mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('facts.directions')}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .invite {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    background: var(--c-ink-900);
+    color: var(--c-ink-100);
+    padding-block: var(--section-y);
+  }
+
+  .invite__glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+      68% 60% at 82% 88%,
+      color-mix(in oklab, var(--c-lamp-500) 26%, transparent) 0%,
+      transparent 68%
+    );
+  }
+
+  .invite__inner {
+    display: grid;
+    gap: var(--s-12);
+    align-items: center;
+  }
+
+  .invite__copy {
+    display: grid;
+    gap: var(--s-5);
+    max-width: 36rem;
+  }
+
+  .invite__eyebrow {
+    margin: 0;
+    color: var(--c-lamp-300);
+  }
+
+  .invite__title {
+    margin: 0;
+    font-size: var(--fs-2xl);
+    color: var(--c-paper-raised);
+    max-width: 18ch;
+  }
+
+  .invite__body {
+    margin: 0;
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--c-ink-200);
+  }
+
+  .invite__actions {
+    --cluster-gap: var(--s-3);
+    padding-block-start: var(--s-2);
+  }
+
+  /* --------------------------------------------------------------- card */
+  .invite__card {
+    display: grid;
+    gap: var(--s-5);
+    padding: var(--s-8);
+    background: color-mix(in oklab, var(--c-paper) 7%, transparent);
+    border: var(--border-hair) solid
+      color-mix(in oklab, var(--c-paper) 18%, transparent);
+    border-radius: var(--r-lg);
+    align-content: start;
+  }
+
+  .invite__row {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .invite__label {
+    font-size: var(--fs-3xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--c-ink-400);
+  }
+
+  .invite__label:lang(zh) {
+    text-transform: none;
+    letter-spacing: 0.15em;
+    font-size: var(--fs-2xs);
+  }
+
+  .invite__value {
+    font-family: var(--font-ui);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--c-paper-raised);
+  }
+
+  .invite__note {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--c-ink-400);
+    padding-block-start: var(--s-1);
+    border-block-start: var(--border-hair) solid
+      color-mix(in oklab, var(--c-paper) 12%, transparent);
+  }
+
+  @media (min-width: 60rem) {
+    .invite__inner {
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: var(--s-16);
+    }
+  }
+</style>

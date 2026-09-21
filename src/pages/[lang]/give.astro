@@ -1,0 +1,263 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import RichText from '@components/RichText.astro';
+import InviteBlock from '@components/InviteBlock.astro';
+import { LOCALES, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getChurch, getPage } from '@lib/church';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const t = useTranslations(locale);
+const church = await getChurch();
+const note = await getPage('giving-note');
+
+/* `unverified` giving methods are not rendered. A payment destination is the
+   last thing on a website that should ever be a guess. */
+const methods = church.giving.filter((m) => m.status !== 'unverified');
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('give.title')}
+  description={locale === 'en'
+    ? 'Ways to give to Waco Chinese Church in Waco, Texas — by Zelle, by check, or in person on a Sunday. If you are visiting, there is no obligation to give anything.'
+    : '奉献给德州韦科华人教会的方式：Zelle 转账、邮寄支票，或主日在教会现场奉献。若你是初次来访的朋友，请不要有任何负担。'}
+>
+  <PageHeader
+    locale={locale}
+    eyebrow={locale === 'en' ? 'Supporting the church' : '支持教会'}
+    title={locale === 'en' ? 'Giving' : '奉献'}
+    lede={t('give.noPressure')}
+  />
+
+  {/* ---- The verse the church chose for this page ---- */}
+  <section class="section section--tight" aria-label={locale === 'en' ? 'Scripture' : '经文'}>
+    <div class="shell">
+      <blockquote class="give-verse" data-reveal>
+        <p class="give-verse__text">
+          {
+            locale === 'en'
+              ? 'Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver.'
+              : '各人要随本心所酌定的，不要作难，不要勉强，因为捐得乐意的人是　神所喜爱的。'
+          }
+        </p>
+        <footer class="give-verse__ref ui">
+          {locale === 'en' ? '2 Corinthians 9:7' : '哥林多后书 9:7'}
+        </footer>
+      </blockquote>
+    </div>
+  </section>
+
+  {/* ---- Methods ---- */}
+  <section class="section" data-surface="warm" aria-labelledby="methods-title">
+    <div class="shell">
+      <h2 class="methods-title" id="methods-title">{t('give.methods')}</h2>
+
+      <ul class="methods" role="list" data-reveal-group>
+        {
+          methods.map((m) => (
+            <li class="method">
+              <h3 class="method__name">{pick(m.method, locale)}</h3>
+              <p class="method__detail">{pick(m.detail, locale)}</p>
+
+              {/* The old site put a Zelle logo next to an email address and
+                  left the reader to infer the connection from layout alone.
+                  Here the destination is labelled in words. */}
+              {m.value && (
+                <p class="method__value">
+                  <span class="method__value-label ui">
+                    {locale === 'en' ? 'Send to' : '收款人'}
+                  </span>
+                  <code class="method__value-code">{m.value}</code>
+                </p>
+              )}
+
+              {m.instructions && pick(m.instructions, locale) && (
+                <p class="method__hint">{pick(m.instructions, locale)}</p>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+
+      {/* ---- What we cannot yet tell you ----
+           The church publishes no tax or 501(c)(3) information anywhere, and
+           never states a check payee. Saying so plainly is more respectful
+           of someone about to send money than silence would be. ---- */}
+      <aside class="caveat" data-reveal>
+        <h3 class="caveat__title">{t('give.questions')}</h3>
+        <p class="caveat__body">
+          {
+            locale === 'en'
+              ? 'For the exact name to make a check payable to, or anything about receipts and tax, please email us first — we would rather answer you directly than publish something that turns out to be wrong.'
+              : '关于支票抬头应填写的确切名称，或任何与收据、税务相关的问题，请先来信询问 —— 我们宁可直接回复你，也不愿在网上公布可能有误的信息。'
+          }
+        </p>
+        {
+          church.contact.email && (
+            <a class="btn btn--ink" href={`mailto:${church.contact.email}`}>
+              {church.contact.email}
+            </a>
+          )
+        }
+      </aside>
+    </div>
+  </section>
+
+  {
+    note && pick(note.data.body, locale) && (
+      <section class="section section--tight" aria-label={locale === 'en' ? 'A note' : '附注'}>
+        <div class="shell">
+          <div class="prose give-note" data-reveal>
+            <RichText markdown={pick(note.data.body, locale)} />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <InviteBlock locale={locale} />
+</BaseLayout>
+
+<style>
+  .give-verse {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    max-width: 44rem;
+  }
+
+  .give-verse__text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    line-height: var(--lh-relaxed);
+    color: var(--text-strong);
+    text-wrap: pretty;
+  }
+
+  .give-verse__ref {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-2xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .give-verse__ref:lang(zh) {
+    text-transform: none;
+    letter-spacing: 0.16em;
+    font-size: var(--fs-sm);
+  }
+
+  .methods-title {
+    margin: 0 0 var(--s-8);
+    font-size: var(--fs-2xl);
+  }
+
+  .methods {
+    display: grid;
+    gap: var(--s-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  }
+
+  .method {
+    display: grid;
+    gap: var(--s-3);
+    align-content: start;
+    padding: var(--s-7);
+    background: var(--surface-raised);
+    border: var(--border-hair) solid var(--rule);
+    border-radius: var(--r-lg);
+    border-block-start: 3px solid var(--accent-solid);
+  }
+
+  .method__name {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+
+  .method__detail {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+  }
+
+  .method__value {
+    display: grid;
+    gap: 0.3rem;
+    margin: 0;
+    padding: var(--s-4);
+    background: var(--accent-faint);
+    border-radius: var(--r-md);
+  }
+
+  .method__value-label {
+    font-size: var(--fs-3xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .method__value-label:lang(zh) {
+    text-transform: none;
+    letter-spacing: 0.15em;
+    font-size: var(--fs-2xs);
+  }
+
+  .method__value-code {
+    font-family: var(--font-ui);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--text-strong);
+    word-break: break-all;
+  }
+
+  .method__hint {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+  }
+
+  .caveat {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: start;
+    margin-block-start: var(--s-12);
+    padding: var(--s-8);
+    background: var(--surface-raised);
+    border-inline-start: 3px solid var(--secondary);
+    border-radius: var(--r-md);
+    max-width: var(--measure);
+  }
+
+  .caveat__title {
+    margin: 0;
+    font-size: var(--fs-md);
+  }
+
+  .caveat__body {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+  }
+
+  .give-note {
+    color: var(--text-muted);
+  }
+
+  .give-note :global(p + p) {
+    margin-block-start: 1em;
+  }
+</style>

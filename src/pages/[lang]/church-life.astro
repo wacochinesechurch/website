@@ -1,0 +1,132 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import MomentMosaic from '@components/MomentMosaic.astro';
+import EventList from '@components/EventList.astro';
+import InviteBlock from '@components/InviteBlock.astro';
+import { LOCALES, localePath, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getUpcomingEvents, getPastEvents } from '@lib/church';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const t = useTranslations(locale);
+
+/*
+  THE SEPARATION THAT KEEPS THIS PAGE ALIVE.
+
+  Evergreen content (the photographs, which stay true) and time-sensitive
+  content (events, which expire) are different collections rendered in
+  different bands. The old site mixed them, which is why a March 2024 picnic
+  was still the lead story in 2026. Here, events sort themselves into
+  upcoming or past by their own dates and nobody has to intervene.
+*/
+const upcoming = await getUpcomingEvents();
+const past = await getPastEvents(12);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('nav.life')}
+  description={locale === 'en'
+    ? 'Meals, retreats, Mid-Autumn Festival, basketball, taiji and ordinary weeks at Waco Chinese Church.'
+    : '韦科华人教会的聚餐、退修会、中秋节、篮球、太极，以及那些平常的日子。'}
+>
+  <PageHeader
+    locale={locale}
+    eyebrow={t('nav.life')}
+    title={locale === 'en'
+      ? 'What a year here looks like'
+      : '这里的一年，大概是这样'}
+    lede={locale === 'en'
+      ? 'Mooncakes made by the grandparents, hotpot on someone’s floor, crabs in Galveston, a basketball team that is definitely the best. These are the church’s own photographs and its own captions.'
+      : '爷爷奶奶做的月饼、谁家地板上的火锅、Galveston 的螃蟹，还有一支肯定是最强的篮球队。以下照片与文字，都出自教会自己。'}
+  />
+
+  {/* ---- UPCOMING (self-emptying) ---- */}
+  <section class="section" aria-labelledby="upcoming-title">
+    <div class="shell">
+      <SectionHeader
+        locale={locale}
+        eyebrow={locale === 'en' ? 'Diary' : '行事历'}
+        title={t('life.upcoming')}
+        id="upcoming-title"
+      />
+
+      {
+        upcoming.length > 0 && (
+          <EventList
+            locale={locale}
+            events={upcoming}
+            variant="upcoming"
+            emptyId="life-events-empty"
+          />
+        )
+      }
+
+      <div class="empty" id="life-events-empty" hidden={upcoming.length > 0} data-reveal>
+        <p class="empty__text">{t('life.noUpcoming')}</p>
+        <a class="link-arrow" href={localePath(locale, '/visit')}>{t('cta.plan')}</a>
+      </div>
+    </div>
+  </section>
+
+  {/* ---- EVERGREEN: the photographs ---- */}
+  <section class="section" data-surface="warm" aria-labelledby="moments-title">
+    <div class="shell">
+      <SectionHeader
+        locale={locale}
+        eyebrow={t('life.moments')}
+        title={locale === 'en' ? 'Ordinary weeks' : '平常的日子'}
+        id="moments-title"
+      />
+      <MomentMosaic locale={locale} />
+    </div>
+  </section>
+
+  {/* ---- ARCHIVE: past events, honestly labelled as past ---- */}
+  {
+    past.length > 0 && (
+      <section class="section" aria-labelledby="past-title">
+        <div class="shell">
+          <SectionHeader
+            locale={locale}
+            eyebrow={t('life.past')}
+            title={t('life.archive')}
+            lede={locale === 'en'
+              ? 'Kept on purpose. A church that has been here since 1993 should be able to show its own back catalogue.'
+              : '刻意保留下来。一间自 1993 年就在这里的教会，应该拿得出自己的过往。'}
+            id="past-title"
+          />
+          <EventList locale={locale} events={past} variant="archive" />
+        </div>
+      </section>
+    )
+  }
+
+  <InviteBlock locale={locale} />
+</BaseLayout>
+
+<style>
+  .empty {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: start;
+    padding: var(--s-8);
+    background: var(--surface-sunk);
+    border-radius: var(--r-lg);
+    max-width: var(--measure);
+  }
+
+  .empty__text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--text-strong);
+  }
+</style>

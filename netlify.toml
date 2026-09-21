@@ -1,0 +1,36 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# ---------------------------------------------------------------------------
+# SCHEDULED REBUILD — the third layer of the anti-staleness design.
+#
+# A static site built in February still believes it is February. A nightly
+# rebuild means the HTML itself (what Google and link previews see) drops
+# past events on its own, without anyone remembering to do anything.
+#
+# Set this up once in the Netlify UI: Build & deploy -> Build hooks ->
+# create a hook, then add it to a daily scheduled trigger. Notes in
+# docs/HANDOVER.md.
+# ---------------------------------------------------------------------------
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"

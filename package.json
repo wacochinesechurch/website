@@ -1,0 +1,29 @@
+{
+  "name": "waco-chinese-church",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "fonts": "node scripts/build-fonts.mjs",
+    "preflight": "node scripts/preflight.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^5.6.1",
+    "marked": "^18.0.13",
+    "sharp": "^0.34.1"
+  },
+  "trustedDependencies": [
+    "esbuild",
+    "sharp"
+  ],
+  "allowScripts": {
+    "esbuild@0.27.7": true,
+    "esbuild@0.25.12": true,
+    "sharp@0.34.5": true
+  }
+}

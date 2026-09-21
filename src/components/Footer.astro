@@ -1,0 +1,335 @@
+---
+import { localePath, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getChurch, formatTimeRange, formatWeekdayName, formatAddress } from '@lib/church';
+import Wordmark from '@components/Wordmark.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const church = await getChurch();
+
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    heading: t('nav.visit'),
+    links: [
+      { href: '/visit', label: t('cta.plan') },
+      { href: '/church-life', label: t('nav.life') },
+      { href: '/sermons', label: t('nav.sermons') },
+    ],
+  },
+  {
+    heading: t('nav.about'),
+    links: [
+      { href: '/about', label: t('about.story') },
+      { href: '/community', label: t('nav.community') },
+      { href: '/students', label: t('nav.students') },
+    ],
+  },
+  {
+    heading: t('cta.contact'),
+    links: [
+      { href: '/contact', label: t('nav.contact') },
+      { href: '/give', label: t('nav.give') },
+    ],
+  },
+];
+
+const verifiedSocial = church.social.filter((s) => s.status !== 'unverified');
+---
+
+<footer class="site-footer" data-surface="ink">
+  <div class="shell shell--wide">
+    <div class="site-footer__top">
+      {/* ---- identity + the facts that matter most ---- */}
+      <div class="site-footer__identity">
+        <a class="site-footer__brand" href={localePath(locale, '/')}>
+          <Wordmark locale={locale} size="md" />
+        </a>
+
+        <p class="site-footer__tagline">{pick(church.tagline, locale)}</p>
+
+        <address class="site-footer__address">
+          <a
+            href={church.address.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {church.address.line1}<br />
+            {church.address.city}, {church.address.state} {church.address.zip}
+            <span class="visually-hidden"> — {t('meta.externalLink')}</span>
+          </a>
+          {
+            church.address.note && pick(church.address.note, locale) && (
+              <span class="site-footer__note">{pick(church.address.note, locale)}</span>
+            )
+          }
+        </address>
+
+        {
+          church.contact.emailStatus !== 'unverified' && church.contact.email && (
+            <a class="site-footer__email" href={`mailto:${church.contact.email}`}>
+              {church.contact.email}
+            </a>
+          )
+        }
+      </div>
+
+      {/* ---- gatherings: repeated in the footer on purpose. Someone who has
+              scrolled to the bottom is often looking for exactly this. ---- */}
+      <div class="site-footer__times">
+        {
+          church.gatherings
+            .filter((g) => g.status !== 'unverified' && g.featured)
+            .map((g) => (
+              <div class="site-footer__time">
+                <span class="site-footer__time-name">{pick(g.name, locale)}</span>
+                <span class="site-footer__time-when">
+                  {formatWeekdayName(g.day, locale)}
+                  {' · '}
+                  {formatTimeRange(g.startTime, g.endTime, locale)}
+                </span>
+                <span class="site-footer__time-where">{pick(g.location, locale)}</span>
+              </div>
+            ))
+        }
+      </div>
+
+      {/* ---- navigation ---- */}
+      <nav class="site-footer__nav ui" aria-label={t('nav.footer')}>
+        {
+          columns.map((col) => (
+            <div class="site-footer__col">
+              <h2 class="site-footer__heading">{col.heading}</h2>
+              <ul role="list">
+                {col.links.map((l) => (
+                  <li>
+                    <a href={localePath(locale, l.href)}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </nav>
+    </div>
+
+    <div class="site-footer__bottom ui">
+      {/* The second name is marked with its own lang so a screen reader
+          switches voice rather than spelling Chinese out in English. */}
+      <p class="site-footer__legal">
+        © {year} {t('site.name')} ·{' '}
+        <span lang={locale === 'en' ? 'zh-CN' : 'en-US'}>{t('site.nameOther')}</span>
+      </p>
+
+      {
+        verifiedSocial.length > 0 && (
+          <ul class="site-footer__social" role="list">
+            {verifiedSocial.map((s) => (
+              <li>
+                <a href={s.url} target="_blank" rel="noopener noreferrer">
+                  {pick(s.label, locale) || s.platform}
+                  <span class="visually-hidden"> — {t('meta.externalLink')}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--c-ink-900);
+    color: var(--c-ink-200);
+    padding-block: var(--s-16) var(--s-8);
+    font-size: var(--fs-sm);
+  }
+
+  .site-footer a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .site-footer a:hover {
+    color: var(--c-lamp-300);
+  }
+
+  .site-footer__top {
+    display: grid;
+    gap: var(--s-12);
+    padding-block-end: var(--s-12);
+  }
+
+  /* ------------------------------------------------------------ identity */
+  .site-footer__identity {
+    display: grid;
+    gap: var(--s-4);
+    align-content: start;
+    max-width: 26rem;
+  }
+
+  .site-footer__brand {
+    color: var(--c-paper-raised);
+  }
+
+  .site-footer__tagline {
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--c-ink-200);
+    margin: 0;
+  }
+
+  .site-footer__address {
+    font-style: normal;
+    display: grid;
+    gap: var(--s-2);
+    line-height: var(--lh-relaxed);
+  }
+
+  .site-footer__address a {
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, currentColor 30%, transparent);
+    text-underline-offset: 0.2em;
+  }
+
+  .site-footer__note {
+    color: var(--c-ink-400);
+    font-size: var(--fs-xs);
+    line-height: var(--lh-relaxed);
+  }
+
+  .site-footer__email {
+    font-family: var(--font-ui);
+    color: var(--c-lamp-400) !important;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    justify-self: start;
+    word-break: break-all;
+  }
+
+  /* --------------------------------------------------------------- times */
+  .site-footer__times {
+    display: grid;
+    gap: var(--s-6);
+    align-content: start;
+  }
+
+  .site-footer__time {
+    display: grid;
+    gap: 0.2rem;
+    padding-inline-start: var(--s-4);
+    border-inline-start: 2px solid var(--c-lamp-500);
+  }
+
+  .site-footer__time-name {
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--c-paper-raised);
+  }
+
+  .site-footer__time-when {
+    font-family: var(--font-ui);
+    color: var(--c-ink-200);
+  }
+
+  .site-footer__time-where {
+    font-family: var(--font-ui);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-400);
+  }
+
+  /* ----------------------------------------------------------------- nav */
+  .site-footer__nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: var(--s-8);
+  }
+
+  .site-footer__heading {
+    font-family: var(--font-ui);
+    font-size: var(--fs-3xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--c-ink-400);
+    margin-block-end: var(--s-4);
+  }
+
+  .site-footer__heading:lang(zh) {
+    text-transform: none;
+    letter-spacing: 0.16em;
+    font-size: var(--fs-2xs);
+  }
+
+  .site-footer__nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  /* -------------------------------------------------------------- bottom */
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4) var(--s-8);
+    align-items: center;
+    justify-content: space-between;
+    padding-block-start: var(--s-8);
+    border-block-start: var(--border-hair) solid
+      color-mix(in oklab, var(--c-paper) 14%, transparent);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-400);
+  }
+
+  .site-footer__legal {
+    margin: 0;
+  }
+
+  .site-footer__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ------------------------------------------------------------- layout */
+  @media (min-width: 46rem) {
+    .site-footer__top {
+      grid-template-columns: 1.2fr 1fr;
+    }
+
+    .site-footer__nav {
+      grid-column: 1 / -1;
+      padding-block-start: var(--s-10);
+      border-block-start: var(--border-hair) solid
+        color-mix(in oklab, var(--c-paper) 12%, transparent);
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .site-footer__top {
+      grid-template-columns: 1.15fr 0.85fr 1.2fr;
+      gap: var(--s-16);
+    }
+
+    .site-footer__nav {
+      grid-column: auto;
+      padding-block-start: 0;
+      border-block-start: 0;
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

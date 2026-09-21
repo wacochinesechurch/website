@@ -1,0 +1,387 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import { LOCALES, pick, type Locale } from '@i18n/config';
+import { getChurch, getFellowships, getMinistries, getPeople } from '@lib/church';
+import { getCollection } from 'astro:content';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const church = await getChurch();
+const fellowships = await getFellowships();
+const ministries = await getMinistries();
+const people = await getPeople();
+const faqs = await getCollection('faq');
+const pages = await getCollection('pages');
+
+/* =========================================================================
+   THE REVIEW CHECKLIST
+   =========================================================================
+
+   This page is generated from the content itself, not hand-written. Anything
+   marked `needs-review` or `unverified` anywhere in the site shows up here
+   automatically, with the reason. When a volunteer fixes a field in the CMS,
+   the row disappears from this list on the next build.
+
+   It is noindex and excluded from robots.txt and the sitemap. It is a tool
+   for the church, not a page for visitors.
+   ========================================================================= */
+
+type Row = {
+  area: string;
+  item: string;
+  status: 'needs-review' | 'unverified';
+  why: string;
+  where: string;
+};
+
+const rows: Row[] = [];
+
+const push = (r: Row) => rows.push(r);
+
+/* --- settings -------------------------------------------------------- */
+for (const g of church.gatherings) {
+  if (g.status !== 'verified')
+    push({
+      area: 'Service times',
+      item: `${g.name.en} / ${g.name.zh}`,
+      status: g.status as Row['status'],
+      why: 'Gathering time or location not confirmed by the church.',
+      where: 'src/content/settings/church.yaml → gatherings',
+    });
+}
+
+if (church.contact.phoneStatus !== 'verified')
+  push({
+    area: 'Contact',
+    item: 'Telephone number',
+    status: church.contact.phoneStatus as Row['status'],
+    why: 'No phone number appears anywhere in the church’s public material. None is published on the site. Add one here if the church wants a phone route.',
+    where: 'src/content/settings/church.yaml → contact.phone',
+  });
+
+for (const s of church.social) {
+  if (s.status !== 'verified')
+    push({
+      area: 'Social',
+      item: `${s.platform} — ${s.url}`,
+      status: s.status as Row['status'],
+      why: 'Channel is linked from the old site but recent activity could not be confirmed. Confirm this is the current, active channel before relying on it.',
+      where: 'src/content/settings/church.yaml → social',
+    });
+}
+
+for (const g of church.giving) {
+  if (g.status !== 'verified')
+    push({
+      area: 'Giving',
+      item: `${g.method.en} / ${g.method.zh}`,
+      status: g.status as Row['status'],
+      why: 'The old site gave a mailing address for checks but never stated who to make the check payable to. The page currently asks people to email first.',
+      where: 'src/content/settings/church.yaml → giving',
+    });
+}
+
+/* --- fellowships ----------------------------------------------------- */
+for (const f of fellowships) {
+  if (f.data.meetsStatus !== 'verified')
+    push({
+      area: 'Fellowships',
+      item: `${f.data.name.en} / ${f.data.name.zh} — meeting time`,
+      status: f.data.meetsStatus as Row['status'],
+      why: 'No meeting day, time or room has ever been published for this group. The card currently invites people to ask instead.',
+      where: `src/content/fellowships/${f.id}.md → meets`,
+    });
+
+  if (f.data.contactStatus !== 'verified')
+    push({
+      area: 'Fellowships',
+      item: `${f.data.name.en} / ${f.data.name.zh} — contact`,
+      status: f.data.contactStatus as Row['status'],
+      why: 'Contact name taken from the old Contacts page; no email was ever published and the person may have moved on.',
+      where: `src/content/fellowships/${f.id}.md → contactName`,
+    });
+}
+
+/* --- ministries ------------------------------------------------------ */
+for (const m of ministries) {
+  if (m.data.state === 'past')
+    push({
+      area: 'Serving',
+      item: `${m.data.name.en} / ${m.data.name.zh}`,
+      status: 'needs-review',
+      why: 'Recorded by the church in 2023 with no update since. Marked as a past record rather than current activity. Set state to "active" if it is still running.',
+      where: `src/content/ministries/${m.id}.md → state`,
+    });
+}
+
+/* --- FAQ ------------------------------------------------------------- */
+for (const f of faqs) {
+  if (f.data.status === 'unverified')
+    push({
+      area: 'Visit FAQ',
+      item: `${f.data.question.en} / ${f.data.question.zh}`,
+      status: 'unverified',
+      why: 'Question is structured and ready but has no answer, so it is hidden from the public site. Fill in the answer and set status to "verified" to publish it.',
+      where: `src/content/faq/${f.id}.md`,
+    });
+}
+
+/* --- pages ----------------------------------------------------------- */
+for (const p of pages) {
+  if (p.data.status === 'unverified')
+    push({
+      area: 'Pages',
+      item: `${p.data.title.en} / ${p.data.title.zh}`,
+      status: 'unverified',
+      why: 'Section exists in the design but no approved text has been written. Nothing is invented; the section simply does not render.',
+      where: `src/content/pages/${p.id}.md`,
+    });
+}
+
+/* --- people ---------------------------------------------------------- */
+if (people.length === 0)
+  push({
+    area: 'Leadership',
+    item: 'No leaders published',
+    status: 'unverified',
+    why: 'No pastor or leader is named anywhere in the church’s public material. The Leadership section is built but does not render while the collection is empty. Add entries in src/content/people/ to publish it.',
+    where: 'src/content/people/',
+  });
+
+/* --- standing items that are not content-derived ---------------------- */
+const standing = [
+  {
+    area: 'Prayer meetings',
+    item: 'Wednesday meets at a private home — address held off the site',
+    status: 'needs-review' as const,
+    why: 'The Wednesday prayer meeting meets at a member\u2019s home, not at the church. The street address is deliberately NOT in this repository: the repo lives on GitHub, git history cannot be undone, and a public page is indexed permanently. The site says where it roughly is and asks people to email for the address. Whoever is hosting needs to know that requests will arrive by email, and the church should agree who answers them. Note for anyone editing later: the street name really is "3A", not "3rd" — do not "correct" it if it ever gets added elsewhere.',
+    where: 'src/content/settings/church.yaml → gatherings.prayer-wednesday.addressOnRequest',
+  },
+  {
+    area: 'Prayer meetings',
+    item: 'Zoom link and prayer-request form',
+    status: 'needs-review' as const,
+    why: 'The Tuesday meeting can be joined online and has a Google Form for prayer requests. Neither link is published yet, at the church\u2019s request. The page says an online option exists without linking to it. Add the links when a permanent home for them is decided — a standing Zoom room and a form that does not expire.',
+    where: 'src/content/settings/church.yaml → gatherings.prayer-tuesday.online',
+  },
+  {
+    area: 'Photography',
+    item: 'Consent for identifiable faces',
+    status: 'needs-review' as const,
+    why: 'All 14 photographs were already published publicly by the church. Several show clearly identifiable faces, and two include a child or teenager. Moving a photo from a small gallery to a full-bleed hero is a meaningful change in prominence — worth confirming with those pictured.',
+    where: 'src/assets/moments/',
+  },
+  {
+    area: 'Photography',
+    item: 'Photos are from 2023',
+    status: 'needs-review' as const,
+    why: 'Every image was captured in September 2023. They are used as reference material and every one is a one-line swap in the CMS. Fresh photography would improve the site more than any other single change.',
+    where: 'src/assets/moments/',
+  },
+  {
+    area: 'Identity',
+    item: 'Chinese name: 韦科 vs 韦城',
+    status: 'needs-review' as const,
+    why: 'Both spellings appear in the church’s own material. The interface standardises on 韦科华人教会 (the logo and footer form); 韦城华人教会 is kept as a historical variant. Confirm this is the right way round.',
+    where: 'src/content/settings/church.yaml → name / nameVariant',
+  },
+  {
+    area: 'History',
+    item: 'Pastor Randy Hughes and the 1995 move',
+    status: 'needs-review' as const,
+    why: 'The church’s English About page credits “Pastor Randy Hughes and his congregation” with supporting the 1995 move to Emmanuel Baptist. But Emmanuel’s own history says Dr Randy Hughes began there in 1998 as its 9th pastor. Both cannot be right, so the name has been removed from the timeline and only Emmanuel Baptist Church is credited. Please confirm who should be named.',
+    where: 'src/content/timeline/timeline.yaml → 1995',
+  },
+  {
+    area: 'Contact',
+    item: 'Do NOT publish 254-752-9823',
+    status: 'needs-review' as const,
+    why: 'Several church directories list 254-752-9823 as Waco Chinese Church’s number. Emmanuel Baptist’s own site identifies that exact number as its pastor’s line. Anyone dialling it reaches Emmanuel, not this church. No phone number is published on this site for that reason. If the church wants a phone route, it needs a number it actually answers.',
+    where: 'src/content/settings/church.yaml → contact.phone',
+  },
+  {
+    area: 'Service times',
+    item: 'Sanctuary: 主堂 or 大堂?',
+    status: 'needs-review' as const,
+    why: 'The old homepage wrote 主堂/Sanctuary; the announcements page wrote 大堂/Santuary. In a building shared with another congregation, the room name is a real wayfinding detail, not a typo. This site uses 主堂.',
+    where: 'src/content/settings/church.yaml → gatherings.sunday.location',
+  },
+  {
+    area: 'Sermons',
+    item: 'YouTube channel has been quiet since December 2023',
+    status: 'needs-review' as const,
+    why: 'The most recent upload to @wacochinesechurchmedia1963 is dated 2023-12-10, and no live or scheduled stream exists on either channel. The old site advertised a weekly “Sunday 10:45 am live stream” whose link was actually a fixed recording from 17 September 2023. This site describes the channel as an archive rather than a live feed. Confirm whether recording has stopped or moved.',
+    where: 'src/content/settings/church.yaml → social',
+  },
+  {
+    area: 'History',
+    item: 'The 2018 partnership is documented on one side only',
+    status: 'needs-review' as const,
+    why: 'The Chinese About text states a formal 2018 partner-church signing with Emmanuel Baptist. Emmanuel’s own website does not mention a Chinese congregation anywhere. A Texas Baptists article from August 2024 does confirm Emmanuel shares its space with Waco Chinese Church, so the relationship is real — but the formal 2018 covenant rests on WCC’s own account. Worth confirming before it is stated as flatly as it is.',
+    where: 'src/content/settings/church.yaml → partners',
+  },
+  {
+    area: 'Sermons',
+    item: 'No sermon archive exists',
+    status: 'needs-review' as const,
+    why: 'The old Sermons page listed no sermons at all and pointed at a fixed 2023 recording labelled as a live stream. The architecture here is complete — add entries to src/content/sermons/ and the indexed archive renders.',
+    where: 'src/content/sermons/',
+  },
+] satisfies Row[];
+
+rows.push(...standing);
+
+const byArea = rows.reduce<Record<string, Row[]>>((acc, r) => {
+  (acc[r.area] ??= []).push(r);
+  return acc;
+}, {});
+
+const counts = {
+  unverified: rows.filter((r) => r.status === 'unverified').length,
+  review: rows.filter((r) => r.status === 'needs-review').length,
+};
+---
+
+<BaseLayout
+  locale={locale}
+  title="Content review checklist"
+  description="Internal checklist of everything on this site awaiting confirmation from church leadership."
+  noindex
+>
+  <PageHeader
+    locale={locale}
+    eyebrow="Internal"
+    title="Content review checklist"
+    lede={`${rows.length} items need a decision from someone at the church. This page is generated from the content itself — fix a field and its row disappears on the next build. It is set to noindex and is not in the sitemap.`}
+  />
+
+  <section class="section">
+    <div class="shell">
+      <div class="legend">
+        <p class="legend__item">
+          <span class="chip">unverified · {counts.unverified}</span>
+          Does <strong>not</strong> appear on the public site. The layout omits it rather than guessing.
+        </p>
+        <p class="legend__item">
+          <span class="chip chip--quiet">needs review · {counts.review}</span>
+          Is published, but should be confirmed or corrected.
+        </p>
+      </div>
+
+      {
+        Object.entries(byArea).map(([area, items]) => (
+          <div class="area">
+            <h2 class="area__title">{area}</h2>
+            <ul class="rows" role="list">
+              {items.map((r) => (
+                <li class="row" data-status={r.status}>
+                  <div class="row__head">
+                    <h3 class="row__item">{r.item}</h3>
+                    <span class={`chip ${r.status === 'unverified' ? '' : 'chip--quiet'}`}>
+                      {r.status}
+                    </span>
+                  </div>
+                  <p class="row__why">{r.why}</p>
+                  <p class="row__where"><code>{r.where}</code></p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legend {
+    display: grid;
+    gap: var(--s-3);
+    margin-block-end: var(--s-12);
+    padding: var(--s-6);
+    background: var(--surface-sunk);
+    border-radius: var(--r-lg);
+    max-width: var(--measure-wide);
+  }
+
+  .legend__item {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    align-items: baseline;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+  }
+
+  .area + .area {
+    margin-block-start: var(--s-12);
+  }
+
+  .area__title {
+    margin: 0 0 var(--s-5);
+    font-size: var(--fs-lg);
+    padding-block-end: var(--s-3);
+    border-block-end: 2px solid var(--accent-solid);
+  }
+
+  .rows {
+    display: grid;
+    gap: var(--s-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .row {
+    display: grid;
+    gap: var(--s-2);
+    padding: var(--s-5);
+    background: var(--surface-raised);
+    border: var(--border-hair) solid var(--rule);
+    border-radius: var(--r-md);
+    border-inline-start: 3px solid var(--text-muted);
+  }
+
+  .row[data-status='unverified'] {
+    border-inline-start-color: var(--secondary);
+  }
+
+  .row__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .row__item {
+    margin: 0;
+    font-size: var(--fs-md);
+  }
+
+  .row__why {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+    max-width: var(--measure);
+  }
+
+  .row__where {
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+
+  .row__where code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.95em;
+    word-break: break-all;
+  }
+</style>

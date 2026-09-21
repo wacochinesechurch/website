@@ -1,0 +1,337 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import InviteBlock from '@components/InviteBlock.astro';
+import { LOCALES, localePath, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getChurch, getFellowships, formatTime, formatWeekdayName } from '@lib/church';
+import { getEntry } from 'astro:content';
+import { resolveImage, focalPosition } from '@lib/images';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const t = useTranslations(locale);
+const church = await getChurch();
+
+const sunday = church.gatherings.find((g) => g.id === 'sunday');
+const friday = church.gatherings.find((g) => g.id === 'friday');
+const studentGroup = (await getFellowships()).find((f) => f.id === 'students');
+
+const hotpot = await getEntry('moments', 'hotpot');
+const hotpotImg = resolveImage(hotpot?.data.image.src);
+
+/*
+  WHY THIS PAGE EXISTS AS ITS OWN URL.
+
+  The brief listed "Students" as an optional sub-item. The research says it
+  should be a front door. This church was literally founded in December 1993
+  as a Baylor Chinese students' fellowship, its largest published group is
+  still 大学生团契, and the single highest-intent search anyone will make is
+  some version of "Chinese church near Baylor". A section buried inside
+  /community cannot rank for that or be shared in a WeChat group chat.
+
+  So: its own URL, its own metadata, its own plain-spoken copy — and
+  crucially, nothing promised that the church has not actually published.
+*/
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('nav.students')}
+  description={locale === 'en'
+    ? 'A Chinese church near Baylor University in Waco, Texas. Started by Baylor students in 1993. Worship in Mandarin with English interpretation, Friday dinner, Sunday at 11.'
+    : '德州韦科、Baylor 大学附近的华人教会，1993 年由 Baylor 学生创立。主日上午十一点以国语敬拜，可提供英文翻译；周五有晚餐。'}
+>
+  <PageHeader
+    locale={locale}
+    eyebrow={locale === 'en' ? 'Baylor & Waco students' : 'Baylor 与韦科的学生'}
+    title={locale === 'en'
+      ? 'You just got here. This is the easy part.'
+      : '你刚到。这一步，是简单的。'}
+    lede={locale === 'en'
+      ? 'This church was started in 1993 by Chinese students at Baylor who were far from home and wanted somewhere to be. Thirty-odd years later that is still most of what it does.'
+      : '这间教会创立于 1993 年，由一群离家很远、想找个地方落脚的 Baylor 中国学生开始。三十多年过去，它做的大致还是同一件事。'}
+  />
+
+  {/* ---- Two doors, described plainly ---- */}
+  <section class="section" aria-labelledby="doors-title">
+    <div class="shell">
+      <SectionHeader
+        locale={locale}
+        eyebrow={locale === 'en' ? 'Two ways in' : '两个入口'}
+        title={locale === 'en' ? 'Come to either. Or both.' : '来哪一个都行，两个都来也行。'}
+        id="doors-title"
+      />
+
+      <div class="doors" data-reveal-group>
+        {
+          friday && (
+            <article class="door door--friday">
+              <p class="door__tag chip">{locale === 'en' ? 'Easier first step' : '比较轻松的第一步'}</p>
+              <h3 class="door__title">{pick(friday.name, locale)}</h3>
+              <p class="door__when ui">
+                {formatWeekdayName(friday.day, locale)}{' '}
+                {formatTime(friday.startTime, locale)}
+              </p>
+              <p class="door__body">
+                {locale === 'en'
+                  ? 'It starts with dinner. Actual dinner, cooked by actual people, before anything religious happens. If you only ever come for the food and the conversation, that is genuinely fine.'
+                  : '一开始就是吃饭 —— 真的晚饭，真的有人做的饭，在任何宗教内容之前。如果你只是来吃饭、聊天，那也完全可以。'}
+              </p>
+            </article>
+          )
+        }
+
+        {
+          sunday && (
+            <article class="door">
+              <p class="door__tag chip chip--quiet">{locale === 'en' ? 'The main service' : '主要聚会'}</p>
+              <h3 class="door__title">{pick(sunday.name, locale)}</h3>
+              <p class="door__when ui">
+                {formatWeekdayName(sunday.day, locale)}{' '}
+                {formatTime(sunday.startTime, locale)}
+              </p>
+              <p class="door__body">
+                {locale === 'en'
+                  ? 'Singing, then a message from the Bible. In Mandarin, with English interpretation if you ask. Sit at the back if you want to — plenty of people did on their first day.'
+                  : '先唱诗，然后讲道。以国语进行，需要的话可以提供英文翻译。想坐后排就坐后排 —— 很多人第一次来都是这样。'}
+              </p>
+            </article>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* ---- The honest bit ---- */}
+  <section class="section" data-surface="ink" aria-labelledby="honest-title">
+    <div class="shell">
+      <div class="honest">
+        <div class="honest__copy" data-reveal>
+          <h2 class="honest__title" id="honest-title">
+            {locale === 'en'
+              ? 'What we are not going to pretend'
+              : '有些话，我们不打算粉饰'}
+          </h2>
+          <p class="honest__body">
+            {
+              locale === 'en'
+                ? 'Moving countries for a degree is lonely in a way that is hard to describe to people back home. The first semester is admin, bad sleep, and food that is nearly right. A church cannot fix that.'
+                : '为了念书搬到另一个国家，那种孤单很难跟家里的人讲清楚。第一个学期就是各种手续、睡不好，以及「差一点就对了」的食物。教会没办法解决这些。'
+            }
+          </p>
+          <p class="honest__body">
+            {
+              locale === 'en'
+                ? 'What it can do is be a room, at a fixed time, every week, where people know your name and there is something hot to eat. That turns out to matter more than it sounds.'
+                : '但教会可以做到的是：每周在固定的时间，有一个房间，里面有人叫得出你的名字，还有一顿热饭。这件事，比听起来重要得多。'
+            }
+          </p>
+          <div class="cluster" style="--cluster-gap: var(--s-3)">
+            <a class="btn btn--solid" href={localePath(locale, '/visit')}>{t('cta.plan')}</a>
+            {
+              church.contact.email && (
+                <a
+                  class="btn btn--outline"
+                  href={`mailto:${church.contact.email}?subject=${encodeURIComponent(locale === 'en' ? 'New student in Waco' : '刚到韦科的学生')}`}
+                >
+                  {t('cta.email')}
+                </a>
+              )
+            }
+          </div>
+        </div>
+
+        {
+          hotpotImg && hotpot && (
+            <figure class="honest__figure" data-reveal>
+              <Image
+                src={hotpotImg}
+                alt={pick(hotpot.data.image.alt, locale)}
+                widths={[420, 640, 900]}
+                sizes="(min-width: 60rem) 34vw, 90vw"
+                loading="lazy"
+                style={`object-position:${focalPosition(hotpot.data.image.focus)}`}
+              />
+              <figcaption>{pick(hotpot.data.caption, locale)}</figcaption>
+            </figure>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* ---- The group ---- */}
+  {
+    studentGroup && (
+      <section class="section" aria-labelledby="group-title">
+        <div class="shell">
+          <div class="group" data-reveal>
+            <h2 class="group__title" id="group-title">
+              {pick(studentGroup.data.name, locale)}
+              <span class="group__alt" lang={locale === 'en' ? 'zh-CN' : 'en-US'}>
+                {locale === 'en' ? studentGroup.data.name.zh : studentGroup.data.name.en}
+              </span>
+            </h2>
+            <p class="group__body">{pick(studentGroup.data.summary, locale)}</p>
+
+            {/* The church publishes a named contact but no meeting time for
+                this group, so the page asks rather than asserts. */}
+            <p class="group__ask">
+              {locale === 'en'
+                ? 'The church lists a contact for this group but has not published a meeting time. Ask and we will tell you when they next meet.'
+                : '教会为这个团契列出了联系人，但未公布聚会时间。来信询问，我们会告诉你他们下次什么时候聚。'}
+            </p>
+            <a class="btn btn--ink" href={localePath(locale, '/contact')}>
+              {t('cta.contact')}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <InviteBlock locale={locale} />
+</BaseLayout>
+
+<style>
+  .doors {
+    display: grid;
+    gap: var(--s-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(21rem, 100%), 1fr));
+  }
+
+  .door {
+    display: grid;
+    gap: var(--s-3);
+    align-content: start;
+    padding: var(--s-8);
+    background: var(--surface-raised);
+    border: var(--border-hair) solid var(--rule);
+    border-radius: var(--r-lg);
+  }
+
+  .door--friday {
+    border-color: var(--accent);
+    background: var(--accent-faint);
+  }
+
+  .door__tag {
+    justify-self: start;
+    margin: 0;
+  }
+
+  .door__title {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+
+  .door__when {
+    margin: 0;
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .door__body {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+  }
+
+  /* -------------------------------------------------------------- honest */
+  .honest {
+    display: grid;
+    gap: var(--s-10);
+    align-items: center;
+  }
+
+  .honest__copy {
+    display: grid;
+    gap: var(--s-4);
+    max-width: 34rem;
+  }
+
+  .honest__title {
+    margin: 0;
+    font-size: var(--fs-2xl);
+    color: var(--c-paper-raised);
+  }
+
+  .honest__body {
+    margin: 0;
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--c-ink-200);
+  }
+
+  .honest__figure {
+    margin: 0;
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .honest__figure :global(img) {
+    width: 100%;
+    border-radius: var(--r-lg);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .honest__figure figcaption {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--c-ink-400);
+  }
+
+  @media (min-width: 60rem) {
+    .honest {
+      grid-template-columns: 1fr 0.8fr;
+      gap: var(--s-16);
+    }
+  }
+
+  /* --------------------------------------------------------------- group */
+  .group {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: start;
+    max-width: var(--measure);
+  }
+
+  .group__title {
+    display: grid;
+    gap: 0.2em;
+    margin: 0;
+    font-size: var(--fs-xl);
+  }
+
+  .group__alt {
+    font-family: var(--font-ui);
+    font-size: 0.55em;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+  }
+
+  .group__body {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+  }
+
+  .group__ask {
+    margin: 0;
+    padding: var(--s-5);
+    background: var(--surface-sunk);
+    border-radius: var(--r-md);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+  }
+</style>

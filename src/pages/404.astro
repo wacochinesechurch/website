@@ -1,0 +1,68 @@
+---
+/* A bilingual 404. Someone who followed a dead link from a 2019 WeChat
+   message should still be able to find out what time church starts. */
+import { getChurch, formatTime, formatWeekdayName } from '@lib/church';
+const church = await getChurch();
+const sunday = church.gatherings.find((g) => g.id === 'sunday');
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page not found · 找不到页面 · Waco Chinese Church</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#14110e" />
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        margin: 0; min-height: 100svh; display: grid; place-items: center;
+        padding: 2rem 1.5rem; background: #14110e; color: #e9e2d9;
+        font-family: 'Source Serif 4', Georgia, 'Songti SC', serif; text-align: center;
+      }
+      .wrap { display: grid; gap: 1.75rem; max-width: 36rem; }
+      h1 { margin: 0; font-size: clamp(1.6rem, 4.5vw, 2.4rem); line-height: 1.2; font-weight: 600; }
+      h1 span { display: block; font-size: 0.62em; color: #f0c489; font-weight: 500; margin-top: 0.35em; }
+      p { margin: 0; color: #b3a79b; line-height: 1.7; }
+      p span { display: block; }
+      .facts { color: #d6ccc1; font-size: 1.05rem; }
+      .go { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+      .go a {
+        padding: 0.8rem 1.6rem; border: 1px solid #c87f2a; border-radius: 3px;
+        background: #c87f2a; color: #14110e; text-decoration: none; font-weight: 600;
+        font-family: 'Source Sans 3', system-ui, sans-serif;
+      }
+      .go a + a { background: transparent; color: #f0c489; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>
+        Page not found
+        <span lang="zh-CN">找不到这个页面</span>
+      </h1>
+      <p>
+        <span>That page has moved or never existed. Here is the way back.</span>
+        <span lang="zh-CN">这个页面可能已移动或从未存在。以下是回去的路。</span>
+      </p>
+      <p class="facts">
+        {church.address.line1}, {church.address.city}, {church.address.state} {church.address.zip}
+        {sunday && (
+          <>
+            <br />
+            {formatWeekdayName(sunday.day, 'en')} {formatTime(sunday.startTime, 'en')}
+            {' · '}
+            <span lang="zh-CN" style="display:inline">
+              {formatWeekdayName(sunday.day, 'zh')}{formatTime(sunday.startTime, 'zh')}
+            </span>
+          </>
+        )}
+      </p>
+      <div class="go">
+        <a href="/en">English</a>
+        <a href="/zh" lang="zh-CN">中文</a>
+      </div>
+    </div>
+  </body>
+</html>

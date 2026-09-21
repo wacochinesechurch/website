@@ -1,0 +1,305 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import InviteBlock from '@components/InviteBlock.astro';
+import { LOCALES, pick, formatDate, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getChurch, getSermons } from '@lib/church';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const t = useTranslations(locale);
+const church = await getChurch();
+const sermons = await getSermons();
+
+const youtube = church.social.find((s) => s.platform === 'youtube');
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('nav.sermons')}
+  description={locale === 'en'
+    ? 'Sermons and worship recordings from Waco Chinese Church in Waco, Texas. Messages are preached in Mandarin on Sunday mornings and kept on the church YouTube channel.'
+    : '德州韦科华人教会的讲道与敬拜录像。主日上午的讲道以国语（普通话）进行，影音内容保存在教会的 YouTube 频道上。'}
+>
+  <PageHeader
+    locale={locale}
+    eyebrow={locale === 'en' ? 'Teaching' : '信息与教导'}
+    title={t('sermons.title')}
+    lede={locale === 'en'
+      ? 'Messages are preached in Mandarin on Sunday mornings. The church’s YouTube channel holds recordings going back several years; the most recent was posted in December 2023.'
+      : '主日上午的讲道以国语（普通话）进行。教会的 YouTube 频道保存了过去数年的录像，最近一次上传是在 2023 年 12 月。'}
+  >
+    {
+      youtube && (
+        <div class="cluster" style="--cluster-gap: var(--s-3); padding-block-start: var(--s-2)">
+          <a
+            class="btn btn--solid"
+            href={youtube.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('sermons.allOnYouTube')}
+          </a>
+        </div>
+      )
+    }
+  </PageHeader>
+
+  {/* ----------------------------------------------------------------------
+      The sermon collection is deliberately empty.
+
+      The church has never published an indexed sermon archive — its Sermons
+      page listed no sermon at all, only two links, one of which pointed at a
+      single frozen 2023 broadcast presented as a live stream. Inventing
+      titles, speakers or dates to fill this layout would be fabricating the
+      teaching of a real congregation.
+
+      So the architecture is complete and the shelf is honestly empty. The
+      moment someone adds a sermon in the CMS, it renders here with speaker,
+      date, passage, series and a YouTube embed.
+      ---------------------------------------------------------------------- */}
+  {
+    sermons.length > 0 ? (
+      <section class="section" aria-labelledby="list-title">
+        <div class="shell">
+          <SectionHeader
+            locale={locale}
+            eyebrow={t('sermons.latest')}
+            title={t('sermons.title')}
+            id="list-title"
+          />
+          <ul class="sermons" role="list" data-reveal-group>
+            {sermons.map((s) => (
+              <li class="sermon">
+                {s.data.youtubeId && (
+                  <div class="sermon__video">
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/${s.data.youtubeId}`}
+                      title={pick(s.data.title, locale)}
+                      loading="lazy"
+                      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    />
+                  </div>
+                )}
+                <div class="sermon__body">
+                  <p class="sermon__date ui">
+                    <time datetime={s.data.date.toISOString().slice(0, 10)}>
+                      {formatDate(s.data.date, locale)}
+                    </time>
+                  </p>
+                  <h3 class="sermon__title">{pick(s.data.title, locale)}</h3>
+                  <dl class="sermon__meta">
+                    {pick(s.data.speaker, locale) && (
+                      <div>
+                        <dt>{t('sermons.speaker')}</dt>
+                        <dd>{pick(s.data.speaker, locale)}</dd>
+                      </div>
+                    )}
+                    {pick(s.data.passage, locale) && (
+                      <div>
+                        <dt>{t('sermons.passage')}</dt>
+                        <dd>{pick(s.data.passage, locale)}</dd>
+                      </div>
+                    )}
+                    {pick(s.data.series, locale) && (
+                      <div>
+                        <dt>{t('sermons.series')}</dt>
+                        <dd>{pick(s.data.series, locale)}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ) : (
+      <section class="section" aria-labelledby="where-title">
+        <div class="shell">
+          <div class="shelf" data-reveal>
+            <h2 class="shelf__title" id="where-title">
+              {locale === 'en'
+                ? 'Recordings live on YouTube'
+                : '录像发布在 YouTube'}
+            </h2>
+            <p class="shelf__body">
+              {locale === 'en'
+                ? 'We have not built a sermon-by-sermon archive on this site yet. The church’s YouTube channel holds what has been recorded, though nothing new has been posted there since December 2023. An indexed archive — speaker, date, passage and series, in both languages — is ready here the moment someone starts filling it in.'
+                : '本站尚未建立逐篇的讲道存档。教会录制的内容保存在 YouTube 频道上，不过自 2023 年 12 月起未再上传新视频。这里已备好中英双语的索引架构 —— 讲员、日期、经文与系列 —— 随时可以启用。'}
+            </p>
+            {youtube && (
+              <a
+                class="btn btn--solid btn--lg"
+                href={youtube.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t('sermons.watchOnYouTube')}
+              </a>
+            )}
+          </div>
+
+          {/* One recording the church itself surfaced, and which is genuinely
+              part of its story rather than a sermon: the 25th anniversary. */}
+          <div class="anniversary" data-reveal>
+            <h3 class="anniversary__title">
+              {locale === 'en'
+                ? 'Twenty-five years, looking back'
+                : '二十五周年回顾'}
+            </h3>
+            <p class="anniversary__note">
+              {locale === 'en'
+                ? 'A retrospective the church made for its 25th anniversary, published in 2020.'
+                : '教会为二十五周年制作的回顾视频，发布于 2020 年。'}
+            </p>
+            <div class="anniversary__video">
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/fMX4u5dGgY4"
+                title={locale === 'en'
+                  ? 'Waco Chinese Church 25th Anniversary (2020)'
+                  : '韦城华人教会 25 周年（2020）'}
+                loading="lazy"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <InviteBlock locale={locale} />
+</BaseLayout>
+
+<style>
+  .shelf {
+    display: grid;
+    gap: var(--s-5);
+    justify-items: start;
+    max-width: var(--measure);
+  }
+
+  .shelf__title {
+    margin: 0;
+    font-size: var(--fs-xl);
+  }
+
+  .shelf__body {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+  }
+
+  .anniversary {
+    margin-block-start: var(--s-16);
+    display: grid;
+    gap: var(--s-3);
+    max-width: 52rem;
+  }
+
+  .anniversary__title {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+
+  .anniversary__note {
+    margin: 0 0 var(--s-3);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+
+  .anniversary__video,
+  .sermon__video {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--r-lg);
+    background: var(--c-ink-900);
+  }
+
+  .anniversary__video iframe,
+  .sermon__video iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  /* -------------------------------------------------------------- list -- */
+  .sermons {
+    display: grid;
+    gap: var(--s-10);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sermon {
+    display: grid;
+    gap: var(--s-5);
+  }
+
+  .sermon__body {
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .sermon__date {
+    margin: 0;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .sermon__title {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+
+  .sermon__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-6);
+    margin: var(--s-2) 0 0;
+  }
+
+  .sermon__meta > div {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .sermon__meta dt {
+    font-family: var(--font-ui);
+    font-size: var(--fs-3xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .sermon__meta dt:lang(zh) {
+    text-transform: none;
+    letter-spacing: 0.15em;
+    font-size: var(--fs-2xs);
+  }
+
+  .sermon__meta dd {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--text-strong);
+  }
+
+  @media (min-width: 52rem) {
+    .sermon {
+      grid-template-columns: minmax(0, 24rem) 1fr;
+      gap: var(--s-8);
+      align-items: start;
+    }
+  }
+</style>

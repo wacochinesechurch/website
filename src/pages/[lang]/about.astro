@@ -1,0 +1,309 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import InviteBlock from '@components/InviteBlock.astro';
+import RichText from '@components/RichText.astro';
+import Timeline from '@components/Timeline.astro';
+import { LOCALES, localePath, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getChurch, getPage, getPeople } from '@lib/church';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const t = useTranslations(locale);
+const church = await getChurch();
+const beliefs = await getPage('beliefs');
+const people = await getPeople();
+
+const hasBeliefs =
+  beliefs?.data.status !== 'unverified' && pick(beliefs?.data.body, locale).trim();
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('nav.about')}
+  description={locale === 'en'
+    ? 'Waco Chinese Church began in December 1993 as a fellowship of Chinese students at Baylor. This is how it got from there to here.'
+    : '韦科华人教会始于 1993 年 12 月，最初是 Baylor 校园里的中国学生团契。这是它一路走来的故事。'}
+>
+  <PageHeader
+    locale={locale}
+    eyebrow={locale === 'en' ? 'Our story' : '我们的故事'}
+    title={locale === 'en'
+      ? 'A handful of students, a long way from home'
+      : '一小群离家很远的学生'}
+    lede={locale === 'en'
+      ? 'This church was not planted by a denomination or a mission board. It was started by students who needed one, and it has been handing itself on to the next set of students ever since.'
+      : '这间教会不是由某个宗派或差会所植立的。它是由一群需要它的学生开始的，此后便一届一届地，交到下一批学生手中。'}
+  />
+
+  {/* ---- The timeline: the church's own history, verbatim ---- */}
+  <section class="section" aria-labelledby="timeline-title">
+    <div class="shell">
+      <SectionHeader
+        locale={locale}
+        eyebrow={locale === 'en' ? 'Since 1993' : '自 1993 年起'}
+        title={t('about.timeline')}
+        id="timeline-title"
+      />
+      <Timeline locale={locale} />
+    </div>
+  </section>
+
+  {/* ---- Partnership. Stated carefully: a partnership, NOT a denomination ---- */}
+  {
+    church.partners.length > 0 && (
+      <section class="section" data-surface="warm" aria-labelledby="partners-title">
+        <div class="shell">
+          <SectionHeader
+            locale={locale}
+            eyebrow={locale === 'en' ? 'Who we walk with' : '同行的伙伴'}
+            title={locale === 'en' ? 'Partner congregations' : '伙伴教会'}
+            id="partners-title"
+          />
+
+          <div class="partners" data-reveal-group>
+            {church.partners.map((p) => (
+              <article class="partner">
+                <h3 class="partner__name">
+                  {pick(p.name, locale)}
+                  <span
+                    class="partner__name-alt"
+                    lang={locale === 'en' ? 'zh-CN' : 'en-US'}
+                  >
+                    {locale === 'en' ? p.name.zh : p.name.en}
+                  </span>
+                </h3>
+                <p class="partner__body">{pick(p.relationship, locale)}</p>
+              </article>
+            ))}
+          </div>
+
+          {/*
+            This paragraph exists because it is the single most likely thing
+            for a visitor to get wrong. Waco Chinese Church meets inside a
+            Baptist church and has done since 1995 — but it is not a Baptist
+            church, and its own materials make no denominational claim at all.
+            Saying so plainly is more useful than leaving it to be inferred.
+          */}
+          <aside class="denom" data-reveal>
+            <p class="denom__text">
+              {locale === 'en'
+                ? 'Waco Chinese Church is non-denominational. We have met in Emmanuel Baptist Church’s building since 1995 and became formally covenanted partner churches in 2018 — but the two are separate congregations, and we are not a Baptist church.'
+                : '韦科华人教会不属于任何宗派。自 1995 年起，我们在以马内利浸信会的建筑中聚会，并于 2018 年正式签约成为伙伴教会 —— 但两者是各自独立的教会，我们并不是一间浸信会。'}
+            </p>
+          </aside>
+        </div>
+      </section>
+    )
+  }
+
+  {/* ---- Beliefs: structure exists; content awaits the church ----
+       Nothing is invented here. If no approved statement of faith exists,
+       this section does not render at all, and the omission is recorded on
+       the internal /review checklist. ---- */}
+  {
+    hasBeliefs && beliefs && (
+      <section class="section" aria-labelledby="beliefs-title">
+        <div class="shell">
+          <SectionHeader
+            locale={locale}
+            eyebrow={locale === 'en' ? 'Theology' : '信仰'}
+            title={pick(beliefs.data.title, locale)}
+            lede={pick(beliefs.data.lede, locale)}
+            id="beliefs-title"
+          />
+          <div class="prose" data-reveal>
+            <RichText markdown={pick(beliefs.data.body, locale)} />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {/* ---- The verse the church chose for itself ---- */}
+  <section class="section verse" data-surface="ink" aria-labelledby="verse-title">
+    <div class="shell">
+      <div class="verse__inner" data-reveal>
+        <h2 class="visually-hidden" id="verse-title">
+          {locale === 'en' ? 'Our foundational verse' : '教会的根基经文'}
+        </h2>
+        <blockquote class="verse__quote">
+          {
+            locale === 'en'
+              ? 'But you are a chosen people, a royal priesthood, a holy nation, a people belonging to God, that you may declare the praises of him who called you out of darkness into his wonderful light.'
+              : '惟有你们是被拣选的族类，是有君尊的祭司，是圣洁的国度，是属神的子民，要叫你们宣扬那召你们出黑暗、入奇妙光明者的美德。'
+          }
+        </blockquote>
+        <p class="verse__ref ui">
+          {locale === 'en' ? '1 Peter 2:9' : '彼得前书 2:9'}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* ---- Leadership: renders only when the church has published people ---- */}
+  {
+    people.length > 0 && (
+      <section class="section" aria-labelledby="people-title">
+        <div class="shell">
+          <SectionHeader
+            locale={locale}
+            eyebrow={locale === 'en' ? 'Who to ask' : '可以找谁'}
+            title={t('about.leadership')}
+            id="people-title"
+          />
+          <ul class="people" role="list" data-reveal-group>
+            {people.map((p) => (
+              <li class="person">
+                <h3 class="person__name">{pick(p.data.name, locale)}</h3>
+                <p class="person__role ui">{pick(p.data.role, locale)}</p>
+                {p.data.email && (
+                  <a class="person__email" href={`mailto:${p.data.email}`}>
+                    {p.data.email}
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <InviteBlock locale={locale} />
+</BaseLayout>
+
+<style>
+  .partners {
+    display: grid;
+    gap: var(--s-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  }
+
+  .partner {
+    display: grid;
+    gap: var(--s-3);
+    padding: var(--s-7);
+    background: var(--surface-raised);
+    border: var(--border-hair) solid var(--rule);
+    border-radius: var(--r-lg);
+    align-content: start;
+  }
+
+  .partner__name {
+    display: grid;
+    gap: 0.2em;
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+
+  .partner__name-alt {
+    font-family: var(--font-ui);
+    font-size: 0.6em;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+
+  .partner__body {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+  }
+
+  .denom {
+    margin-block-start: var(--s-8);
+    padding: var(--s-6) var(--s-7);
+    border-inline-start: 3px solid var(--secondary);
+    background: var(--surface-raised);
+    border-radius: var(--r-md);
+    max-width: var(--measure-wide);
+  }
+
+  .denom__text {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+  }
+
+  /* --------------------------------------------------------------- verse */
+  .verse {
+    background: var(--c-ink-900);
+  }
+
+  .verse__inner {
+    display: grid;
+    gap: var(--s-6);
+    justify-items: center;
+    text-align: center;
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .verse__quote {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    font-style: normal;
+    line-height: var(--lh-relaxed);
+    color: var(--c-paper-raised);
+    text-wrap: balance;
+  }
+
+  .verse__ref {
+    margin: 0;
+    font-size: var(--fs-2xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--c-lamp-400);
+  }
+
+  .verse__ref:lang(zh) {
+    text-transform: none;
+    letter-spacing: 0.16em;
+    font-size: var(--fs-sm);
+  }
+
+  /* -------------------------------------------------------------- people */
+  .people {
+    display: grid;
+    gap: var(--s-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  }
+
+  .person {
+    display: grid;
+    gap: var(--s-1);
+    padding-block-start: var(--s-4);
+    border-block-start: 2px solid var(--accent-solid);
+  }
+
+  .person__name {
+    margin: 0;
+    font-size: var(--fs-md);
+  }
+
+  .person__role {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+
+  .person__email {
+    font-family: var(--font-ui);
+    font-size: var(--fs-sm);
+    color: var(--accent);
+    word-break: break-all;
+  }
+</style>

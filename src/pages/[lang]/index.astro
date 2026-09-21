@@ -1,0 +1,285 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Hero from '@components/Hero.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import SundayShape from '@components/SundayShape.astro';
+import FellowshipGrid from '@components/FellowshipGrid.astro';
+import MomentStrip from '@components/MomentStrip.astro';
+import EventList from '@components/EventList.astro';
+import InviteBlock from '@components/InviteBlock.astro';
+import AnnouncementBar from '@components/AnnouncementBar.astro';
+import RichText from '@components/RichText.astro';
+import { LOCALES, localePath, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getPage, getUpcomingEvents, getTimeline } from '@lib/church';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const t = useTranslations(locale);
+
+const welcome = await getPage('welcome');
+const upcoming = await getUpcomingEvents(3);
+const timeline = await getTimeline();
+const first = timeline.find((e) => e.data.year === '1993');
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('site.name')}
+  description={t('site.description')}
+>
+  <AnnouncementBar locale={locale} />
+
+  {/* 1 — WHO, WHEN, WHERE, WHAT LANGUAGE. The ten-second test. */}
+  <Hero locale={locale} />
+
+  {/* 2 — WELCOME. Who this church is actually for, in its own words. */}
+  {
+    welcome && (
+      <section class="section" aria-labelledby="welcome-title">
+        <div class="shell">
+          <div class="welcome">
+            <SectionHeader
+              locale={locale}
+              eyebrow={locale === 'en' ? 'Who is welcome' : '谁可以来'}
+              title={pick(welcome.data.title, locale)}
+              id="welcome-title"
+            />
+            <div class="welcome__body prose" data-reveal>
+              <p class="welcome__lede">{pick(welcome.data.lede, locale)}</p>
+              <RichText markdown={pick(welcome.data.body, locale)} />
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {/* 3 — WHAT IT IS LIKE. Removes the fear of a first visit. */}
+  <section class="section" data-surface="warm" aria-labelledby="sunday-title">
+    <div class="shell">
+      <SundayShape locale={locale} />
+    </div>
+  </section>
+
+  {/* 4 — WHERE YOU WOULD BELONG. */}
+  <section class="section" aria-labelledby="community-title">
+    <div class="shell">
+      <SectionHeader
+        locale={locale}
+        eyebrow={t('nav.community')}
+        title={t('community.title')}
+        lede={t('community.fellowshipsLede')}
+        id="community-title"
+      />
+      <FellowshipGrid locale={locale} featuredOnly />
+      <p class="section__more">
+        <a class="link-arrow" href={localePath(locale, '/community')}>
+          {locale === 'en'
+            ? 'All groups and ways to serve'
+            : '所有团契与服事机会'}
+        </a>
+      </p>
+    </div>
+  </section>
+
+  {/* 5 — WHAT IT LOOKS LIKE. The church's own photographs and captions. */}
+  <section class="section" data-surface="ink" aria-labelledby="life-title">
+    <div class="shell">
+      <SectionHeader
+        locale={locale}
+        eyebrow={t('nav.life')}
+        title={locale === 'en'
+          ? 'Mooncakes, hotpot, basketball, taiji'
+          : '月饼、火锅、篮球、太极'}
+        lede={locale === 'en'
+          ? 'A church is mostly its ordinary weeks. These are ours.'
+          : '一间教会，大部分时候就是那些平常的日子。这些，就是我们的日常。'}
+        id="life-title"
+      />
+    </div>
+    <MomentStrip locale={locale} limit={8} />
+    <div class="shell">
+      <p class="section__more">
+        <a class="link-arrow" href={localePath(locale, '/church-life')}>
+          {locale === 'en' ? 'More of church life' : '更多教会生活'}
+        </a>
+      </p>
+    </div>
+  </section>
+
+  {/* 6 — WHAT IS NEXT. Self-demoting: empties itself honestly. */}
+  <section class="section" aria-labelledby="upcoming-title">
+    <div class="shell">
+      <SectionHeader
+        locale={locale}
+        eyebrow={locale === 'en' ? 'Diary' : '行事历'}
+        title={t('life.upcoming')}
+        id="upcoming-title"
+      />
+
+      {
+        upcoming.length > 0 ? (
+          <EventList
+            locale={locale}
+            events={upcoming}
+            variant="upcoming"
+            emptyId="home-events-empty"
+          />
+        ) : null
+      }
+
+      <div
+        class="empty"
+        id="home-events-empty"
+        hidden={upcoming.length > 0}
+        data-reveal
+      >
+        <p class="empty__text">{t('life.noUpcoming')}</p>
+        <a class="link-arrow" href={localePath(locale, '/visit')}>
+          {t('cta.plan')}
+        </a>
+      </div>
+
+      {
+        upcoming.length > 0 && (
+          <p class="section__more">
+            <a class="link-arrow" href={localePath(locale, '/church-life')}>
+              {t('life.allEvents')}
+            </a>
+          </p>
+        )
+      }
+    </div>
+  </section>
+
+  {/* 7 — WHERE WE CAME FROM. */}
+  {
+    first && (
+      <section class="section section--tight story" aria-labelledby="story-title">
+        <div class="shell">
+          <div class="story__inner" data-reveal>
+            <p class="story__year">1993</p>
+            <div class="story__copy">
+              <h2 class="story__title" id="story-title">
+                {locale === 'en'
+                  ? 'It started with a handful of students a long way from home.'
+                  : '一切始于一小群离家很远的学生。'}
+              </h2>
+              <p class="story__body">
+                {locale === 'en'
+                  ? 'In December 1993 an evangelist brought a few students to Baylor and began a monthly gathering. By 1995 they had a room in a Baptist church on Gurley Avenue. They are still in it.'
+                  : '1993 年 12 月，一位传道人带着几位学生来到 Baylor，开始了每月一次的聚会。到了 1995 年，他们在 Gurley 大道一间浸信会里有了自己的空间 —— 直到今天，仍在那里。'}
+              </p>
+              <a class="link-arrow" href={localePath(locale, '/about')}>
+                {t('about.timeline')}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {/* 8 — COME. */}
+  <InviteBlock locale={locale} />
+</BaseLayout>
+
+<style>
+  .welcome {
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  .welcome__lede {
+    font-family: var(--font-display);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-relaxed);
+    color: var(--text-strong);
+  }
+
+  .welcome__body {
+    max-width: var(--measure);
+  }
+
+  @media (min-width: 62rem) {
+    .welcome {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: var(--s-16);
+      align-items: start;
+    }
+    .welcome :global(.sec-head) {
+      margin-block-end: 0;
+    }
+  }
+
+  .section__more {
+    margin-block-start: var(--s-8);
+  }
+
+  .empty {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: start;
+    padding: var(--s-8);
+    background: var(--surface-sunk);
+    border-radius: var(--r-lg);
+    max-width: var(--measure);
+  }
+
+  .empty__text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--text-strong);
+  }
+
+  /* ---------------------------------------------------------------- story */
+  .story__inner {
+    display: grid;
+    gap: var(--s-6);
+    align-items: start;
+    padding-block: var(--s-8);
+    border-block-start: var(--border-hair) solid var(--rule);
+  }
+
+  .story__year {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-3xl);
+    font-weight: 300;
+    line-height: 1;
+    color: var(--accent);
+    font-variant-numeric: lining-nums;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .story__copy {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: start;
+    max-width: var(--measure);
+  }
+
+  .story__title {
+    margin: 0;
+    font-size: var(--fs-xl);
+  }
+
+  .story__body {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+  }
+
+  @media (min-width: 52rem) {
+    .story__inner {
+      grid-template-columns: 10rem 1fr;
+      gap: var(--s-10);
+    }
+  }
+</style>

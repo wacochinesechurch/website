@@ -1,0 +1,173 @@
+---
+import { Image } from 'astro:assets';
+import { pick, type Locale } from '@i18n/config';
+import { getMoments } from '@lib/church';
+import { resolveImage, focalPosition } from '@lib/images';
+
+interface Props {
+  locale: Locale;
+  limit?: number;
+}
+
+const { locale, limit = 8 } = Astro.props;
+const moments = (await getMoments()).slice(0, limit);
+---
+
+{/*
+  A filmstrip rather than a grid.
+
+  The brand idea is a lit room seen from outside, so church life is presented
+  as a row of windows you move past — mooncakes, hotpot, basketball, taiji,
+  a table with fifty people at it. Scroll-snap makes it feel deliberate on a
+  phone, which is where most of these will be seen.
+
+  Captions are not decoration here. The church wrote them itself, and lines
+  like "there is nothing hotpot cannot fix" say more about this congregation
+  than any mission statement would.
+*/}
+<div class="strip-wrap">
+  <ul
+    class="strip"
+    role="list"
+    tabindex="0"
+    aria-label={locale === 'en' ? 'Photographs of church life' : '教会生活照片'}
+  >
+    {
+      moments.map((m) => {
+        const img = resolveImage(m.data.image.src);
+        if (!img) return null;
+        return (
+          <li class="strip__item" data-weight={m.data.weight}>
+            <figure class="strip__figure">
+              <div class="strip__media">
+                <Image
+                  src={img}
+                  alt={pick(m.data.image.alt, locale)}
+                  widths={[320, 480, 720]}
+                  sizes="(min-width: 64rem) 22rem, 68vw"
+                  loading="lazy"
+                  decoding="async"
+                  style={`object-position:${focalPosition(m.data.image.focus)}`}
+                />
+              </div>
+              <figcaption class="strip__caption">
+                {pick(m.data.caption, locale)}
+              </figcaption>
+            </figure>
+          </li>
+        );
+      })
+    }
+  </ul>
+</div>
+
+<style>
+  .strip-wrap {
+    /* break out of the shell so the strip runs to the screen edge — it
+       should feel like it continues past the frame, not like a widget */
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+  }
+
+  .strip {
+    display: flex;
+    gap: var(--s-5);
+    margin: 0;
+    padding: var(--s-2) var(--gutter) var(--s-6);
+    list-style: none;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline-start: var(--gutter);
+    /* a thin warm scrollbar rather than the OS default */
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--accent) 55%, transparent)
+      transparent;
+  }
+
+  .strip:focus-visible {
+    outline: 2.5px solid var(--focus-ring);
+    outline-offset: -4px;
+  }
+
+  .strip::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .strip::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--accent) 55%, transparent);
+    border-radius: var(--r-full);
+  }
+
+  .strip__item {
+    flex: 0 0 auto;
+    width: min(68vw, 19rem);
+    scroll-snap-align: start;
+  }
+
+  .strip__item[data-weight='wide'] {
+    width: min(84vw, 27rem);
+  }
+
+  .strip__figure {
+    display: grid;
+    gap: var(--s-3);
+    margin: 0;
+    height: 100%;
+  }
+
+  .strip__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--r-lg);
+    background: var(--c-ink-150);
+  }
+
+  .strip__item[data-weight='tall'] .strip__media {
+    aspect-ratio: 3 / 4;
+  }
+
+  .strip__item[data-weight='wide'] .strip__media {
+    aspect-ratio: 16 / 10;
+  }
+
+  .strip__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out-soft);
+  }
+
+  .strip__item:hover .strip__media :global(img) {
+    transform: scale(1.03);
+  }
+
+  .strip__caption {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .strip {
+      scroll-snap-type: none;
+    }
+    .strip__item:hover .strip__media :global(img) {
+      transform: none;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .strip {
+      gap: var(--s-6);
+      padding-inline: var(--gutter);
+    }
+    .strip__item {
+      width: 22rem;
+    }
+    .strip__item[data-weight='wide'] {
+      width: 30rem;
+    }
+  }
+</style>

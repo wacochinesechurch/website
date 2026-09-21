@@ -1,0 +1,398 @@
+---
+import { localePath, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getChurch, formatTime, formatWeekdayName } from '@lib/church';
+import SectionHeader from '@components/SectionHeader.astro';
+
+interface Props {
+  locale: Locale;
+  /** On the Visit page both gatherings are shown; the homepage shows Sunday. */
+  showAll?: boolean;
+  compact?: boolean;
+}
+
+const { locale, showAll = false, compact = false } = Astro.props;
+const t = useTranslations(locale);
+const church = await getChurch();
+
+/* The homepage shows the two main ways in (Sunday and Friday). The Visit page
+   passes showAll and lists the prayer meetings too — useful once you are
+   looking, clutter before that. */
+const gatherings = church.gatherings.filter(
+  (g) => g.status !== 'unverified' && (showAll || g.featured),
+);
+---
+
+{/*
+  "What would it feel like to attend?" is one of the hardest questions for a
+  first-time visitor and almost no church site answers it. A running order,
+  in plain language, with the reassurance that nothing is required of you,
+  answers it better than any amount of welcoming copy.
+*/}
+<div class="sunday" data-compact={compact ? '' : null}>
+  {
+    !compact && (
+      <SectionHeader
+        locale={locale}
+        eyebrow={locale === 'en' ? 'Before you come' : '来之前'}
+        title={t('visit.sundayFlow')}
+        lede={
+          locale === 'en'
+            ? 'So that nothing on your first morning is a surprise.'
+            : '好让你第一次来的那个早上，不会有任何意外。'
+        }
+      />
+    )
+  }
+
+  <div class="sunday__list" data-reveal-group>
+    {
+      gatherings.map((g) => (
+        <article class="gathering">
+          <header class="gathering__head">
+            <h3 class="gathering__name">{pick(g.name, locale)}</h3>
+            <p class="gathering__when ui">
+              {formatWeekdayName(g.day, locale)}
+              <span aria-hidden="true"> · </span>
+              <time>{formatTime(g.startTime, locale)}</time>
+              {g.endTime && (
+                <>
+                  <span aria-hidden="true">–</span>
+                  <time>{formatTime(g.endTime, locale)}</time>
+                </>
+              )}
+            </p>
+            <p class="gathering__where ui">{pick(g.location, locale)}</p>
+            {/* A gathering that meets away from the church says so loudly.
+                Sending someone to 1801 Gurley for the Wednesday prayer
+                meeting would be worse than telling them nothing. */}
+            {g.addressOnRequest && pick(g.addressOnRequest, locale) && (
+              <span class="gathering__ask-address">
+                <span>{pick(g.addressOnRequest, locale)}</span>
+                {church.contact.email && (
+                  <a
+                    class="link-arrow"
+                    href={`mailto:${church.contact.email}?subject=${encodeURIComponent(
+                      locale === 'en'
+                        ? 'Address for the Wednesday prayer meeting'
+                        : '索取周三祷告会的地址',
+                    )}`}
+                  >
+                    {locale === 'en' ? 'Email for the address' : '来信索取地址'}
+                  </a>
+                )}
+              </span>
+            )}
+
+            {g.address && (
+              <p class="gathering__elsewhere">
+                <a
+                  href={g.address.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {g.address.line1}, {g.address.city}, {g.address.state}{' '}
+                  {g.address.zip}
+                </a>
+                {g.address.note && pick(g.address.note, locale) && (
+                  <span class="gathering__elsewhere-note">
+                    {pick(g.address.note, locale)}
+                  </span>
+                )}
+              </p>
+            )}
+          </header>
+
+          {pick(g.summary, locale) && (
+            <p class="gathering__summary">{pick(g.summary, locale)}</p>
+          )}
+
+          {g.schedule.length > 0 && (
+            <ol class="runsheet" role="list">
+              {g.schedule.map((block) => (
+                <li class="runsheet__row">
+                  <span class="runsheet__time ui">
+                    {formatTime(block.start, locale)}
+                  </span>
+                  <span class="runsheet__label">{pick(block.label, locale)}</span>
+                </li>
+              ))}
+            </ol>
+          )}
+
+          {g.groups.length > 0 && (
+            <div class="gathering__groups">
+              <p class="gathering__groups-label ui">
+                {locale === 'en' ? 'The three study groups' : '三个查经小组'}
+              </p>
+              <ul class="grouplist" role="list">
+                {g.groups.map((grp) => (
+                  <li class="grouplist__item">
+                    <span class="grouplist__name">{pick(grp.name, locale)}</span>
+                    {pick(grp.audience, locale) && (
+                      <span class="grouplist__who ui">{pick(grp.audience, locale)}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {g.online && pick(g.online, locale) && (
+            <p class="gathering__online ui">{pick(g.online, locale)}</p>
+          )}
+
+          {pick(g.languages, locale) && (
+            <p class="gathering__lang ui">{pick(g.languages, locale)}</p>
+          )}
+        </article>
+      ))
+    }
+  </div>
+
+  {
+    !compact && (
+      <aside class="reassure" data-reveal>
+        <p class="reassure__text">
+          {locale === 'en'
+            ? 'You do not have to sing, stand, give, or say anything. Sitting at the back and watching is a completely normal way to spend a first Sunday.'
+            : '你不需要唱、不需要站、不需要奉献，也不需要发言。第一次来，坐在后面安静地看着，是再正常不过的事。'}
+        </p>
+        <a class="link-arrow" href={localePath(locale, '/visit')}>
+          {locale === 'en' ? 'More about visiting' : '更多来访须知'}
+        </a>
+      </aside>
+    )
+  }
+</div>
+
+<style>
+  .sunday__list {
+    display: grid;
+    gap: var(--s-8);
+  }
+
+  @media (min-width: 52rem) {
+    .sunday__list:has(> * + *) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-10);
+    }
+  }
+
+  /* --------------------------------------------------------- gathering -- */
+  .gathering {
+    display: grid;
+    gap: var(--s-5);
+    align-content: start;
+    padding: var(--s-8);
+    background: var(--surface-raised);
+    border: var(--border-hair) solid var(--rule);
+    border-radius: var(--r-lg);
+    /* The warm edge is the one decorative flourish: a lit seam down the
+       left of anything that represents a gathering. */
+    border-inline-start: 3px solid var(--accent-solid);
+  }
+
+  .gathering__head {
+    display: grid;
+    gap: var(--s-1);
+  }
+
+  .gathering__name {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+
+  .gathering__when {
+    margin: 0;
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--accent);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  .gathering__where {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+
+  .gathering__ask-address {
+    display: grid;
+    gap: var(--s-3);
+    justify-items: start;
+    margin: var(--s-2) 0 0;
+    padding: var(--s-4);
+    background: color-mix(in oklab, var(--secondary) 12%, transparent);
+    border-radius: var(--r-md);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+  }
+
+  /* The accent sits on a clay tint here, which lands at 4.49:1 — just under
+     AA. The darker step clears it at 5.2:1 and looks the same. */
+  .gathering__ask-address :global(.link-arrow) {
+    color: var(--accent-hover);
+  }
+
+  .gathering__elsewhere {
+    margin: var(--s-2) 0 0;
+    padding: var(--s-3) var(--s-4);
+    background: color-mix(in oklab, var(--secondary) 12%, transparent);
+    border-radius: var(--r-md);
+    display: grid;
+    gap: 0.2rem;
+    font-family: var(--font-ui);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  .gathering__elsewhere a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .gathering__elsewhere-note {
+    font-weight: 400;
+    font-size: var(--fs-xs);
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+  }
+
+  .gathering__online {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .gathering__summary {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+  }
+
+  /* --------------------------------------------------------- run sheet -- */
+  .runsheet {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: var(--border-hair) solid var(--rule);
+  }
+
+  .runsheet__row {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: var(--s-4);
+    align-items: baseline;
+    padding-block: var(--s-3);
+    border-block-end: var(--border-hair) solid var(--rule);
+  }
+
+  .runsheet__row:last-child {
+    border-block-end: 0;
+    padding-block-end: 0;
+  }
+
+  .runsheet__time {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  .runsheet__label {
+    font-size: var(--fs-base);
+    color: var(--text-strong);
+  }
+
+  /* --------------------------------------------------------- groups -- */
+  .gathering__groups {
+    display: grid;
+    gap: var(--s-3);
+    padding: var(--s-5);
+    background: var(--accent-faint);
+    border-radius: var(--r-md);
+  }
+
+  .gathering__groups-label {
+    margin: 0;
+    font-size: var(--fs-3xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .gathering__groups-label:lang(zh) {
+    text-transform: none;
+    letter-spacing: 0.15em;
+    font-size: var(--fs-2xs);
+  }
+
+  .grouplist {
+    display: grid;
+    gap: var(--s-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .grouplist__item {
+    display: grid;
+    gap: 0.1rem;
+    padding-inline-start: var(--s-4);
+    border-inline-start: 2px solid var(--accent-solid);
+  }
+
+  .grouplist__name {
+    font-family: var(--font-display);
+    font-size: var(--fs-base);
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  .grouplist__who {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    line-height: var(--lh-relaxed);
+  }
+
+  .gathering__lang {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+    padding-block-start: var(--s-2);
+  }
+
+  /* -------------------------------------------------------- reassurance -- */
+  .reassure {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: start;
+    margin-block-start: var(--s-10);
+    padding: var(--s-8);
+    background: var(--accent-faint);
+    border-radius: var(--r-lg);
+    max-width: var(--measure);
+  }
+
+  .reassure__text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--text-strong);
+  }
+
+  [data-compact] .gathering {
+    padding: var(--s-6);
+  }
+</style>

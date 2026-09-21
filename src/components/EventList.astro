@@ -1,0 +1,251 @@
+---
+import { Image } from 'astro:assets';
+import { pick, formatDate, formatDateRange, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { resolveImage, focalPosition } from '@lib/images';
+
+type EventEntry = {
+  id: string;
+  data: {
+    title: { en: string; zh: string };
+    summary: { en: string; zh: string };
+    start: Date;
+    end?: Date;
+    allDay: boolean;
+    location?: { en: string; zh: string };
+    image?: { src: string; alt: { en: string; zh: string }; focus: { x: number; y: number } };
+    featured: boolean;
+    audience: string[];
+    registerUrl?: string;
+    registerLabel?: { en: string; zh: string };
+  };
+};
+
+interface Props {
+  locale: Locale;
+  events: EventEntry[];
+  /** Upcoming lists get the runtime expiry guard; archives do not. */
+  variant?: 'upcoming' | 'archive';
+  emptyId?: string;
+}
+
+const { locale, events, variant = 'upcoming', emptyId } = Astro.props;
+const t = useTranslations(locale);
+
+const timeFmt = new Intl.DateTimeFormat(locale === 'zh' ? 'zh-CN' : 'en-US', {
+  hour: 'numeric',
+  minute: '2-digit',
+  timeZone: 'America/Chicago',
+});
+---
+
+{/*
+  data-event-end is read by src/scripts/freshness.ts in the visitor's browser.
+  Even if nobody rebuilds this site for six months, an event that has passed
+  stops presenting itself as upcoming on the reader's actual clock.
+*/}
+<ul
+  class="events"
+  role="list"
+  data-upcoming-list={variant === 'upcoming' ? '' : null}
+  data-empty-target={emptyId}
+  data-reveal-group
+>
+  {
+    events.map((e) => {
+      const img = resolveImage(e.data.image?.src);
+      const endIso = (e.data.end ?? e.data.start).toISOString();
+      const startIso = e.data.start.toISOString();
+      return (
+        <li
+          class="event"
+          data-featured={e.data.featured ? '' : null}
+          data-event-end={variant === 'upcoming' ? endIso : null}
+        >
+          {img && (
+            <div class="event__media">
+              <Image
+                src={img}
+                alt={pick(e.data.image!.alt, locale)}
+                widths={[320, 520, 760]}
+                sizes="(min-width: 60rem) 20rem, 90vw"
+                loading="lazy"
+                style={`object-position:${focalPosition(e.data.image!.focus)}`}
+              />
+            </div>
+          )}
+
+          <div class="event__body">
+            <p class="event__date ui">
+              <time datetime={startIso}>
+                {e.data.end
+                  ? formatDateRange(e.data.start, e.data.end, locale)
+                  : formatDate(e.data.start, locale)}
+              </time>
+              {!e.data.allDay && (
+                <span class="event__time">{timeFmt.format(e.data.start)}</span>
+              )}
+            </p>
+
+            <h3 class="event__title">{pick(e.data.title, locale)}</h3>
+
+            {pick(e.data.summary, locale) && (
+              <p class="event__summary">{pick(e.data.summary, locale)}</p>
+            )}
+
+            <div class="event__foot">
+              {e.data.location && pick(e.data.location, locale) && (
+                <p class="event__where ui">{pick(e.data.location, locale)}</p>
+              )}
+
+              {e.data.registerUrl && (
+                <a
+                  class="btn btn--sm btn--outline"
+                  href={e.data.registerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {pick(e.data.registerLabel, locale) ||
+                    (locale === 'en' ? 'Sign up' : '报名')}
+                </a>
+              )}
+            </div>
+
+            {/* Only ever revealed by the freshness script, never at build. */}
+            <p class="event__passed chip chip--quiet">{t('life.happened')}</p>
+          </div>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .events {
+    display: grid;
+    gap: var(--s-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .events[data-empty] {
+    display: none;
+  }
+
+  .event {
+    display: grid;
+    gap: var(--s-5);
+    padding: var(--s-6);
+    background: var(--surface-raised);
+    border: var(--border-hair) solid var(--rule);
+    border-radius: var(--r-lg);
+    align-items: start;
+  }
+
+  .event[data-featured] {
+    border-inline-start: 3px solid var(--accent-solid);
+  }
+
+  .event[data-passed][data-featured] {
+    border-inline-start-color: var(--rule-strong);
+  }
+
+  /* When the browser notices an event has passed, it is quietened and
+     labelled rather than silently vanishing — a visitor who followed a link
+     to it should see what happened, not a blank page.
+
+     Deliberately NOT a blanket opacity: fading the whole card took its date,
+     location and summary down to 2.3–3.9:1, below AA. Instead the accent
+     recedes to a muted tone that still passes, and only the photograph is
+     desaturated. */
+  .event[data-passed] {
+    --accent: var(--text-muted);
+    background: var(--surface-sunk);
+    border-color: var(--rule);
+  }
+
+  .event[data-passed] .event__media :global(img) {
+    filter: saturate(0.45);
+  }
+
+  .event[data-passed] .event__title {
+    color: var(--text);
+  }
+
+  .event[data-passed] .event__passed {
+    display: inline-flex;
+  }
+
+  .event__passed {
+    display: none;
+    justify-self: start;
+  }
+
+  .event__media {
+    overflow: hidden;
+    border-radius: var(--r-md);
+    aspect-ratio: 16 / 10;
+    background: var(--c-ink-150);
+  }
+
+  .event__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .event__body {
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .event__date {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin: 0;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--accent);
+    font-variant-numeric: lining-nums;
+  }
+
+  .event__time {
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .event__title {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+
+  .event__summary {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+    max-width: var(--measure);
+  }
+
+  .event__foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4);
+    align-items: center;
+    padding-block-start: var(--s-1);
+  }
+
+  .event__where {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+
+  @media (min-width: 46rem) {
+    .event:has(.event__media) {
+      grid-template-columns: minmax(0, 18rem) 1fr;
+      gap: var(--s-7);
+    }
+  }
+</style>

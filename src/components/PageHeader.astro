@@ -1,0 +1,106 @@
+---
+import type { Locale } from '@i18n/config';
+
+interface Props {
+  locale: Locale;
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+  /** The second-language rendering of the title, shown beneath it. */
+  titleAlt?: string;
+}
+
+const { locale, eyebrow, title, lede, titleAlt } = Astro.props;
+---
+
+{/*
+  Inner pages open on the same warm dark as the homepage hero, so the whole
+  site reads as one building with the lights on rather than a set of
+  separately designed pages.
+*/}
+<header class="page-head" data-surface="ink">
+  <div class="page-head__glow" aria-hidden="true"></div>
+  <div class="shell">
+    <div class="page-head__inner">
+      {eyebrow && <p class="eyebrow page-head__eyebrow">{eyebrow}</p>}
+      <h1 class="page-head__title">
+        {title}
+        {
+          titleAlt && (
+            <span
+              class="page-head__title-alt"
+              lang={locale === 'en' ? 'zh-CN' : 'en-US'}
+            >
+              {titleAlt}
+            </span>
+          )
+        }
+      </h1>
+      {lede && <p class="page-head__lede">{lede}</p>}
+      <slot />
+    </div>
+  </div>
+</header>
+
+<style>
+  .page-head {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    background: var(--c-ink-900);
+    color: var(--c-ink-100);
+    margin-block-start: calc(var(--header-h) * -1);
+    padding-block: calc(var(--header-h) + var(--s-12)) var(--s-16);
+  }
+
+  .page-head__glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+      72% 88% at 84% 8%,
+      color-mix(in oklab, var(--c-lamp-500) 24%, transparent) 0%,
+      transparent 66%
+    );
+  }
+
+  .page-head__inner {
+    display: grid;
+    gap: var(--s-5);
+    max-width: 44rem;
+  }
+
+  .page-head__eyebrow {
+    margin: 0;
+    color: var(--c-lamp-300);
+  }
+
+  .page-head__title {
+    display: grid;
+    gap: 0.2em;
+    margin: 0;
+    font-size: var(--fs-3xl);
+    color: var(--c-paper-raised);
+  }
+
+  .page-head__title-alt {
+    font-family: var(--font-ui);
+    font-size: 0.4em;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--c-lamp-300);
+  }
+
+  .page-head__title-alt:lang(zh) {
+    letter-spacing: 0.16em;
+    font-size: 0.36em;
+  }
+
+  .page-head__lede {
+    margin: 0;
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--c-ink-200);
+    max-width: 38rem;
+  }
+</style>

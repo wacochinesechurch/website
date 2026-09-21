@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Edit the website · 编辑网站 · Waco Chinese Church</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <style>
+      body { margin: 0; background: #f8f4ed; }
+      /* Shown only until the editor finishes loading. */
+      #boot {
+        position: fixed; inset: 0; display: grid; place-items: center;
+        padding: 2rem; text-align: center; color: #4a4038;
+        font-family: 'Source Serif 4', Georgia, 'Songti SC', serif;
+      }
+      #boot p { max-width: 30rem; line-height: 1.7; }
+      #boot strong { display: block; font-size: 1.3rem; margin-bottom: 0.6rem; color: #211c17; }
+      #boot span { display: block; margin-top: 0.4rem; color: #6b5e53; font-size: 0.95rem; }
+    </style>
+  </head>
+  <body>
+    <div id="boot">
+      <p>
+        <strong>Loading the editor… 正在载入编辑器…</strong>
+        <span>If this message stays on screen, the sign-in settings may not be
+          configured yet. See <code>docs/HANDOVER.md</code>.</span>
+      </p>
+    </div>
+
+    <!--
+      Sveltia CMS — a drop-in, actively maintained replacement for Decap CMS
+      (formerly Netlify CMS). It reads public/admin/config.yml, and commits
+      every change straight to the repository as Markdown and YAML.
+
+      Nothing about the church's content depends on this script continuing to
+      exist: if it ever went away, every word would still be sitting in plain
+      files in the repo, and any other Git-based CMS could read the same config.
+    -->
+    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
+
+    <script>
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const boot = document.getElementById('boot');
+          // The CMS replaces the page body once it mounts; if our boot notice
+          // is still the only thing here after a few seconds, something failed.
+          if (boot && document.querySelector('#nc-root, #app, .sveltia-cms')) {
+            boot.remove();
+          }
+        }, 2500);
+      });
+    </script>
+  </body>
+</html>

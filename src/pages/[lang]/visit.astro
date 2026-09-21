@@ -1,0 +1,326 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import SundayShape from '@components/SundayShape.astro';
+import InviteBlock from '@components/InviteBlock.astro';
+import RichText from '@components/RichText.astro';
+import { LOCALES, localePath, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getChurch, getFaq, formatAddress } from '@lib/church';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const t = useTranslations(locale);
+const church = await getChurch();
+
+/* getFaq() already drops `unverified` entries, so a question the church has
+   not answered yet simply is not asked here — rather than being asked and
+   left hanging, which is worse than silence. */
+const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('nav.visit')}
+  description={locale === 'en'
+    ? 'Everything you need to know before your first visit to Waco Chinese Church — when we meet, where to go, what happens on a Sunday, and what language is used.'
+    : '第一次来韦科华人教会之前，你需要知道的一切：聚会时间、地点、主日流程，以及使用的语言。'}
+>
+  <PageHeader
+    locale={locale}
+    eyebrow={locale === 'en' ? 'New here' : '新朋友'}
+    title={t('visit.title')}
+    lede={t('visit.lede')}
+  >
+    <div class="cluster" style="--cluster-gap: var(--s-3); padding-block-start: var(--s-2)">
+      <a
+        class="btn btn--solid"
+        href={church.address.mapsUrl}
+        target="_blank"
+        rel="noopener noreferrer">{t('facts.directions')}</a
+      >
+      {
+        church.contact.email && (
+          <a class="btn btn--outline" href={`mailto:${church.contact.email}`}>
+            {t('cta.email')}
+          </a>
+        )
+      }
+    </div>
+  </PageHeader>
+
+  {/* ---- 1. WHERE, in as few words as possible ---- */}
+  <section class="section section--tight" aria-labelledby="where-title">
+    <div class="shell">
+      <div class="where">
+        <div class="where__block" data-reveal>
+          <h2 class="where__title" id="where-title">{t('facts.where')}</h2>
+          <address class="where__address">
+            {church.address.line1}<br />
+            {church.address.city}, {church.address.state} {church.address.zip}
+          </address>
+          {
+            church.address.note && (
+              <p class="where__note">{pick(church.address.note, locale)}</p>
+            )
+          }
+          <a class="link-arrow" href={church.address.mapsUrl} target="_blank" rel="noopener noreferrer">
+            {t('facts.openInMaps')}
+          </a>
+        </div>
+
+        {/* A static map would need an API key and a monthly bill. A plain,
+            high-contrast link out to Maps is more useful on a phone anyway,
+            because it hands the visitor straight to turn-by-turn directions. */}
+        <div class="where__map" data-reveal>
+          <p class="where__map-label ui">
+            {locale === 'en'
+              ? 'The building is shared. Look for the Emmanuel Baptist Church sign — that is the right place.'
+              : '这栋建筑是共用的。请找 Emmanuel Baptist Church 的招牌 —— 那就是我们。'}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ---- 2. WHAT HAPPENS ---- */}
+  <section class="section" data-surface="warm" aria-labelledby="shape-title">
+    <div class="shell">
+      <SundayShape locale={locale} showAll />
+    </div>
+  </section>
+
+  {/* ---- 3. QUESTIONS ---- */}
+  {
+    faqs.length > 0 && (
+      <section class="section" aria-labelledby="faq-title">
+        <div class="shell">
+          <SectionHeader
+            locale={locale}
+            eyebrow={locale === 'en' ? 'Ahead of time' : '先说清楚'}
+            title={t('visit.faq')}
+            id="faq-title"
+          />
+
+          <div class="faq" data-reveal-group>
+            {faqs.map((f) => (
+              <details class="faq__item" name="visit-faq">
+                <summary class="faq__q">
+                  <span>{pick(f.data.question, locale)}</span>
+                  <span class="faq__mark" aria-hidden="true" />
+                </summary>
+                <div class="faq__a prose">
+                  <RichText markdown={pick(f.data.answer, locale)} />
+                </div>
+              </details>
+            ))}
+          </div>
+
+          {/* The honest catch-all. The church has not published answers about
+              parking, childcare or dress code; rather than invent them, the
+              page says who to ask. */}
+          <div class="faq__ask" data-reveal>
+            <p class="faq__ask-text">
+              {locale === 'en'
+                ? "Not answered here? Ask — parking, children, what to wear, anything. A real person reads these and will reply."
+                : '这里没写到的，直接问就好 —— 停车、孩子、穿着，任何问题都可以。这些信件由真人查看，会回复你。'}
+            </p>
+            <a class="btn btn--ink" href={localePath(locale, '/contact')}>
+              {t('cta.contact')}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {/* ---- 4. TELL US YOU'RE COMING ---- */}
+  <section class="section section--tight" aria-labelledby="tellus-title">
+    <div class="shell">
+      <div class="tellus" data-reveal>
+        <h2 class="tellus__title" id="tellus-title">{t('visit.tellUs')}</h2>
+        <p class="tellus__body">{t('visit.tellUsBody')}</p>
+        {
+          church.contact.email && (
+            <a class="btn btn--solid btn--lg" href={`mailto:${church.contact.email}?subject=${encodeURIComponent(locale === 'en' ? 'Visiting on a Sunday' : '想来参加主日聚会')}`}>
+              {church.contact.email}
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <InviteBlock locale={locale} />
+</BaseLayout>
+
+<style>
+  .where {
+    display: grid;
+    gap: var(--s-8);
+  }
+
+  .where__block {
+    display: grid;
+    gap: var(--s-3);
+    justify-items: start;
+  }
+
+  .where__title {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+
+  .where__address {
+    font-style: normal;
+    font-family: var(--font-ui);
+    font-size: var(--fs-xl);
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--text-strong);
+  }
+
+  .where__note {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: var(--lh-relaxed);
+    max-width: var(--measure-narrow);
+  }
+
+  .where__map {
+    display: grid;
+    align-content: center;
+    padding: var(--s-8);
+    background: var(--accent-faint);
+    border-inline-start: 3px solid var(--accent-solid);
+    border-radius: var(--r-lg);
+  }
+
+  .where__map-label {
+    margin: 0;
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--text-strong);
+  }
+
+  @media (min-width: 52rem) {
+    .where {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-12);
+      align-items: center;
+    }
+  }
+
+  /* ----------------------------------------------------------------- faq */
+  .faq {
+    display: grid;
+    border-block-start: var(--border-hair) solid var(--rule);
+    max-width: var(--measure-wide);
+  }
+
+  .faq__item {
+    border-block-end: var(--border-hair) solid var(--rule);
+  }
+
+  .faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-5);
+    padding-block: var(--s-5);
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__q:hover {
+    color: var(--accent);
+  }
+
+  /* A plus that becomes a minus — the smallest possible affordance. */
+  .faq__mark {
+    position: relative;
+    flex: 0 0 auto;
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  .faq__mark::before,
+  .faq__mark::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 0;
+    width: 100%;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform var(--dur-base) var(--ease-out-soft);
+  }
+
+  .faq__mark::after {
+    transform: rotate(90deg);
+  }
+
+  .faq__item[open] .faq__mark::after {
+    transform: rotate(0deg);
+  }
+
+  .faq__a {
+    padding-block-end: var(--s-6);
+    color: var(--text);
+    max-width: var(--measure);
+  }
+
+  .faq__a :global(p + p) {
+    margin-block-start: 1em;
+  }
+
+  .faq__ask {
+    display: grid;
+    gap: var(--s-5);
+    justify-items: start;
+    margin-block-start: var(--s-10);
+    padding: var(--s-8);
+    background: var(--surface-sunk);
+    border-radius: var(--r-lg);
+    max-width: var(--measure);
+  }
+
+  .faq__ask-text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--text-strong);
+  }
+
+  /* -------------------------------------------------------------- tellus */
+  .tellus {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: start;
+    max-width: var(--measure);
+  }
+
+  .tellus__title {
+    margin: 0;
+    font-size: var(--fs-xl);
+  }
+
+  .tellus__body {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+  }
+</style>

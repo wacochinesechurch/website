@@ -1,0 +1,425 @@
+---
+import { Image } from 'astro:assets';
+import { localePath, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import {
+  getChurch,
+  formatTime,
+  formatWeekdayName,
+} from '@lib/church';
+import { resolveImage, focalPosition } from '@lib/images';
+import { getEntry } from 'astro:content';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const church = await getChurch();
+
+const sunday = church.gatherings.find((g) => g.id === 'sunday');
+
+/* The hero photograph. Chosen because it is the single image that best
+   answers "what would it feel like to attend?" — a full room of people of
+   every age eating together. It is the church's own published photograph.
+   Swapping it is a one-line change here or, later, a CMS field. */
+const heroMoment = await getEntry('moments', 'midautumn-gathering');
+const heroImage = resolveImage(heroMoment?.data.image.src);
+const heroAlt = heroMoment ? pick(heroMoment.data.image.alt, locale) : '';
+const heroFocus = focalPosition(heroMoment?.data.image.focus);
+---
+
+<section class="hero" data-surface="ink">
+  {/* ---------------------------------------------------------------------
+      THE LIT DOORWAY
+
+      Not a full-bleed photo with a headline on top — every church site in
+      America is that. Instead the photograph is seen THROUGH an arch: the
+      same arch as the logo, scaled up to architecture. You are standing
+      outside in the dark, looking through a lit doorway into a room where
+      people are eating together.
+
+      The warm glow behind the arch is the one piece of signature motion on
+      the site. It rises once, on load, and then stops.
+      --------------------------------------------------------------------- */}
+  <div class="hero__glow" aria-hidden="true"></div>
+
+  <div class="hero__inner shell shell--wide">
+    <div class="hero__copy">
+      <p class="hero__eyebrow eyebrow">
+        {locale === 'en' ? 'Waco, Texas · Since 1993' : '德州韦科 · 始于 1993 年'}
+      </p>
+
+      <h1 class="hero__title">
+        <span class="hero__title-main">{t('site.name')}</span>
+        <span
+          class="hero__title-alt"
+          lang={locale === 'en' ? 'zh-CN' : 'en-US'}>{t('site.nameOther')}</span>
+      </h1>
+
+      <p class="hero__lede">
+        {
+          locale === 'en'
+            ? 'Chinese students, families, working people and neighbors. We worship in Mandarin, and someone will interpret into English whenever it is needed. If you are far from home, you are the reason this church exists.'
+            : '华人学生、家庭、职场人士与本地邻舍。我们以国语敬拜，需要时也有弟兄姊妹翻译成英文。如果你身在异乡，这间教会当初就是为你而开始的。'
+        }
+      </p>
+
+      {/* --- THE TEN-SECOND ANSWERS ------------------------------------
+          When, where, what language. Above the fold, in plain type, before
+          any scrolling. This is the part that must never be beautiful at
+          the expense of being legible. --------------------------------- */}
+      {
+        sunday && (
+          <dl class="hero__facts">
+            <div class="hero__fact">
+              <dt>{t('facts.when')}</dt>
+              <dd>
+                {formatWeekdayName(sunday.day, locale)}{' '}
+                {formatTime(sunday.startTime, locale)}
+              </dd>
+            </div>
+            <div class="hero__fact">
+              <dt>{t('facts.where')}</dt>
+              <dd>
+                <a href={church.address.mapsUrl} target="_blank" rel="noopener noreferrer">
+                  {church.address.line1}
+                </a>
+                <span class="hero__fact-sub">
+                  {church.address.city}, {church.address.state}
+                </span>
+              </dd>
+            </div>
+            <div class="hero__fact">
+              <dt>{t('facts.languages')}</dt>
+              <dd>
+                {locale === 'en' ? 'Mandarin' : '国语（普通话）'}
+                <span class="hero__fact-sub">
+                  {
+                    locale === 'en'
+                      ? 'English interpretation on request'
+                      : '可应需要提供英文翻译'
+                  }
+                </span>
+              </dd>
+            </div>
+          </dl>
+        )
+      }
+
+      <div class="hero__actions cluster">
+        <a class="btn btn--solid btn--lg" href={localePath(locale, '/visit')}>
+          {t('cta.plan')}
+        </a>
+        <a class="btn btn--outline btn--lg" href={localePath(locale, '/about')}>
+          {locale === 'en' ? 'Who we are' : '认识我们'}
+        </a>
+      </div>
+    </div>
+
+    {/* --- the aperture --- */}
+    <div class="hero__aperture">
+      <div class="hero__arch">
+        {
+          heroImage && (
+            <Image
+              src={heroImage}
+              alt={heroAlt}
+              widths={[420, 640, 900, 1200]}
+              sizes="(min-width: 64rem) 42vw, 92vw"
+              loading="eager"
+              style={`object-position:${heroFocus}`}
+            />
+          )
+        }
+      </div>
+      {
+        heroMoment && (
+          <p class="hero__credit">{pick(heroMoment.data.caption, locale)}</p>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    background: var(--c-ink-900);
+    color: var(--c-ink-100);
+    /* Pulled up under the sticky header, with matching padding so nothing
+       moves. This replaces the old position:fixed header and its layout
+       shift — the visual result is the same, the CLS is zero. */
+    margin-block-start: calc(var(--header-h) * -1);
+    padding-block: calc(var(--header-h) + var(--s-12)) var(--s-16);
+  }
+
+  /* The warm light behind the doorway. A single radial gradient — cheap,
+     never repaints, and carries the entire brand idea. */
+  .hero__glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(
+        46% 46% at 76% 46%,
+        color-mix(in oklab, var(--c-lamp-400) 34%, transparent) 0%,
+        color-mix(in oklab, var(--c-lamp-600) 20%, transparent) 38%,
+        transparent 70%
+      ),
+      radial-gradient(
+        70% 58% at 88% 18%,
+        color-mix(in oklab, var(--c-lamp-500) 20%, transparent) 0%,
+        transparent 64%
+      ),
+      radial-gradient(
+        95% 75% at 6% 108%,
+        color-mix(in oklab, var(--c-clay-700) 26%, transparent) 0%,
+        transparent 58%
+      );
+    opacity: 0;
+    animation: glow-up 2.2s var(--ease-settle) 120ms forwards;
+  }
+
+  @keyframes glow-up {
+    to {
+      opacity: 1;
+    }
+  }
+
+  .hero__inner {
+    display: grid;
+    gap: var(--s-12);
+    align-items: center;
+  }
+
+  /* ---------------------------------------------------------------- copy */
+  .hero__copy {
+    display: grid;
+    gap: var(--s-6);
+    max-width: 34rem;
+  }
+
+  .hero__eyebrow {
+    color: var(--c-lamp-300);
+    margin: 0;
+  }
+
+  .hero__title {
+    display: grid;
+    gap: 0.22em;
+    margin: 0;
+    font-size: var(--fs-4xl);
+    line-height: 0.98;
+    letter-spacing: var(--tracking-tight);
+    color: var(--c-paper-raised);
+  }
+
+  .hero__title-main {
+    font-weight: 600;
+  }
+
+  /* The second language is not a subtitle or a translation caption — it is
+     the same name, given real size and weight. Slightly quieter, never
+     subordinate. */
+  .hero__title-alt {
+    font-size: 0.52em;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--c-lamp-300);
+    line-height: 1.2;
+  }
+
+  .hero__title-alt:lang(zh) {
+    letter-spacing: 0.14em;
+    font-size: 0.48em;
+  }
+
+  .hero__lede {
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--c-ink-200);
+    margin: 0;
+    max-width: 30rem;
+  }
+
+  /* --------------------------------------------------------------- facts */
+  .hero__facts {
+    display: grid;
+    gap: var(--s-5);
+    margin: 0;
+    padding-block-start: var(--s-2);
+  }
+
+  .hero__fact {
+    display: grid;
+    gap: 0.15rem;
+    padding-inline-start: var(--s-4);
+    border-inline-start: 2px solid
+      color-mix(in oklab, var(--c-lamp-400) 55%, transparent);
+  }
+
+  .hero__fact dt {
+    font-family: var(--font-ui);
+    font-size: var(--fs-3xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--c-ink-400);
+  }
+
+  .hero__fact dt:lang(zh) {
+    text-transform: none;
+    letter-spacing: 0.16em;
+    font-size: var(--fs-2xs);
+  }
+
+  .hero__fact dd {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--c-paper-raised);
+    line-height: 1.35;
+  }
+
+  .hero__fact dd a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, currentColor 35%, transparent);
+    text-underline-offset: 0.18em;
+  }
+
+  .hero__fact dd a:hover {
+    color: var(--c-lamp-300);
+  }
+
+  .hero__fact-sub {
+    display: block;
+    font-size: var(--fs-xs);
+    font-weight: 400;
+    color: var(--c-ink-300);
+    margin-block-start: 0.15rem;
+    line-height: 1.45;
+  }
+
+  .hero__actions {
+    padding-block-start: var(--s-2);
+    --cluster-gap: var(--s-3);
+  }
+
+  /* ------------------------------------------------------------ aperture */
+  .hero__aperture {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: center;
+  }
+
+  .hero__arch {
+    position: relative;
+    width: min(100%, 30rem);
+    aspect-ratio: 4 / 5;
+    /* The arch. A top radius of half the element's width produces a true
+       semicircle; the base stays square, so it reads as a doorway rather
+       than a pill. */
+    border-radius: 999px 999px var(--r-lg) var(--r-lg);
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--c-lamp-300) 26%, transparent),
+      0 40px 80px -30px rgb(0 0 0 / 0.8);
+  }
+
+  /* The photographs are mostly fluorescent-lit fellowship halls. Left raw,
+     they read cold and fight the warm dark around them. A restrained warm
+     grade — never a heavy filter that would recolour skin tones — settles
+     the photo into the same light as the rest of the page. */
+  .hero__arch::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to top,
+        color-mix(in oklab, var(--c-ink-950) 55%, transparent) 0%,
+        color-mix(in oklab, var(--c-ink-950) 12%, transparent) 38%,
+        transparent 62%
+      ),
+      radial-gradient(
+        120% 80% at 50% 0%,
+        color-mix(in oklab, var(--c-lamp-300) 16%, transparent) 0%,
+        transparent 58%
+      );
+    mix-blend-mode: normal;
+    pointer-events: none;
+  }
+
+  /* The photograph paints immediately — it is the desktop LCP element and
+     must never be held at opacity 0. The "light arriving" effect is applied
+     to an overlay on the frame instead, which costs nothing and leaves the
+     image itself eligible for a fast LCP. */
+  .hero__arch :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(1.04) contrast(1.03) brightness(0.96);
+  }
+
+  .hero__arch::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--c-ink-950);
+    animation: arch-lit 1.5s var(--ease-settle) 120ms both;
+    pointer-events: none;
+  }
+
+  @keyframes arch-lit {
+    from {
+      opacity: 0.72;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .hero__credit {
+    font-family: var(--font-ui);
+    font-size: var(--fs-xs);
+    line-height: var(--lh-relaxed);
+    color: var(--c-ink-400);
+    text-align: center;
+    max-width: 28rem;
+    margin: 0;
+  }
+
+  /* ------------------------------------------------------------- layout */
+  @media (min-width: 64rem) {
+    .hero {
+      padding-block: calc(var(--header-h) + var(--s-16)) var(--s-24);
+    }
+
+    .hero__inner {
+      grid-template-columns: 1fr minmax(0, 0.82fr);
+      gap: var(--s-20);
+    }
+
+    .hero__aperture {
+      justify-items: end;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__glow,
+    .hero__arch::before {
+      animation: none;
+      opacity: 0;
+    }
+
+    .hero__glow {
+      opacity: 1;
+    }
+  }
+</style>

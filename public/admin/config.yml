@@ -1,0 +1,548 @@
+# =============================================================================
+# WACO CHINESE CHURCH — CONTENT MANAGEMENT
+#
+# This powers the editing interface at /admin. It is read by Sveltia CMS,
+# which is a drop-in replacement for Decap CMS (formerly Netlify CMS) — the
+# same config format, but actively maintained and much faster.
+#
+# WHY THIS AND NOT A HOSTED CMS
+#
+#   - It is free, permanently. No monthly bill a future treasurer has to
+#     justify, and no vendor who can raise prices or shut down.
+#   - Content is plain Markdown and YAML committed to the repository. If this
+#     tool disappears tomorrow, every word the church has written is still
+#     there in readable files.
+#   - There is no database to back up, migrate or have breached.
+#
+# HOW BILINGUAL EDITING WORKS HERE
+#
+# Each translatable field is an object with an English and a Chinese box,
+# shown together on one screen. A volunteer creating an event fills in one
+# form and gets both language versions of the site. There is no way to
+# publish an event in English and forget the Chinese, which is the single
+# most common way a bilingual church site decays.
+# =============================================================================
+
+backend:
+  name: github
+  repo: OWNER/REPO # ← set this to the real GitHub repository before launch
+  branch: main
+  # Volunteers sign in with a free GitHub account. See docs/HANDOVER.md for
+  # the one-time OAuth setup (a free Cloudflare Worker, about ten minutes).
+
+# Lets an editor preview changes on a branch before they go live.
+publish_mode: editorial_workflow
+
+media_folder: src/assets/uploads
+public_folder: /src/assets/uploads
+
+locale: en
+
+# Shown at the top of the editing interface.
+site_url: https://www.wacochinesechurch.org
+display_url: https://www.wacochinesechurch.org
+logo_url: /favicon.svg
+
+# --- reusable field shapes ---------------------------------------------------
+# YAML anchors keep this file readable; the CMS sees them fully expanded.
+en_zh_text: &en_zh_text
+  widget: object
+  collapsed: false
+  fields:
+    - { name: en, label: 'English', widget: string, required: false }
+    - { name: zh, label: '中文', widget: string, required: false }
+
+en_zh_long: &en_zh_long
+  widget: object
+  collapsed: false
+  fields:
+    - { name: en, label: 'English', widget: text, required: false }
+    - { name: zh, label: '中文', widget: text, required: false }
+
+en_zh_markdown: &en_zh_markdown
+  widget: object
+  collapsed: false
+  fields:
+    - { name: en, label: 'English', widget: markdown, required: false }
+    - { name: zh, label: '中文', widget: markdown, required: false }
+
+verification_field: &verification
+  name: status
+  label: 'Confirmed?'
+  widget: select
+  default: verified
+  options:
+    - { label: 'Confirmed — safe to publish', value: verified }
+    - { label: 'Published, but needs checking', value: needs-review }
+    - { label: 'Not confirmed — hide from the website', value: unverified }
+  hint: >-
+    "Not confirmed" hides this from the public site entirely rather than
+    publishing a guess. It will appear on the /review checklist instead.
+
+collections:
+  # ===========================================================================
+  # 1. THE THINGS THAT CHANGE MOST OFTEN — put first on purpose
+  # ===========================================================================
+
+  - name: announcements
+    label: 'Notices'
+    label_singular: 'Notice'
+    folder: src/content/announcements
+    create: true
+    delete: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    summary: '{{title.en}} — until {{showUntil}}'
+    description: >-
+      A one-line notice shown at the very top of every page. It REMOVES ITSELF
+      on the date you set, so you never have to remember to take it down.
+    filter: { field: draft, value: false }
+    fields:
+      - { name: title, label: 'Notice', <<: *en_zh_text }
+      - { name: body, label: 'A little more (optional)', <<: *en_zh_long, required: false }
+      - name: showUntil
+        label: 'Hide it after this date'
+        widget: datetime
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        picker_utc: false
+        hint: 'Required. The notice disappears by itself on this date.'
+      - { name: href, label: 'Link to (optional)', widget: string, required: false, hint: 'e.g. /church-life' }
+      - { name: linkLabel, label: 'Link text', <<: *en_zh_text, required: false }
+      - name: tone
+        label: 'Tone'
+        widget: select
+        default: info
+        options:
+          - { label: 'Information', value: info }
+          - { label: 'Invitation', value: invite }
+          - { label: 'Important', value: urgent }
+      - { name: draft, label: 'Save as draft (not published)', widget: boolean, default: false }
+
+  - name: events
+    label: 'Events'
+    label_singular: 'Event'
+    folder: src/content/events
+    create: true
+    delete: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    summary: '{{start}} — {{title.en}}'
+    sortable_fields: ['start', 'title.en']
+    description: >-
+      You never need to delete a past event. Once its date has passed it stops
+      showing under "What's coming up" and moves into the archive by itself.
+    fields:
+      - { name: title, label: 'Event name', <<: *en_zh_text }
+      - { name: summary, label: 'One or two sentences', <<: *en_zh_long }
+      - name: start
+        label: 'Starts'
+        widget: datetime
+        picker_utc: false
+      - name: end
+        label: 'Ends (optional)'
+        widget: datetime
+        required: false
+        picker_utc: false
+      - { name: allDay, label: 'All day (hide the time)', widget: boolean, default: false }
+      - { name: location, label: 'Where', <<: *en_zh_text, required: false }
+      - name: image
+        label: 'Photograph (optional)'
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { name: src, label: 'Image', widget: image, required: false }
+          - name: alt
+            label: 'Describe the photo for blind visitors'
+            <<: *en_zh_text
+            required: false
+          - name: focus
+            label: 'Focal point'
+            widget: object
+            required: false
+            collapsed: true
+            hint: 'Where the important part of the photo is, as a percentage. 50/50 is the centre.'
+            fields:
+              - { name: x, label: 'Across (%)', widget: number, default: 50, value_type: int, min: 0, max: 100 }
+              - { name: y, label: 'Down (%)', widget: number, default: 50, value_type: int, min: 0, max: 100 }
+      - { name: featured, label: 'Pin to the top / show on the homepage', widget: boolean, default: false }
+      - name: audience
+        label: 'Especially for'
+        widget: select
+        multiple: true
+        default: ['everyone']
+        options:
+          - { label: 'Everyone', value: everyone }
+          - { label: 'Students', value: students }
+          - { label: 'Families', value: families }
+          - { label: 'Children', value: children }
+          - { label: 'Professionals / young adults', value: professionals }
+          - { label: 'Seniors', value: seniors }
+          - { label: 'English speakers', value: english }
+          - { label: 'People visiting for the first time', value: newcomers }
+      - { name: registerUrl, label: 'Sign-up link (optional)', widget: string, required: false }
+      - { name: registerLabel, label: 'Sign-up button text', <<: *en_zh_text, required: false }
+      - { name: archive, label: 'Keep in the archive once it has passed', widget: boolean, default: true }
+      - { name: draft, label: 'Save as draft (not published)', widget: boolean, default: false }
+
+  - name: moments
+    label: 'Church life photos'
+    label_singular: 'Photo'
+    folder: src/content/moments
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{caption.en}}'
+    description: >-
+      Photographs of ordinary church life, with captions. These do not expire —
+      they are the part of the site that stays true.
+    fields:
+      - name: caption
+        label: 'Caption'
+        <<: *en_zh_text
+        hint: 'Write it the way you would say it out loud. The best captions on this site are the funny ones.'
+      - name: image
+        label: 'Photograph'
+        widget: object
+        collapsed: false
+        fields:
+          - { name: src, label: 'Image', widget: image }
+          - name: alt
+            label: 'Describe the photo for blind visitors'
+            <<: *en_zh_text
+            hint: 'Say what is in the picture, plainly. "Twelve people around a table making mooncakes."'
+          - name: focus
+            label: 'Focal point'
+            widget: object
+            collapsed: true
+            fields:
+              - { name: x, label: 'Across (%)', widget: number, default: 50, value_type: int, min: 0, max: 100 }
+              - { name: y, label: 'Down (%)', widget: number, default: 50, value_type: int, min: 0, max: 100 }
+      - name: tags
+        label: 'What is it about'
+        widget: select
+        multiple: true
+        required: false
+        options:
+          [worship, meals, students, children, seniors, festival, retreat, sports, service, families, professionals, prayer]
+      - name: weight
+        label: 'Size in the mosaic'
+        widget: select
+        default: normal
+        options:
+          - { label: 'Normal', value: normal }
+          - { label: 'Wide', value: wide }
+          - { label: 'Tall', value: tall }
+      - { name: order, label: 'Order (lower shows first)', widget: number, default: 50, value_type: int }
+      - { name: draft, label: 'Save as draft (not published)', widget: boolean, default: false }
+
+  - name: sermons
+    label: 'Sermons'
+    label_singular: 'Sermon'
+    folder: src/content/sermons
+    create: true
+    delete: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    summary: '{{date}} — {{title.en}}'
+    sortable_fields: ['date']
+    fields:
+      - { name: title, label: 'Title', <<: *en_zh_text }
+      - { name: date, label: 'Date preached', widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, picker_utc: false }
+      - { name: speaker, label: 'Speaker', <<: *en_zh_text, required: false }
+      - { name: passage, label: 'Bible passage', <<: *en_zh_text, required: false }
+      - { name: series, label: 'Series', <<: *en_zh_text, required: false }
+      - name: youtubeId
+        label: 'YouTube video ID'
+        widget: string
+        required: false
+        hint: 'Just the ID — the part after "watch?v=". For youtube.com/watch?v=abc123 enter abc123'
+      - name: language
+        label: 'Language preached in'
+        widget: select
+        default: mandarin
+        options:
+          - { label: 'Mandarin 国语', value: mandarin }
+          - { label: 'English', value: english }
+          - { label: 'Both', value: bilingual }
+      - { name: summary, label: 'Summary (optional)', <<: *en_zh_long, required: false }
+      - { name: draft, label: 'Save as draft (not published)', widget: boolean, default: false }
+
+  # ===========================================================================
+  # 2. THINGS THAT CHANGE OCCASIONALLY
+  # ===========================================================================
+
+  - name: fellowships
+    label: 'Fellowships'
+    label_singular: 'Fellowship'
+    folder: src/content/fellowships
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{name.en}} / {{name.zh}}'
+    description: >-
+      The groups where people actually belong. If you know when a group meets,
+      please fill it in — a group with no meeting time is one nobody can join.
+    fields:
+      - { name: name, label: 'Name', <<: *en_zh_text }
+      - { name: summary, label: 'One or two sentences', <<: *en_zh_long }
+      - { name: audience, label: 'Who it is for', <<: *en_zh_text }
+      - { name: meets, label: 'When and where it meets', <<: *en_zh_text, required: false }
+      - { <<: *verification, name: meetsStatus, label: 'Is the meeting time confirmed?' }
+      - { name: language, label: 'Language used', <<: *en_zh_text, required: false }
+      - { name: contactName, label: 'Who to ask', <<: *en_zh_text, required: false }
+      - { name: contactEmail, label: 'Their email (optional)', widget: string, required: false }
+      - { <<: *verification, name: contactStatus, label: 'Is this contact still current?' }
+      - name: accent
+        label: 'Colour'
+        widget: select
+        default: lamp
+        options:
+          - { label: 'Amber', value: lamp }
+          - { label: 'Terracotta', value: clay }
+          - { label: 'Green', value: pine }
+      - { name: featured, label: 'Show on the homepage', widget: boolean, default: true }
+      - { name: order, label: 'Order (lower shows first)', widget: number, default: 50, value_type: int }
+      - { name: draft, label: 'Save as draft (not published)', widget: boolean, default: false }
+
+  - name: ministries
+    label: 'Serving'
+    label_singular: 'Ministry'
+    folder: src/content/ministries
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{name.en}} ({{state}})'
+    description: >-
+      Work the church gives itself to. Set "Currently running" so the site can
+      be honest about what is happening now versus what happened in the past.
+    fields:
+      - { name: name, label: 'Name', <<: *en_zh_text }
+      - { name: summary, label: 'One or two sentences', <<: *en_zh_long }
+      - name: state
+        label: 'Is this happening now?'
+        widget: select
+        default: active
+        options:
+          - { label: 'Yes — currently running', value: active }
+          - { label: 'Seasonal / occasional', value: seasonal }
+          - { label: 'No — a past record', value: past }
+      - name: lastConfirmed
+        label: 'Last known to be happening'
+        widget: datetime
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        required: false
+        picker_utc: false
+      - { name: contactName, label: 'Who to ask', <<: *en_zh_text, required: false }
+      - { name: order, label: 'Order', widget: number, default: 50, value_type: int }
+      - { name: draft, label: 'Save as draft', widget: boolean, default: false }
+
+  - name: faq
+    label: 'Visitor questions'
+    label_singular: 'Question'
+    folder: src/content/faq
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{question.en}} [{{status}}]'
+    description: >-
+      Questions on the Visit page. Several are written but have no answer yet —
+      those are hidden from the public site until someone fills them in.
+      Answering "Where do I park?" would genuinely help a first-time visitor.
+    fields:
+      - { name: question, label: 'Question', <<: *en_zh_text }
+      - { name: answer, label: 'Answer', <<: *en_zh_markdown }
+      - name: topic
+        label: 'Group it under'
+        widget: select
+        default: practical
+        options:
+          - { label: 'Getting there', value: arriving }
+          - { label: 'What Sunday is like', value: sunday }
+          - { label: 'Children', value: children }
+          - { label: 'Language', value: language }
+          - { label: 'Practical', value: practical }
+          - { label: 'Belief', value: belief }
+      - { <<: *verification }
+      - { name: order, label: 'Order', widget: number, default: 50, value_type: int }
+
+  - name: people
+    label: 'Leaders'
+    label_singular: 'Person'
+    folder: src/content/people
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{name.en}} — {{role.en}}'
+    description: >-
+      Nobody is listed yet, so the Leadership section does not appear on the
+      site at all. Add people here and it appears. Please only add someone who
+      has agreed to have their name published.
+    fields:
+      - { name: name, label: 'Name', <<: *en_zh_text }
+      - { name: role, label: 'Role', <<: *en_zh_text }
+      - { name: bio, label: 'A short introduction (optional)', <<: *en_zh_markdown, required: false }
+      - { name: email, label: 'Email (optional)', widget: string, required: false }
+      - name: group
+        label: 'Group'
+        widget: select
+        default: pastoral
+        options: [pastoral, staff, deacons, volunteers]
+      - { name: order, label: 'Order', widget: number, default: 50, value_type: int }
+      - name: draft
+        label: 'Save as draft (not published)'
+        widget: boolean
+        default: true
+        hint: 'Deliberately on by default — a real person’s name is never published by accident.'
+
+  - name: pages
+    label: 'Page text'
+    label_singular: 'Page'
+    folder: src/content/pages
+    create: false
+    delete: false
+    slug: '{{slug}}'
+    summary: '{{title.en}} [{{status}}]'
+    description: >-
+      Longer passages of writing used on the site. "What we believe" is empty
+      and hidden — it needs text the church has actually approved.
+    fields:
+      - { name: title, label: 'Heading', <<: *en_zh_text }
+      - { name: lede, label: 'Opening line', <<: *en_zh_long, required: false }
+      - { name: body, label: 'Text', <<: *en_zh_markdown }
+      - { <<: *verification }
+
+  # ===========================================================================
+  # 3. THE THINGS THAT ALMOST NEVER CHANGE — but must be easy when they do
+  # ===========================================================================
+
+  - name: settings
+    label: 'Church details'
+    files:
+      - name: church
+        label: 'Service times, address and giving'
+        file: src/content/settings/church.yaml
+        description: >-
+          Change the Sunday time here and it updates everywhere on the site at
+          once — the homepage, the Visit page, the footer, and the information
+          Google shows in search results.
+        fields:
+          - name: entries
+            label: 'Church'
+            widget: list
+            allow_add: false
+            max: 1
+            fields:
+              - { name: id, widget: hidden, default: church }
+              - { name: name, label: 'Church name', <<: *en_zh_text }
+              - { name: nameVariant, label: 'Alternative spelling', <<: *en_zh_text, required: false }
+              - { name: established, label: 'Founded', widget: string }
+              - { name: tagline, label: 'Tagline', <<: *en_zh_text }
+
+              - name: address
+                label: 'Address'
+                widget: object
+                fields:
+                  - { name: line1, label: 'Street', widget: string }
+                  - { name: city, label: 'City', widget: string }
+                  - { name: state, label: 'State', widget: string }
+                  - { name: zip, label: 'ZIP', widget: string }
+                  - { name: note, label: 'Note about the building', <<: *en_zh_long, required: false }
+                  - { name: mapsUrl, label: 'Google Maps link', widget: string, required: false }
+                  - { name: lat, label: 'Latitude', widget: number, required: false, value_type: float }
+                  - { name: lng, label: 'Longitude', widget: number, required: false, value_type: float }
+
+              - name: gatherings
+                label: 'Regular gatherings'
+                label_singular: 'Gathering'
+                widget: list
+                summary: '{{fields.name.en}} — {{fields.day}} {{fields.startTime}}'
+                fields:
+                  - { name: id, label: 'Short id', widget: string }
+                  - { name: name, label: 'Name', <<: *en_zh_text }
+                  - name: day
+                    label: 'Day'
+                    widget: select
+                    options: [sunday, monday, tuesday, wednesday, thursday, friday, saturday]
+                  - { name: startTime, label: 'Starts (24-hour, e.g. 11:00)', widget: string, pattern: ['^\d{2}:\d{2}$', 'Use HH:MM, e.g. 11:00 or 18:00'] }
+                  - { name: endTime, label: 'Ends (24-hour)', widget: string, required: false, pattern: ['^\d{2}:\d{2}$', 'Use HH:MM'] }
+                  - { name: location, label: 'Room', <<: *en_zh_text }
+                  - { name: summary, label: 'What happens', <<: *en_zh_long, required: false }
+                  - name: schedule
+                    label: 'Running order'
+                    widget: list
+                    required: false
+                    summary: '{{fields.start}} {{fields.label.en}}'
+                    fields:
+                      - { name: start, label: 'From', widget: string }
+                      - { name: end, label: 'To', widget: string, required: false }
+                      - { name: label, label: 'What', <<: *en_zh_text }
+                  - { name: languages, label: 'Language note', <<: *en_zh_long, required: false }
+                  - { <<: *verification }
+                  - { name: featured, label: 'Show prominently', widget: boolean, default: true }
+
+              - name: contact
+                label: 'Contact'
+                widget: object
+                fields:
+                  - { name: email, label: 'Email', widget: string, required: false }
+                  - { <<: *verification, name: emailStatus, label: 'Email confirmed?' }
+                  - { name: phone, label: 'Phone', widget: string, required: false }
+                  - { <<: *verification, name: phoneStatus, label: 'Phone confirmed?', default: unverified }
+
+              - name: social
+                label: 'Social channels'
+                widget: list
+                required: false
+                summary: '{{fields.platform}} — {{fields.url}}'
+                fields:
+                  - { name: platform, label: 'Platform', widget: string }
+                  - { name: label, label: 'Label', <<: *en_zh_text, required: false }
+                  - { name: url, label: 'Link', widget: string }
+                  - { <<: *verification }
+
+              - name: giving
+                label: 'Ways to give'
+                widget: list
+                required: false
+                summary: '{{fields.method.en}}'
+                fields:
+                  - { name: id, label: 'Short id', widget: string }
+                  - { name: method, label: 'Method', <<: *en_zh_text }
+                  - { name: detail, label: 'Explanation', <<: *en_zh_long }
+                  - name: value
+                    label: 'Where the money goes'
+                    widget: string
+                    required: false
+                    hint: 'e.g. the Zelle email address. This is shown to the public with a clear label — never leave it to be guessed.'
+                  - { name: instructions, label: 'Extra instructions', <<: *en_zh_long, required: false }
+                  - { <<: *verification }
+
+              - name: partners
+                label: 'Partner churches'
+                widget: list
+                required: false
+                summary: '{{fields.name.en}}'
+                fields:
+                  - { name: name, label: 'Name', <<: *en_zh_text }
+                  - { name: url, label: 'Website', widget: string, required: false }
+                  - { name: relationship, label: 'The relationship', <<: *en_zh_long }
+                  - { name: since, label: 'Since', widget: string, required: false }
+
+  - name: timeline
+    label: 'Church history'
+    files:
+      - name: timeline
+        label: 'Our story'
+        file: src/content/timeline/timeline.yaml
+        description: 'The timeline on the About page.'
+        fields:
+          - name: entries
+            label: 'Moments in our history'
+            widget: list
+            summary: '{{fields.year}} — {{fields.title.en}}'
+            fields:
+              - { name: id, label: 'Short id', widget: string }
+              - { name: year, label: 'Year', widget: string }
+              - { name: title, label: 'Heading', <<: *en_zh_text }
+              - { name: body, label: 'What happened', <<: *en_zh_markdown }
+              - { <<: *verification }

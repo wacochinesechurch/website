@@ -1,0 +1,258 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import FellowshipGrid from '@components/FellowshipGrid.astro';
+import InviteBlock from '@components/InviteBlock.astro';
+import { LOCALES, localePath, pick, formatDate, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getMinistries } from '@lib/church';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const t = useTranslations(locale);
+
+/*
+  DESIGN DECISION — one page, two bands.
+
+  The old site split 团契 (Fellowship) and 服侍 (Serving) into separate
+  top-level pages. But they are two halves of one question a visitor is
+  asking: "where would I fit?" A fellowship is who you belong with; a
+  ministry is what you give yourself to. Splitting them across the navigation
+  made both harder to find and neither easier to understand.
+*/
+const past = await getMinistries('past');
+const active = await getMinistries('active');
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('nav.community')}
+  description={locale === 'en'
+    ? 'Fellowships for students, professionals, children, seniors and English speakers at Waco Chinese Church — and the work this church gives itself to.'
+    : '韦科华人教会的大学生、职青、儿童、长者与英文团契，以及这间教会所摆上的服事。'}
+>
+  <PageHeader
+    locale={locale}
+    eyebrow={t('nav.community')}
+    title={t('community.title')}
+    lede={t('community.fellowshipsLede')}
+  />
+
+  {/* ---- BAND 1: who you belong with ---- */}
+  <section class="section" aria-labelledby="fellowships-title">
+    <div class="shell">
+      <SectionHeader
+        locale={locale}
+        eyebrow={locale === 'en' ? 'Belonging' : '归属'}
+        title={t('community.fellowships')}
+        lede={locale === 'en'
+          ? 'Five groups, gathered around the stage of life you are actually in.'
+          : '五个团契，按你此刻所处的人生阶段而聚。'}
+        id="fellowships-title"
+      />
+      <FellowshipGrid locale={locale} />
+    </div>
+  </section>
+
+  {/* ---- BAND 2: what this church gives itself to ----
+       Every item the church published about its serving work is dated 2023
+       and has not been updated since. Presenting it as current activity
+       would repeat the exact mistake that made the old site untrustworthy.
+       So it is presented as a record, with the year attached. ---- */}
+  {
+    (active.length > 0 || past.length > 0) && (
+      <section class="section" data-surface="warm" aria-labelledby="serving-title">
+        <div class="shell">
+          <SectionHeader
+            locale={locale}
+            eyebrow={locale === 'en' ? 'Serving' : '服事'}
+            title={t('community.serving')}
+            lede={t('community.servingLede')}
+            id="serving-title"
+          />
+
+          {active.length > 0 && (
+            <ul class="ministries" role="list" data-reveal-group>
+              {active.map((m) => (
+                <li class="ministry">
+                  <h3 class="ministry__name">{pick(m.data.name, locale)}</h3>
+                  <p class="ministry__summary">{pick(m.data.summary, locale)}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {past.length > 0 && (
+            <div class="record">
+              <h3 class="record__title">
+                {locale === 'en'
+                  ? 'Where this church has put its hands'
+                  : '这间教会曾经摆上的'}
+              </h3>
+              <p class="record__note">
+                {locale === 'en'
+                  ? 'Recorded by the church itself. We have not confirmed which of these are still running — ask us and we will tell you what is happening now.'
+                  : '以下由教会自己记录。我们尚未确认其中哪些仍在进行 —— 欢迎来信询问目前的情况。'}
+              </p>
+              <ul class="ministries ministries--record" role="list" data-reveal-group>
+                {past.map((m) => (
+                  <li class="ministry ministry--past">
+                    <h4 class="ministry__name">{pick(m.data.name, locale)}</h4>
+                    <p class="ministry__summary">{pick(m.data.summary, locale)}</p>
+                    {m.data.lastConfirmed && (
+                      <p class="ministry__when ui">
+                        {locale === 'en' ? 'Last recorded ' : '最后记录于 '}
+                        <time datetime={m.data.lastConfirmed.toISOString().slice(0, 10)}>
+                          {formatDate(m.data.lastConfirmed, locale, {
+                            month: 'long',
+                            year: 'numeric',
+                            day: undefined,
+                          })}
+                        </time>
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  {/* ---- Students get their own door ---- */}
+  <section class="section section--tight" aria-labelledby="students-cta">
+    <div class="shell">
+      <div class="students-cta" data-reveal>
+        <div class="students-cta__copy">
+          <h2 class="students-cta__title" id="students-cta">
+            {locale === 'en'
+              ? 'Just arrived at Baylor?'
+              : '刚到 Baylor？'}
+          </h2>
+          <p class="students-cta__body">
+            {locale === 'en'
+              ? 'This church began as a Baylor student fellowship in 1993 and has been catching new arrivals ever since. There is a page written specifically for you.'
+              : '这间教会 1993 年正是从 Baylor 的学生团契开始的，此后一直在接住每一批新来的人。有一页是专门为你写的。'}
+          </p>
+        </div>
+        <a class="btn btn--solid btn--lg" href={localePath(locale, '/students')}>
+          {t('nav.students')}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <InviteBlock locale={locale} />
+</BaseLayout>
+
+<style>
+  .ministries {
+    display: grid;
+    gap: var(--s-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  }
+
+  .ministry {
+    display: grid;
+    gap: var(--s-2);
+    align-content: start;
+    padding: var(--s-6);
+    background: var(--surface-raised);
+    border: var(--border-hair) solid var(--rule);
+    border-radius: var(--r-lg);
+  }
+
+  .ministry--past {
+    background: transparent;
+    border: 0;
+    border-block-start: 2px solid var(--rule-strong);
+    border-radius: 0;
+    padding: var(--s-4) 0 0;
+  }
+
+  .ministry__name {
+    margin: 0;
+    font-size: var(--fs-md);
+  }
+
+  .ministry__summary {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+  }
+
+  .ministry__when {
+    margin: 0;
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+  }
+
+  .record {
+    margin-block-start: var(--s-12);
+  }
+
+  .record__title {
+    margin: 0 0 var(--s-2);
+    font-size: var(--fs-lg);
+  }
+
+  .record__note {
+    margin: 0 0 var(--s-8);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+    max-width: var(--measure);
+  }
+
+  /* -------------------------------------------------------- students cta */
+  .students-cta {
+    display: grid;
+    gap: var(--s-6);
+    align-items: center;
+    padding: var(--s-8);
+    background: var(--c-ink-900);
+    color: var(--c-ink-100);
+    border-radius: var(--r-lg);
+  }
+
+  .students-cta__copy {
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .students-cta__title {
+    margin: 0;
+    font-size: var(--fs-xl);
+    color: var(--c-paper-raised);
+  }
+
+  .students-cta__body {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--c-ink-200);
+    max-width: 40ch;
+  }
+
+  .students-cta .btn--solid {
+    justify-self: start;
+  }
+
+  @media (min-width: 52rem) {
+    .students-cta {
+      grid-template-columns: 1fr auto;
+      gap: var(--s-10);
+      padding: var(--s-10);
+    }
+  }
+</style>

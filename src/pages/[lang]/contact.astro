@@ -1,0 +1,449 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHeader from '@components/PageHeader.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import InviteBlock from '@components/InviteBlock.astro';
+import { LOCALES, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getChurch, getFellowships } from '@lib/church';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const t = useTranslations(locale);
+const church = await getChurch();
+
+/* The three named fellowship contacts the church publishes. None has an
+   email address attached, so the page says who they are and routes the
+   message through the church address rather than inventing a mailbox. */
+const contacts = (await getFellowships()).filter(
+  (f) => f.data.contactStatus !== 'unverified' && pick(f.data.contactName, locale),
+);
+
+const social = church.social.filter((s) => s.status !== 'unverified');
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('contact.title')}
+  description={locale === 'en'
+    ? 'Get in touch with Waco Chinese Church at 1801 Gurley Ave, Waco, Texas — email us, get directions, or find out who to ask about each fellowship. Write in English or Chinese.'
+    : '与德州韦科华人教会联系 —— 教会位于 1801 Gurley Ave。你可以写信给我们、查看路线，或找到各团契的联系人。中文或英文留言都可以。'}
+>
+  <PageHeader
+    locale={locale}
+    eyebrow={t('contact.title')}
+    title={locale === 'en' ? 'Talk to a person' : '找个人聊聊'}
+    lede={t('contact.lede')}
+  />
+
+  <section class="section" aria-labelledby="form-title">
+    <div class="shell">
+      <div class="contact">
+        {/* ------------------------------------------------------------- */}
+        {/* FORM — Netlify Forms. Free, no server, no database, and the     */}
+        {/* church receives submissions by email. `netlify` + a honeypot    */}
+        {/* is the whole integration. Degrades to a plain mailto link if    */}
+        {/* the site is ever hosted somewhere without form handling.        */}
+        {/* ------------------------------------------------------------- */}
+        <div class="contact__form-wrap" data-reveal>
+          <h2 class="contact__title" id="form-title">
+            {locale === 'en' ? 'Send a message' : '给我们留言'}
+          </h2>
+
+          {/* The form posts to ?sent=1. On a static site nothing renders that
+              by itself, so the confirmation is pre-rendered hidden and
+              revealed from the query string. role="status" announces it. */}
+          <div class="form-sent" id="form-sent" role="status" hidden>
+            <p class="form-sent__title">{t('contact.sentTitle')}</p>
+            <p class="form-sent__body">{t('contact.sentBody')}</p>
+          </div>
+
+          <form
+            class="form"
+            name="contact"
+            method="POST"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+            action={`/${locale}/contact?sent=1`}
+          >
+            <input type="hidden" name="form-name" value="contact" />
+            <input type="hidden" name="locale" value={locale} />
+            <p class="visually-hidden">
+              <label>
+                {locale === 'en' ? 'Leave this empty' : '请留空'}
+                <input name="bot-field" tabindex="-1" autocomplete="off" />
+              </label>
+            </p>
+
+            <div class="field">
+              <label class="field__label" for="topic">{t('contact.topic')}</label>
+              <select class="field__input" id="topic" name="topic">
+                <option value="visit">{t('contact.topicVisit')}</option>
+                <option value="ride">{t('contact.topicRide')}</option>
+                <option value="prayer">{t('contact.topicPrayer')}</option>
+                <option value="other">{t('contact.topicOther')}</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="name">
+                {t('contact.name')}
+                <span class="field__req">({t('contact.required')})</span>
+              </label>
+              <input
+                class="field__input"
+                id="name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="email">
+                {t('contact.email')}
+                <span class="field__req">({t('contact.required')})</span>
+              </label>
+              <input
+                class="field__input"
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="message">
+                {t('contact.message')}
+                <span class="field__req">({t('contact.required')})</span>
+              </label>
+              <textarea
+                class="field__input"
+                id="message"
+                name="message"
+                rows="6"
+                required
+                aria-describedby="message-hint"></textarea>
+              <p class="field__hint" id="message-hint">
+                {locale === 'en'
+                  ? 'Write in English or Chinese — whichever is easier.'
+                  : '中文或英文皆可，用你顺手的那一种就好。'}
+              </p>
+            </div>
+
+            <button class="btn btn--solid btn--lg" type="submit">
+              {t('contact.send')}
+            </button>
+          </form>
+        </div>
+
+        {/* ---- Direct routes ---- */}
+        <aside class="contact__side" data-reveal>
+          {
+            church.contact.email && (
+              <div class="side-block">
+                <h3 class="side-block__title ui">{t('cta.email')}</h3>
+                <a class="side-block__email" href={`mailto:${church.contact.email}`}>
+                  {church.contact.email}
+                </a>
+              </div>
+            )
+          }
+
+          <div class="side-block">
+            <h3 class="side-block__title ui">{t('facts.address')}</h3>
+            <address class="side-block__address">
+              {church.address.line1}<br />
+              {church.address.city}, {church.address.state} {church.address.zip}
+            </address>
+            <a
+              class="link-arrow"
+              href={church.address.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer">{t('facts.directions')}</a
+            >
+          </div>
+
+          {
+            social.length > 0 && (
+              <div class="side-block">
+                <h3 class="side-block__title ui">{t('contact.follow')}</h3>
+                <ul class="side-block__links" role="list">
+                  {social.map((s) => (
+                    <li>
+                      <a href={s.url} target="_blank" rel="noopener noreferrer">
+                        {pick(s.label, locale) || s.platform}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+
+          {/*
+            No phone number appears anywhere in the church's public material,
+            so none is offered. An invented or guessed number would be worse
+            than no number at all.
+          */}
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      try {
+        if (new URLSearchParams(location.search).get('sent') === '1') {
+          var el = document.getElementById('form-sent');
+          if (el) {
+            el.hidden = false;
+            el.scrollIntoView({ block: 'center' });
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  {/* ---- Who to ask, by group ---- */}
+  {
+    contacts.length > 0 && (
+      <section class="section" data-surface="warm" aria-labelledby="who-title">
+        <div class="shell">
+          <SectionHeader
+            locale={locale}
+            eyebrow={locale === 'en' ? 'By group' : '各团契'}
+            title={locale === 'en' ? 'Who to ask' : '可以找谁'}
+            lede={locale === 'en'
+              ? 'These are the people the church lists for each fellowship. Email the church address above and say who you are trying to reach.'
+              : '以下是教会为各团契列出的联系人。请写信到上方的教会邮箱，并说明你想找哪一位。'}
+            id="who-title"
+          />
+          <ul class="whos" role="list" data-reveal-group>
+            {contacts.map((f) => (
+              <li class="who">
+                <p class="who__group ui">{pick(f.data.name, locale)}</p>
+                <p class="who__name">{pick(f.data.contactName, locale)}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <InviteBlock locale={locale} />
+</BaseLayout>
+
+<style>
+  .contact {
+    display: grid;
+    gap: var(--s-12);
+  }
+
+  .contact__title {
+    margin: 0 0 var(--s-6);
+    font-size: var(--fs-xl);
+  }
+
+  /* ---------------------------------------------------------------- form */
+  .form {
+    display: grid;
+    gap: var(--s-5);
+    max-width: 34rem;
+  }
+
+  .field {
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .field__label {
+    font-family: var(--font-ui);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  .field__input {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    font-family: var(--font-ui);
+    font-size: var(--fs-base);
+    color: var(--text-strong);
+    background: var(--surface-raised);
+    border: var(--border-hair) solid var(--rule-strong);
+    border-radius: var(--r-md);
+    transition: border-color var(--dur-fast) var(--ease-out-soft);
+  }
+
+  .field__input:hover {
+    border-color: var(--accent);
+  }
+
+  .field__input:focus-visible {
+    border-color: var(--accent);
+    outline: 2.5px solid var(--focus-ring);
+    outline-offset: 1px;
+  }
+
+  textarea.field__input {
+    resize: vertical;
+    min-height: 8rem;
+    line-height: var(--lh-relaxed);
+  }
+
+  .field__hint {
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+
+  .field__req {
+    font-weight: 500;
+    color: var(--text-muted);
+    font-size: 0.9em;
+  }
+
+  .form-sent {
+    display: grid;
+    gap: var(--s-2);
+    margin-block-end: var(--s-6);
+    padding: var(--s-6);
+    background: var(--accent-faint);
+    border-inline-start: 3px solid var(--accent-solid);
+    border-radius: var(--r-md);
+    max-width: 34rem;
+  }
+
+  .form-sent__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  .form-sent__body {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+  }
+
+  .form .btn {
+    justify-self: start;
+  }
+
+  /* ---------------------------------------------------------------- side */
+  .contact__side {
+    display: grid;
+    gap: var(--s-8);
+    align-content: start;
+  }
+
+  .side-block {
+    display: grid;
+    gap: var(--s-2);
+    justify-items: start;
+    padding-block-start: var(--s-4);
+    border-block-start: 2px solid var(--accent-solid);
+  }
+
+  .side-block__title {
+    margin: 0;
+    font-size: var(--fs-3xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .side-block__title:lang(zh) {
+    text-transform: none;
+    letter-spacing: 0.15em;
+    font-size: var(--fs-2xs);
+  }
+
+  .side-block__email {
+    font-family: var(--font-ui);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--accent);
+    word-break: break-all;
+  }
+
+  .side-block__address {
+    font-style: normal;
+    font-family: var(--font-ui);
+    font-size: var(--fs-md);
+    line-height: 1.5;
+    color: var(--text-strong);
+  }
+
+  .side-block__links {
+    display: grid;
+    gap: var(--s-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-ui);
+    font-size: var(--fs-sm);
+  }
+
+  .side-block__links a {
+    color: var(--accent);
+  }
+
+  /* ---------------------------------------------------------------- whos */
+  .whos {
+    display: grid;
+    gap: var(--s-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  }
+
+  .who {
+    display: grid;
+    gap: 0.2rem;
+    padding: var(--s-5);
+    background: var(--surface-raised);
+    border-radius: var(--r-md);
+  }
+
+  .who__group {
+    margin: 0;
+    font-size: var(--fs-2xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .who__group:lang(zh) {
+    text-transform: none;
+    letter-spacing: 0.12em;
+  }
+
+  .who__name {
+    margin: 0;
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  @media (min-width: 56rem) {
+    .contact {
+      grid-template-columns: 1.4fr 0.6fr;
+      gap: var(--s-16);
+    }
+  }
+</style>

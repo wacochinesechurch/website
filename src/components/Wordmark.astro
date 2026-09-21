@@ -1,0 +1,145 @@
+---
+import type { Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+
+interface Props {
+  locale: Locale;
+  size?: 'sm' | 'md' | 'lg';
+  /** Stack the two languages rather than showing the secondary smaller. */
+  stacked?: boolean;
+}
+
+const { locale, size = 'sm', stacked = false } = Astro.props;
+const t = useTranslations(locale);
+
+const primary = t('site.name');
+const secondary = t('site.nameOther');
+const secondaryLang = locale === 'en' ? 'zh-CN' : 'en-US';
+---
+
+{/*
+  THE MARK — a lit doorway.
+
+  Not a cross, not a dove, not a fish. The church's own founding verse is
+  about being called "out of darkness into his wonderful light", and its own
+  history describes itself as a home for people far from home. So the mark is
+  the thing you see from outside on a cold night: an arched doorway with the
+  light on inside.
+
+  It is architectural (a real church has arched windows), domestic (it is a
+  doorway you can walk through), and it holds the brand's one colour idea —
+  warm light inside a dark frame — at 20px as well as at 200px.
+*/}
+<span class={`wordmark wordmark--${size}`} data-stacked={stacked ? '' : null}>
+  <svg
+    class="wordmark__mark"
+    viewBox="0 0 28 34"
+    fill="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path
+      d="M2.25 32.5V14a11.75 11.75 0 0 1 23.5 0v18.5"
+      stroke="currentColor"
+      stroke-width="2.1"
+      stroke-linecap="round"
+    />
+    <path
+      d="M9.4 32.5V15.6a4.6 4.6 0 0 1 9.2 0v16.9Z"
+      class="wordmark__light"
+    />
+    <path
+      d="M0.75 32.5h26.5"
+      stroke="currentColor"
+      stroke-width="2.1"
+      stroke-linecap="round"
+    />
+  </svg>
+
+  <span class="wordmark__text">
+    <span class="wordmark__primary">{primary}</span>
+    <span class="wordmark__secondary" lang={secondaryLang}>{secondary}</span>
+  </span>
+</span>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    line-height: 1;
+  }
+
+  .wordmark__mark {
+    flex: 0 0 auto;
+    width: auto;
+    height: 1.9em;
+    overflow: visible;
+  }
+
+  .wordmark__light {
+    fill: var(--accent-solid, var(--c-lamp-500));
+    transition: fill var(--dur-base) var(--ease-out-soft);
+  }
+
+  /* The light warms when you hover the brand — a tiny, one-off delight that
+     restates the whole idea in half a second. */
+  a:hover .wordmark__light,
+  a:focus-visible .wordmark__light {
+    fill: var(--c-lamp-300);
+  }
+
+  .wordmark__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.28em;
+    min-width: 0;
+  }
+
+  .wordmark__primary {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: var(--tracking-snug);
+    white-space: nowrap;
+  }
+
+  .wordmark__secondary {
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 0.72em;
+    letter-spacing: 0.07em;
+    opacity: 0.64;
+    white-space: nowrap;
+  }
+
+  /* A Chinese secondary line needs looser tracking than a Latin one to
+     avoid looking cramped beside the larger primary. */
+  .wordmark__secondary:lang(zh) {
+    letter-spacing: 0.14em;
+    font-size: 0.68em;
+  }
+
+  /* ------------------------------------------------------------- sizes -- */
+  .wordmark--sm {
+    font-size: clamp(0.95rem, 0.88rem + 0.3vw, 1.1rem);
+  }
+
+  .wordmark--md {
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+  }
+
+  .wordmark--lg {
+    font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+    gap: 0.5em;
+  }
+
+  .wordmark--lg .wordmark__mark {
+    height: 2.4em;
+  }
+
+  @media (max-width: 26rem) {
+    .wordmark__secondary {
+      display: none;
+    }
+  }
+</style>

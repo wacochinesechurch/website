@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /en/review
+Disallow: /zh/review
+
+Sitemap: https://www.wacochinesechurch.org/sitemap-index.xml

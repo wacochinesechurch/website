@@ -1,0 +1,411 @@
+---
+import {
+  LOCALES,
+  LOCALE_META,
+  localePath,
+  swapLocale,
+  pathWithoutLocale,
+  type Locale,
+} from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import Wordmark from '@components/Wordmark.astro';
+
+interface Props {
+  locale: Locale;
+  transparent?: boolean;
+}
+
+const { locale, transparent = false } = Astro.props;
+const t = useTranslations(locale);
+const here = pathWithoutLocale(Astro.url.pathname);
+
+const nav = [
+  { href: '/visit', label: t('nav.visit') },
+  { href: '/about', label: t('nav.about') },
+  { href: '/community', label: t('nav.community') },
+  { href: '/church-life', label: t('nav.life') },
+  { href: '/sermons', label: t('nav.sermons') },
+  { href: '/give', label: t('nav.give') },
+] as const;
+
+const isCurrent = (href: string) =>
+  here === href || (href !== '/' && here.startsWith(href + '/'));
+---
+
+<header class="site-header" data-transparent={transparent ? '' : null}>
+  <div class="site-header__inner shell shell--wide">
+    <a class="site-header__brand" href={localePath(locale, '/')}>
+      <Wordmark locale={locale} />
+    </a>
+
+    <nav class="site-header__nav ui" aria-label={t('nav.primary')}>
+      <ul role="list">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={localePath(locale, item.href)}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      {/* Both languages are always visible. A visitor never has to discover
+          that a Chinese version exists behind a globe icon. */}
+      <div class="langswitch ui" role="group" aria-label={t('lang.switch')}>
+        {
+          LOCALES.map((l) =>
+            l === locale ? (
+              <span class="langswitch__item" aria-current="true">
+                {LOCALE_META[l].short}
+              </span>
+            ) : (
+              <a
+                class="langswitch__item"
+                href={swapLocale(Astro.url.pathname, l)}
+                lang={LOCALE_META[l].tag}
+                hreflang={LOCALE_META[l].tag}
+              >
+                {LOCALE_META[l].short}
+              </a>
+            ),
+          )
+        }
+      </div>
+
+      <a class="btn btn--sm btn--solid ui" href={localePath(locale, '/visit')}>
+        {t('cta.planShort')}
+      </a>
+
+      <button
+        class="site-header__burger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        data-menu-toggle
+        data-label-open={t('nav.openMenu')}
+        data-label-close={t('nav.closeMenu')}
+      >
+        <span class="visually-hidden" data-menu-label>{t('nav.openMenu')}</span>
+        <span class="site-header__burger-bars" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div
+  class="mobile-nav"
+  id="mobile-nav"
+  hidden
+  data-menu-panel
+  role="dialog"
+  aria-modal="true"
+  aria-label={t('nav.menu')}
+>
+  <nav class="mobile-nav__inner" aria-label={t('nav.primary')}>
+    <ul role="list">
+      {
+        nav.map((item) => (
+          <li>
+            <a
+              href={localePath(locale, item.href)}
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a href={localePath(locale, '/contact')}>{t('nav.contact')}</a>
+      </li>
+    </ul>
+
+    <div class="mobile-nav__foot ui">
+      <div class="langswitch langswitch--lg" role="group" aria-label={t('lang.switch')}>
+        {
+          LOCALES.map((l) =>
+            l === locale ? (
+              <span class="langswitch__item" aria-current="true">
+                {LOCALE_META[l].endonym}
+              </span>
+            ) : (
+              <a
+                class="langswitch__item"
+                href={swapLocale(Astro.url.pathname, l)}
+                lang={LOCALE_META[l].tag}
+              >
+                {LOCALE_META[l].endonym}
+              </a>
+            ),
+          )
+        }
+      </div>
+      <a class="btn btn--solid" href={localePath(locale, '/visit')}>{t('cta.plan')}</a>
+    </div>
+  </nav>
+</div>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: var(--c-paper);
+    border-block-end: var(--border-hair) solid var(--rule);
+    transition:
+      background-color var(--dur-base) var(--ease-out-soft),
+      border-color var(--dur-base) var(--ease-out-soft),
+      color var(--dur-base) var(--ease-out-soft);
+  }
+
+  /* Over a dark hero the header floats transparently, then solidifies once
+     the visitor scrolls past it. The state is toggled in src/scripts/reveal.
+
+     It stays position:sticky in BOTH states. An earlier version switched to
+     position:fixed while transparent, which took the header out of flow and
+     shifted the page 73px — 0.09 CLS every time it flipped. Only composited
+     paint properties change here now; the hero pulls itself up underneath
+     (see .hero in Hero.astro) so the effect is identical and free. */
+  .site-header[data-transparent]:not([data-stuck]) {
+    background: transparent;
+    border-color: transparent;
+    color: var(--c-paper);
+  }
+
+  .site-header[data-transparent]:not([data-stuck]) .langswitch {
+    border-color: color-mix(in oklab, var(--c-paper) 40%, transparent);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-6);
+    min-height: var(--header-h);
+  }
+
+  .site-header__brand {
+    text-decoration: none;
+    color: inherit;
+    flex: 0 0 auto;
+  }
+
+  /* ---------------------------------------------------------------- nav -- */
+  .site-header__nav {
+    display: none;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .site-header__nav ul {
+    display: flex;
+    gap: clamp(var(--s-4), 1.6vw, var(--s-8));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-header__nav a {
+    display: block;
+    padding-block: var(--s-2);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  /* An underline that grows from the centre like a slowly opening door. */
+  .site-header__nav a::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    height: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--dur-base) var(--ease-out-soft);
+  }
+
+  .site-header__nav a:hover::after,
+  .site-header__nav a:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  .site-header__nav a[aria-current='page'] {
+    color: var(--accent);
+  }
+
+  .site-header__nav a[aria-current='page']::after {
+    transform: scaleX(1);
+    background: var(--accent);
+  }
+
+  /* ------------------------------------------------------------ actions -- */
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    flex: 0 0 auto;
+  }
+
+  .langswitch {
+    display: flex;
+    align-items: stretch;
+    border: var(--border-hair) solid var(--rule-strong);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    font-size: var(--fs-2xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .langswitch__item {
+    display: grid;
+    place-items: center;
+    padding: 0.38rem 0.6rem;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.62;
+    transition:
+      background-color var(--dur-fast) var(--ease-out-soft),
+      opacity var(--dur-fast) var(--ease-out-soft);
+    min-width: 2.6rem;
+  }
+
+  .langswitch__item:hover {
+    opacity: 1;
+    background: color-mix(in oklab, currentColor 10%, transparent);
+    color: inherit;
+  }
+
+  .langswitch__item[aria-current='true'] {
+    opacity: 1;
+    background: color-mix(in oklab, currentColor 12%, transparent);
+  }
+
+  .langswitch--lg {
+    font-size: var(--fs-sm);
+  }
+
+  .langswitch--lg .langswitch__item {
+    padding: var(--s-3) var(--s-5);
+    min-width: 0;
+  }
+
+  /* ------------------------------------------------------------- burger -- */
+  .site-header__burger {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-inline-end: calc(var(--s-2) * -1);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: inherit;
+    border-radius: var(--r-md);
+  }
+
+  .site-header__burger-bars {
+    display: grid;
+    gap: 5px;
+    width: 1.25rem;
+  }
+
+  .site-header__burger-bars i {
+    display: block;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform var(--dur-base) var(--ease-out-soft);
+  }
+
+  :global([data-menu-open]) .site-header__burger-bars i:first-child {
+    transform: translateY(3.25px) rotate(45deg);
+  }
+
+  :global([data-menu-open]) .site-header__burger-bars i:last-child {
+    transform: translateY(-3.25px) rotate(-45deg);
+  }
+
+  /* -------------------------------------------------------- mobile nav -- */
+  .mobile-nav {
+    position: fixed;
+    inset: var(--header-h) 0 0;
+    z-index: var(--z-overlay);
+    background: var(--c-ink-900);
+    color: var(--c-ink-100);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .mobile-nav__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--s-10);
+    min-height: 100%;
+    padding: var(--s-10) var(--gutter) var(--s-12);
+  }
+
+  .mobile-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-1);
+  }
+
+  .mobile-nav a {
+    display: block;
+    padding-block: var(--s-3);
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    font-weight: 500;
+    text-decoration: none;
+    border-block-end: var(--border-hair) solid
+      color-mix(in oklab, var(--c-paper) 12%, transparent);
+  }
+
+  .mobile-nav a[aria-current='page'] {
+    color: var(--c-lamp-400);
+  }
+
+  .mobile-nav__foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-nav__foot .langswitch {
+    border-color: color-mix(in oklab, var(--c-paper) 30%, transparent);
+  }
+
+  /* ------------------------------------------------------------ desktop -- */
+  @media (min-width: 68rem) {
+    .site-header__nav {
+      display: flex;
+    }
+
+    .site-header__burger {
+      display: none;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .site-header__actions .btn {
+      display: none;
+    }
+  }
+</style>

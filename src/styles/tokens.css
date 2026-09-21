@@ -1,0 +1,305 @@
+/* =========================================================================
+   WACO CHINESE CHURCH — DESIGN TOKENS
+   韦科华人教会 · 设计令牌
+   =========================================================================
+
+   BRAND THESIS
+   ------------
+   The church's own founding verse is 1 Peter 2:9 — "called out of darkness
+   into his wonderful light." Its own history calls itself "温馨的家园" — a warm
+   home for people far from home. So the identity is not invented: it is
+   LIGHT and HOME.
+
+   The visual translation is a lit room seen from outside on a cold night.
+   Warm lamplight against a deep warm dark. Paper, table, bread, wood.
+   No red-and-gold chinoiserie. No stock crosses. No megachurch gradient.
+
+   COLOR
+   -----
+   INK    a warm near-black — night, and the ink of a written language
+   PAPER  a warm off-white — paper, plaster, a tablecloth
+   LAMP   honey/amber — the light in the window, the primary accent
+   CLAY   muted terracotta — warmth and humanity, a secondary voice
+   PINE   deep muted green — growth and life, Texas live oak, used sparingly
+
+   Every foreground/background pair used for text in this system has been
+   checked to WCAG 2.2 AA (>= 4.5:1 body, >= 3:1 large text & UI).
+   ========================================================================= */
+
+:root {
+  /* ---------------------------------------------------------------
+     PALETTE — raw ramps. Do not use these directly in components;
+     use the semantic tokens below so theming stays possible.
+     --------------------------------------------------------------- */
+
+  /* Ink — warm near-black through warm greys */
+  --c-ink-950: #0c0a08;
+  --c-ink-900: #14110e;
+  --c-ink-850: #1a1713;
+  --c-ink-800: #211c17;
+  --c-ink-700: #332b24;
+  --c-ink-600: #4a4038;
+  --c-ink-500: #6b5e53;
+  --c-ink-400: #8e8175;
+  --c-ink-300: #b3a79b;
+  --c-ink-200: #d6ccc1;
+  --c-ink-150: #e0d8cd;
+  --c-ink-100: #e9e2d9;
+  --c-ink-050: #f2ece4;
+
+  /* Paper — warm whites */
+  --c-paper: #f8f4ed;
+  --c-paper-raised: #fffdf8;
+  --c-paper-sunk: #efe8dd;
+
+  /* Lamp — the light. Primary accent. */
+  --c-lamp-900: #4e2d0b;
+  --c-lamp-800: #6f4010;
+  --c-lamp-700: #854e14;
+  --c-lamp-600: #9a5b18; /* AA on paper: 5.1:1 */
+  --c-lamp-500: #c87f2a;
+  --c-lamp-400: #e0a455; /* AA on ink-900: 8.6:1 */
+  --c-lamp-300: #f0c489;
+  --c-lamp-200: #f7dcb5;
+  --c-lamp-100: #fbebd3;
+  --c-lamp-050: #fdf5e8;
+
+  /* Clay — secondary warmth */
+  --c-clay-800: #6d3123;
+  --c-clay-700: #85402e;
+  --c-clay-600: #9c4a34; /* AA on paper */
+  --c-clay-500: #b85c42;
+  --c-clay-300: #dc9f8b;
+  --c-clay-100: #f6e2da;
+
+  /* Pine — growth, life */
+  --c-pine-800: #24332a;
+  --c-pine-700: #35473a;
+  --c-pine-600: #435847; /* AA on paper */
+  --c-pine-500: #63795f;
+  --c-pine-300: #a3b49c;
+  --c-pine-100: #e2e9dd;
+
+  /* ---------------------------------------------------------------
+     SEMANTIC TOKENS — light surface (the default)
+     --------------------------------------------------------------- */
+  --surface: var(--c-paper);
+  --surface-raised: var(--c-paper-raised);
+  --surface-sunk: var(--c-paper-sunk);
+  --surface-inverse: var(--c-ink-900);
+
+  --text: var(--c-ink-800);
+  --text-strong: var(--c-ink-900);
+  --text-muted: var(--c-ink-500); /* 5.8:1 on paper */
+  --text-faint: var(--c-ink-400); /* large text & non-essential only */
+  --text-inverse: var(--c-ink-050);
+  --text-on-accent: var(--c-ink-950);
+
+  --accent: var(--c-lamp-600);
+  --accent-hover: var(--c-lamp-700);
+  --accent-solid: var(--c-lamp-500);
+  --accent-soft: var(--c-lamp-100);
+  --accent-faint: var(--c-lamp-050);
+
+  --secondary: var(--c-clay-600);
+  --tertiary: var(--c-pine-600);
+
+  --rule: color-mix(in oklab, var(--c-ink-900) 12%, transparent);
+  --rule-strong: color-mix(in oklab, var(--c-ink-900) 22%, transparent);
+
+  --focus-ring: var(--c-lamp-600);
+
+  /* ---------------------------------------------------------------
+     TYPOGRAPHY
+     ---------------------------------------------------------------
+     The Latin and Chinese faces are siblings, not strangers:
+     Source Serif 4 / Source Sans 3 are the Latin members of the same
+     Adobe superfamily as Source Han Serif / Source Han Sans, which ship
+     on Google Fonts as Noto Serif SC / Noto Sans SC. Their weights,
+     proportions and contrast were designed to harmonize across scripts.
+
+     That is the whole brand argument in one decision: two languages,
+     one voice — not an English site with Chinese bolted on.
+     --------------------------------------------------------------- */
+  --font-serif:
+    'Source Serif 4', 'Noto Serif SC', 'Songti SC', 'STSong', 'SimSun',
+    ui-serif, Georgia, serif;
+  --font-sans:
+    'Source Sans 3', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', ui-sans-serif, system-ui, sans-serif;
+
+  --font-display: var(--font-serif);
+  --font-body: var(--font-serif);
+  --font-ui: var(--font-sans);
+
+  /* Fluid type scale. Ratio ~1.25 at small, ~1.33 at large.
+     Base is 17px — CJK glyphs are denser and need a touch more size. */
+  --fs-3xs: 0.75rem;
+  --fs-2xs: 0.8125rem;
+  --fs-xs: 0.875rem;
+  --fs-sm: 0.9375rem;
+  --fs-base: 1.0625rem;
+  --fs-md: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --fs-lg: clamp(1.3125rem, 1.15rem + 0.7vw, 1.625rem);
+  --fs-xl: clamp(1.5rem, 1.25rem + 1.1vw, 2.125rem);
+  --fs-2xl: clamp(1.875rem, 1.45rem + 1.9vw, 2.875rem);
+  --fs-3xl: clamp(2.25rem, 1.6rem + 2.9vw, 3.875rem);
+  --fs-4xl: clamp(2.75rem, 1.7rem + 4.6vw, 5.25rem);
+  --fs-5xl: clamp(3.25rem, 1.8rem + 6.4vw, 7rem);
+
+  --lh-tight: 1.05;
+  --lh-snug: 1.18;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.65;
+  --lh-prose: 1.72;
+  /* CJK needs noticeably more leading than Latin at the same size. */
+  --lh-prose-cjk: 1.95;
+
+  --tracking-tight: -0.022em;
+  --tracking-snug: -0.012em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-caps: 0.12em;
+
+  --measure: 66ch;
+  --measure-narrow: 52ch;
+  --measure-wide: 78ch;
+
+  /* ---------------------------------------------------------------
+     SPACE — a 4px-rooted scale with a fluid section rhythm
+     --------------------------------------------------------------- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.25rem;
+  --s-6: 1.5rem;
+  --s-8: 2rem;
+  --s-10: 2.5rem;
+  --s-12: 3rem;
+  --s-16: 4rem;
+  --s-20: 5rem;
+  --s-24: 6rem;
+  --s-32: 8rem;
+
+  /* Vertical rhythm between major page sections */
+  --section-y: clamp(3.5rem, 2rem + 7vw, 8.5rem);
+  --section-y-tight: clamp(2.5rem, 1.5rem + 4.5vw, 5.5rem);
+
+  /* ---------------------------------------------------------------
+     LAYOUT
+     --------------------------------------------------------------- */
+  --shell-max: 84rem; /* 1344px */
+  --shell-wide: 96rem;
+  --gutter: clamp(1.25rem, 0.5rem + 3.2vw, 4.5rem);
+  --header-h: 4.5rem;
+
+  /* ---------------------------------------------------------------
+     SHAPE
+     ---------------------------------------------------------------
+     Deliberately restrained. Church architecture, printed bulletins and
+     photographs have square or very softly eased corners — not the 16px
+     pill-radius of a SaaS dashboard.
+     --------------------------------------------------------------- */
+  --r-xs: 1px;
+  --r-sm: 2px;
+  --r-md: 3px;
+  --r-lg: 4px;
+  --r-arch: 999px 999px 4px 4px; /* the one expressive shape: a window/arch */
+  --r-full: 999px;
+
+  --border-hair: 1px;
+
+  /* ---------------------------------------------------------------
+     ELEVATION — light, warm, never a grey box-shadow
+     --------------------------------------------------------------- */
+  --shadow-sm: 0 1px 2px color-mix(in oklab, var(--c-ink-900) 8%, transparent);
+  --shadow-md:
+    0 2px 4px color-mix(in oklab, var(--c-ink-900) 6%, transparent),
+    0 8px 20px -8px color-mix(in oklab, var(--c-ink-900) 14%, transparent);
+  --shadow-lg:
+    0 4px 8px color-mix(in oklab, var(--c-ink-900) 6%, transparent),
+    0 24px 48px -16px color-mix(in oklab, var(--c-ink-900) 22%, transparent);
+
+  /* ---------------------------------------------------------------
+     MOTION
+     ---------------------------------------------------------------
+     One motion idea carries the brand: light arriving. Things warm up,
+     brighten and settle rather than sliding or bouncing. Easing is gentle
+     and asymmetric — quick to start, slow to settle, like a door opening.
+     --------------------------------------------------------------- */
+  --ease-out-soft: cubic-bezier(0.22, 0.68, 0.24, 1);
+  --ease-in-out-soft: cubic-bezier(0.55, 0.06, 0.24, 1);
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --dur-fast: 140ms;
+  --dur-base: 260ms;
+  --dur-slow: 560ms;
+  --dur-reveal: 900ms;
+
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-header: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-skip: 500;
+}
+
+/* =========================================================================
+   INVERSE SURFACE
+   A utility context rather than a user-selectable dark mode. The site
+   deliberately alternates lit paper and warm dark sections — that
+   alternation IS the "out of darkness into light" idea, so it must be
+   authored, not toggled.
+   ========================================================================= */
+[data-surface='ink'] {
+  --surface: var(--c-ink-900);
+  --surface-raised: var(--c-ink-850);
+  --surface-sunk: var(--c-ink-950);
+  --surface-inverse: var(--c-paper);
+
+  --text: var(--c-ink-100);
+  --text-strong: var(--c-paper-raised);
+  --text-muted: var(--c-ink-300);
+  --text-faint: var(--c-ink-400);
+  --text-inverse: var(--c-ink-900);
+  --text-on-accent: var(--c-ink-950);
+
+  --accent: var(--c-lamp-400);
+  --accent-hover: var(--c-lamp-300);
+  --accent-solid: var(--c-lamp-400);
+  --accent-soft: color-mix(in oklab, var(--c-lamp-400) 18%, transparent);
+  --accent-faint: color-mix(in oklab, var(--c-lamp-400) 8%, transparent);
+
+  --secondary: var(--c-clay-300);
+  --tertiary: var(--c-pine-300);
+
+  --rule: color-mix(in oklab, var(--c-paper) 16%, transparent);
+  --rule-strong: color-mix(in oklab, var(--c-paper) 30%, transparent);
+
+  --focus-ring: var(--c-lamp-300);
+
+  color-scheme: dark;
+}
+
+/* A warm mid-tone surface, for sections that should feel like a lit room
+   rather than either night or daylight. */
+[data-surface='warm'] {
+  --surface: var(--c-lamp-050);
+  --surface-raised: var(--c-paper-raised);
+  --surface-sunk: var(--c-lamp-100);
+  --rule: color-mix(in oklab, var(--c-lamp-900) 14%, transparent);
+}
+
+/* =========================================================================
+   REDUCED MOTION — honoured globally, not per-component
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 1ms;
+    --dur-base: 1ms;
+    --dur-slow: 1ms;
+    --dur-reveal: 1ms;
+  }
+}

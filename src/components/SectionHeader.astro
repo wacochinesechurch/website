@@ -1,0 +1,79 @@
+---
+import type { Locale } from '@i18n/config';
+
+interface Props {
+  locale: Locale;
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+  align?: 'start' | 'center';
+  /** Renders the title one level down for nested sections. */
+  as?: 'h2' | 'h3';
+  id?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  lede,
+  align = 'start',
+  as: Tag = 'h2',
+  id,
+} = Astro.props;
+---
+
+<header class="sec-head" data-align={align} data-reveal>
+  {
+    eyebrow && (
+      <p class="sec-head__eyebrow marker">
+        <span class="eyebrow">{eyebrow}</span>
+      </p>
+    )
+  }
+  <Tag class="sec-head__title" id={id}>{title}</Tag>
+  {lede && <p class="sec-head__lede">{lede}</p>}
+</header>
+
+<style>
+  .sec-head {
+    display: grid;
+    gap: var(--s-4);
+    max-width: var(--measure-wide);
+    margin-block-end: var(--s-10);
+  }
+
+  .sec-head[data-align='center'] {
+    justify-items: center;
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .sec-head__eyebrow {
+    margin: 0;
+  }
+
+  .sec-head[data-align='center'] .sec-head__eyebrow {
+    justify-content: center;
+  }
+
+  .sec-head__title {
+    margin: 0;
+    max-width: 22ch;
+  }
+
+  .sec-head__title:lang(zh) {
+    max-width: 20ch;
+  }
+
+  .sec-head[data-align='center'] .sec-head__title {
+    max-width: 26ch;
+  }
+
+  .sec-head__lede {
+    margin: 0;
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+    max-width: var(--measure);
+  }
+</style>

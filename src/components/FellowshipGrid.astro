@@ -1,0 +1,236 @@
+---
+import { localePath, pick, type Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/ui';
+import { getFellowships } from '@lib/church';
+
+interface Props {
+  locale: Locale;
+  featuredOnly?: boolean;
+}
+
+const { locale, featuredOnly = false } = Astro.props;
+const t = useTranslations(locale);
+const all = await getFellowships();
+const fellowships = featuredOnly ? all.filter((f) => f.data.featured) : all;
+---
+
+<ul class="fellowships" role="list" data-reveal-group>
+  {
+    fellowships.map((f) => {
+      const meets = pick(f.data.meets, locale);
+      const showMeets = f.data.meetsStatus !== 'unverified' && meets;
+      const language = pick(f.data.language, locale);
+      const contact = pick(f.data.contactName, locale);
+      const showContact = f.data.contactStatus !== 'unverified' && contact;
+
+      return (
+        <li class="fellowship" data-accent={f.data.accent}>
+          <div class="fellowship__head">
+            <h3 class="fellowship__name">
+              <span class="fellowship__name-main">{pick(f.data.name, locale)}</span>
+              <span
+                class="fellowship__name-alt"
+                lang={locale === 'en' ? 'zh-CN' : 'en-US'}
+              >
+                {locale === 'en' ? f.data.name.zh : f.data.name.en}
+              </span>
+            </h3>
+          </div>
+
+          <p class="fellowship__summary">{pick(f.data.summary, locale)}</p>
+
+          <dl class="fellowship__meta">
+            <div>
+              <dt>{t('community.forWho')}</dt>
+              <dd>{pick(f.data.audience, locale)}</dd>
+            </div>
+
+            {/* The language a group runs in is the single most useful fact for
+                someone deciding whether they could follow it. The English
+                Fellowship sets this, and an English speaker scanning the page
+                needs to see it — it is the one group they can join without
+                interpretation. */}
+            {language && (
+              <div>
+                <dt>{t('community.language')}</dt>
+                <dd>{language}</dd>
+              </div>
+            )}
+
+            {showMeets && (
+              <div>
+                <dt>{t('community.meets')}</dt>
+                <dd>{meets}</dd>
+              </div>
+            )}
+
+            {showContact && (
+              <div>
+                <dt>{t('community.contactLeader')}</dt>
+                <dd>
+                  {f.data.contactEmail ? (
+                    <a href={`mailto:${f.data.contactEmail}`}>{contact}</a>
+                  ) : (
+                    contact
+                  )}
+                </dd>
+              </div>
+            )}
+          </dl>
+
+          {/*
+            Where a meeting time is genuinely unknown, the card says so and
+            offers the way to find out, rather than rendering a blank row or
+            — worse — inventing a time. This is the single biggest failure of
+            the old fellowship page, which listed five groups with no time,
+            no place and a "Join us now" button that went nowhere.
+          */}
+          {!showMeets &&
+            (f.id === 'students' ? (
+              /* A whole page exists for students; sending them to a generic
+                 contact form instead would waste it. */
+              <p class="fellowship__ask ui">
+                <a href={localePath(locale, '/students')}>
+                  {locale === 'en'
+                    ? 'More for Baylor students'
+                    : '更多学生事工的内容'}
+                </a>
+              </p>
+            ) : (
+              <p class="fellowship__ask ui">
+                <a href={localePath(locale, '/contact')}>
+                  {locale === 'en'
+                    ? 'Ask us when this group meets'
+                    : '来信询问这个团契的聚会时间'}
+                </a>
+              </p>
+            ))}
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .fellowships {
+    display: grid;
+    gap: var(--s-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr));
+  }
+
+  .fellowship {
+    --fx: var(--c-lamp-500);
+
+    display: grid;
+    gap: var(--s-4);
+    align-content: start;
+    padding: var(--s-7) var(--s-6) var(--s-6);
+    background: var(--surface-raised);
+    border: var(--border-hair) solid var(--rule);
+    border-radius: var(--r-lg);
+    position: relative;
+    overflow: hidden;
+    transition:
+      border-color var(--dur-base) var(--ease-out-soft),
+      box-shadow var(--dur-base) var(--ease-out-soft);
+  }
+
+  /* A colour seam across the top rather than a coloured card — keeps the
+     page calm while still letting each group have an identity. */
+  .fellowship::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 3px;
+    background: var(--fx);
+  }
+
+  .fellowship[data-accent='clay'] {
+    --fx: var(--c-clay-500);
+  }
+
+  .fellowship[data-accent='pine'] {
+    --fx: var(--c-pine-500);
+  }
+
+  .fellowship:hover {
+    border-color: var(--rule-strong);
+    box-shadow: var(--shadow-md);
+  }
+
+  .fellowship__name {
+    display: grid;
+    gap: 0.2em;
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+
+  .fellowship__name-alt {
+    font-family: var(--font-ui);
+    font-size: 0.62em;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+
+  .fellowship__name-alt:lang(zh) {
+    letter-spacing: 0.12em;
+  }
+
+  .fellowship__summary {
+    margin: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+  }
+
+  .fellowship__meta {
+    display: grid;
+    gap: var(--s-3);
+    margin: 0;
+    padding-block-start: var(--s-2);
+    border-block-start: var(--border-hair) solid var(--rule);
+    margin-block-start: auto;
+  }
+
+  .fellowship__meta > div {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .fellowship__meta dt {
+    font-family: var(--font-ui);
+    font-size: var(--fs-3xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .fellowship__meta dt:lang(zh) {
+    text-transform: none;
+    letter-spacing: 0.15em;
+    font-size: var(--fs-2xs);
+  }
+
+  .fellowship__meta dd {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text-strong);
+  }
+
+  .fellowship__ask {
+    margin: 0;
+    font-size: var(--fs-sm);
+  }
+
+  .fellowship__ask a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+</style>

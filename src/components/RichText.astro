@@ -1,0 +1,21 @@
+---
+import { marked } from 'marked';
+
+interface Props {
+  markdown: string;
+}
+
+const { markdown } = Astro.props;
+
+/* Church volunteers write plain paragraphs, the occasional bold phrase and
+   the occasional link. GFM covers that; `breaks` is deliberately OFF so a
+   soft-wrapped line in the CMS editor does not become a hard <br>. Blank
+   lines make paragraphs, which is what people actually expect. */
+marked.setOptions({ breaks: false, gfm: true });
+
+const html = markdown?.trim() ? marked.parse(markdown.trim()) : '';
+---
+
+{/* Rendered without a wrapper element so the paragraphs become direct
+    children of the surrounding .prose container and inherit its rhythm. */}
+{html && <Fragment set:html={html} />}

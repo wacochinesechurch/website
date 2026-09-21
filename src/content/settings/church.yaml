@@ -1,0 +1,259 @@
+# =============================================================================
+# CHURCH SETTINGS — the facts that appear across the whole site.
+#
+# Change the Sunday start time here and it updates the homepage, the Visit
+# page, the footer, the structured data Google reads, and every other place
+# it appears. There is exactly one copy of each fact.
+#
+# `status` on a field means:
+#   verified     — confirmed by the church, safe to publish
+#   needs-review — published, but listed on /review for someone to confirm
+#   unverified   — NOT published; the site omits it rather than guessing
+#
+# Every fact below is sourced from wacochinesechurch.org unless noted.
+# Audited 2026-09-21.
+# =============================================================================
+
+- id: church
+
+  name:
+    en: Waco Chinese Church
+    zh: 韦科华人教会
+  # The church's own materials use 韦城华人教会 in the historical narrative
+  # and on the 25th-anniversary video. Both are in use; the interface
+  # standardises on 韦科 (the logo/footer form) and notes 韦城 in the history.
+  nameVariant:
+    en: ""
+    zh: 韦城华人教会
+
+  established: "1993"
+
+  tagline:
+    en: A home for people far from home.
+    zh: 给远方游子的一个家。
+
+  address:
+    line1: 1801 Gurley Ave
+    city: Waco
+    state: TX
+    zip: "76706"
+    note:
+      en: We are non-denominational, and share this building with Emmanuel Baptist Church, our partner congregation.
+      zh: 我们不属于任何宗派，与伙伴教会以马内利浸信会共用这栋建筑。
+    mapsUrl: https://www.google.com/maps/search/?api=1&query=1801+Gurley+Ave%2C+Waco%2C+TX+76706
+    lat: 31.5375467
+    lng: -97.1342783
+
+  # ---------------------------------------------------------------------------
+  # GATHERINGS — the answer to "when do they meet?"
+  # ---------------------------------------------------------------------------
+  gatherings:
+    - id: sunday
+      name:
+        en: Sunday Worship
+        zh: 主日崇拜
+      day: sunday
+      startTime: "11:00"
+      endTime: "12:30"
+      location:
+        en: The Sanctuary
+        zh: 主堂
+      summary:
+        en: The whole church together — singing, a message from Scripture, and time to talk afterwards. Younger children have their own group during the message.
+        zh: 全教会一同敬拜 —— 诗歌、证道，以及聚会后彼此交谈的时间。讲道时段，年纪较小的孩子有自己的聚会。
+      schedule:
+        - start: "11:00"
+          end: "11:30"
+          label:
+            en: Singing together
+            zh: 诗歌敬拜
+        - start: "11:30"
+          end: "12:30"
+          label:
+            en: Message — younger children go to their own group
+            zh: 主日讲道 —— 年纪较小的孩子前往儿童聚会
+      languages:
+        en: Mandarin, with English interpretation available on request.
+        zh: 以国语（普通话）进行，可应需要提供英文翻译。
+      status: verified
+      featured: true
+
+    - id: friday
+      name:
+        en: Friday Bible Study
+        zh: 周五查经
+      day: friday
+      startTime: "18:00"
+      endTime: "20:30"
+      location:
+        en: The Fellowship Hall
+        zh: 团契厅
+      summary:
+        en: Dinner first, then singing, then Bible study in three groups — students, working adults, and English speakers. Come for any part of it.
+        zh: 先一起吃晚饭，然后唱诗，接着分成三个小组查经 —— 大学生、职青，以及英文组。任何一段你都可以来参加。
+      schedule:
+        - start: "18:00"
+          end: "18:45"
+          label:
+            en: Dinner together
+            zh: 爱心晚餐
+        - start: "18:45"
+          end: "19:15"
+          label:
+            en: Singing
+            zh: 赞美敬拜
+        - start: "19:15"
+          end: "20:30"
+          label:
+            en: Bible study, in three groups
+            zh: 分组查经
+      groups:
+        - name:
+            en: Baylor Bible Bears (BBB)
+            zh: 大学生组（BBB）
+          audience:
+            en: Baylor and Waco college students
+            zh: Baylor 与韦科的大学生
+        - name:
+            en: Study Group
+            zh: 职青组
+          audience:
+            en: Working adults and young professionals
+            zh: 职场人士与青年专业人士
+        - name:
+            en: English-speaking group
+            zh: 英文组
+          audience:
+            en: Anyone who would rather study in English
+            zh: 希望以英文查经的朋友
+      languages:
+        en: Mandarin, with a group that studies in English.
+        zh: 以国语（普通话）进行，另有一组以英文查经。
+      status: verified
+      featured: true
+
+    - id: prayer-tuesday
+      name:
+        en: Prayer Meeting
+        zh: 祷告会
+      day: tuesday
+      startTime: "19:30"
+      endTime: "20:45"
+      location:
+        en: At the church, or online
+        zh: 教会现场，或线上参加
+      online:
+        en: This one can be joined online as well as in person.
+        zh: 这场祷告会可以到现场，也可以在线上参加。
+      summary:
+        en: The church praying together. Come in person or join online — and you can send a request in beforehand if you would like others to pray for something.
+        zh: 全教会一同祷告。可以到教会现场，也可以线上参加；若有代祷需要，也可以事先提交，让弟兄姊妹为你祷告。
+      languages:
+        en: Mandarin.
+        zh: 以国语（普通话）进行。
+      status: verified
+      featured: false
+
+    - id: prayer-wednesday
+      name:
+        en: Prayer Meeting — Baylor Bible Bears
+        zh: 祷告会 —— 大学生组（BBB）
+      day: wednesday
+      startTime: "19:30"
+      endTime: "20:30"
+      location:
+        en: A member's home near Baylor — not at the church
+        zh: Baylor 附近弟兄姊妹的家中 —— 不在教会
+      # The street address is deliberately not stored here. It is a private
+      # home, this repository is on GitHub, and git history cannot be undone.
+      # Whoever is hosting sends it to people who ask — which also means the
+      # site never goes stale when the host changes.
+      addressOnRequest:
+        en: This one meets at a member's home rather than at the church, so we send the address out rather than posting it. Email us and we will pass it on — you are very welcome to come.
+        zh: 这场祷告会在弟兄姊妹家中聚会，不在教会，因此地址我们不公开张贴，而是来信索取。写信给我们，我们会把地址发给你 —— 非常欢迎你来。
+      summary:
+        en: The college group praying together, midweek.
+        zh: 大学生组在周间一同祷告。
+      languages:
+        en: Mandarin.
+        zh: 以国语（普通话）进行。
+      status: verified
+      featured: false
+
+  # ---------------------------------------------------------------------------
+  # CONTACT
+  # ---------------------------------------------------------------------------
+  contact:
+    email: wacochinesechurch@gmail.com
+    emailStatus: verified
+    # No telephone number is published anywhere by the church. Rather than
+    # invent one, the site simply does not offer a phone route.
+    phone: ""
+    phoneStatus: unverified
+
+  # ---------------------------------------------------------------------------
+  # SOCIAL / MEDIA CHANNELS — only channels confirmed to belong to WCC.
+  # ---------------------------------------------------------------------------
+  social:
+    - platform: youtube
+      label:
+        en: Waco Chinese Church Media
+        zh: YouTube 频道
+      url: https://www.youtube.com/@wacochinesechurchmedia1963
+      # Nothing has been published to this channel since 2023-12-10. It is
+      # linked because it holds the church's back catalogue, but it is not a
+      # live feed and the site must not imply otherwise.
+      status: needs-review
+
+  # ---------------------------------------------------------------------------
+  # GIVING
+  # ---------------------------------------------------------------------------
+  giving:
+    - id: zelle
+      method:
+        en: Zelle
+        zh: Zelle 转账
+      detail:
+        en: Send through your own bank's Zelle service to the church email address.
+        zh: 透过你所属银行的 Zelle 服务，转账至教会的电子邮箱。
+      value: wacochinesechurch@gmail.com
+      instructions:
+        en: Most US banks include Zelle in their app. Add the address above as the recipient.
+        zh: 美国多数银行的手机应用都内建 Zelle，将上述邮箱加为收款人即可。
+      status: verified
+
+    - id: check
+      method:
+        en: Check by mail
+        zh: 邮寄支票
+      detail:
+        en: Mail to Waco Chinese Church, 1801 Gurley Ave, Waco, TX 76706.
+        zh: 邮寄至 Waco Chinese Church, 1801 Gurley Ave, Waco, TX 76706。
+      value: ""
+      instructions:
+        en: Please email us first to confirm exactly who to make the check payable to.
+        zh: 开票前请先来信，与我们确认支票抬头应填写的名称。
+      status: needs-review
+
+    - id: inperson
+      method:
+        en: In person
+        zh: 现场奉献
+      detail:
+        en: Cash given at the church is welcome.
+        zh: 欢迎在教会现场以现金奉献。
+      value: ""
+      status: verified
+
+  # ---------------------------------------------------------------------------
+  # PARTNERS — a partnership, explicitly NOT a denominational affiliation.
+  # Waco Chinese Church is non-denominational.
+  # ---------------------------------------------------------------------------
+  partners:
+    - name:
+        en: Emmanuel Baptist Church
+        zh: 以马内利浸信会
+      relationship:
+        en: Our host and partner congregation since 1995, and formally covenanted partner churches since 2018. We share this building, and share work in Waco and in mission.
+        zh: 自 1995 年起接待我们的教会，2018 年正式签约成为伙伴教会。我们共用这栋建筑，也一同服事韦科本地与宣教工场。
+      since: "1995"

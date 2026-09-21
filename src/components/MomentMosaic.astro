@@ -1,0 +1,126 @@
+---
+import { Image } from 'astro:assets';
+import { pick, type Locale } from '@i18n/config';
+import { getMoments } from '@lib/church';
+import { resolveImage, focalPosition } from '@lib/images';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const moments = await getMoments();
+---
+
+{/*
+  An editorial mosaic, not a lightbox gallery.
+
+  Captions sit beside the photographs at full size rather than hiding behind
+  a click, because the captions are half the content — "there is nothing
+  hotpot cannot fix", "the grandpas and grandmas practising taiji". Hiding
+  those behind an overlay would throw away the warmest writing on the site.
+*/}
+<ul class="mosaic" role="list" data-reveal-group>
+  {
+    moments.map((m, i) => {
+      const img = resolveImage(m.data.image.src);
+      if (!img) return null;
+      return (
+        <li class="tile" data-weight={m.data.weight} data-i={i % 6}>
+          <figure class="tile__figure">
+            <div class="tile__media">
+              <Image
+                src={img}
+                alt={pick(m.data.image.alt, locale)}
+                widths={[360, 560, 860, 1200]}
+                sizes="(min-width: 68rem) 32vw, (min-width: 44rem) 48vw, 92vw"
+                loading={i < 3 ? 'eager' : 'lazy'}
+                decoding="async"
+                style={`object-position:${focalPosition(m.data.image.focus)}`}
+              />
+            </div>
+            <figcaption class="tile__caption">
+              {pick(m.data.caption, locale)}
+            </figcaption>
+          </figure>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .mosaic {
+    display: grid;
+    gap: var(--s-8) var(--s-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    grid-template-columns: repeat(auto-fill, minmax(min(19rem, 100%), 1fr));
+  }
+
+  .tile__figure {
+    display: grid;
+    gap: var(--s-3);
+    margin: 0;
+    height: 100%;
+    align-content: start;
+  }
+
+  .tile__media {
+    overflow: hidden;
+    border-radius: var(--r-lg);
+    background: var(--c-ink-150);
+    aspect-ratio: 4 / 3;
+  }
+
+  /* Varying the aspect ratio rather than the column span keeps the grid
+     honest at every width — no orphaned gaps, no breakpoint juggling. */
+  .tile[data-weight='tall'] .tile__media {
+    aspect-ratio: 3 / 4;
+  }
+
+  .tile[data-weight='wide'] .tile__media {
+    aspect-ratio: 3 / 2;
+  }
+
+  .tile[data-i='0'] .tile__media,
+  .tile[data-i='4'] .tile__media {
+    aspect-ratio: 1 / 1;
+  }
+
+  .tile__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out-soft);
+  }
+
+  .tile:hover .tile__media :global(img) {
+    transform: scale(1.03);
+  }
+
+  .tile__caption {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+  }
+
+  /* On wide screens let a couple of tiles run to two columns so the page has
+     rhythm rather than reading as a uniform contact sheet. */
+  @media (min-width: 68rem) {
+    .mosaic {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s-10) var(--s-8);
+    }
+
+    .tile[data-weight='wide'] {
+      grid-column: span 2;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tile:hover .tile__media :global(img) {
+      transform: none;
+    }
+  }
+</style>
