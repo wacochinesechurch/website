@@ -92,9 +92,17 @@ guard in `src/scripts/freshness.ts` keeps *visitors* seeing the right thing,
 but the HTML **Google and link previews** see only updates when the site
 rebuilds.
 
-Netlify: **Site configuration → Build & deploy → Build hooks** → create one.
-Then **Deploys → Deploy scheduling** (or a free cron service hitting the hook
-URL once a day). Any time works; early morning is tidy.
+**This is already set up.** `.github/workflows/nightly-rebuild.yml` runs at
+09:00 UTC (about 4am in Waco) and asks Netlify to rebuild. It needs one secret:
+
+1. Netlify → **Site configuration → Build & deploy → Build hooks** → *Add build
+   hook*. Copy the URL it gives you.
+2. GitHub → the repo → **Settings → Secrets and variables → Actions** → *New
+   repository secret*, named exactly `NETLIFY_BUILD_HOOK`, with that URL.
+
+The workflow fails loudly if the secret is missing, rather than quietly doing
+nothing — a silent cron job is worse than none. You can trigger it by hand from
+the repo's **Actions** tab to check it works.
 
 This is the third of three layers that stop this site going stale the way the
 last one did.

@@ -82,7 +82,7 @@ Practical consequences:
   227 KB render-blocking stylesheet with 202 `@font-face` blocks. Subsetting to
   the 683 Chinese characters the church has actually written, and splitting
   those by `unicode-range` so an English page fetches only the 28 glyphs in the
-  bilingual lockup, gives **70 KB on /en and 293 KB on /zh** — 96% and 89%
+  bilingual lockup, gives **71 KB on /en and 297 KB on /zh** — 96% and 89%
   less — with no third-party request at all. Chinese *sans* is deliberately not
   webfonted: it carried only small UI labels, and the system faces already in
   the stack render them well. Anything outside the subset falls back to a
@@ -192,7 +192,7 @@ Every gap is listed on `/en/review`, generated from the content itself.
 
 | | |
 |---|---|
-| Total JavaScript | **~2.3 KB** uncompressed |
+| Total JavaScript | **7 KB** uncompressed, **2.7 KB** gzipped |
 | Homepage HTML | ~41 KB, **~8 KB gzipped** |
 | Largest source image | 1.6 MB → **187 KB** at display size |
 | Render-blocking | one stylesheet, no third-party requests |

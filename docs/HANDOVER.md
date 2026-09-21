@@ -121,14 +121,16 @@ security headers and cache rules.
 
 ### 3. Turn on CMS sign-in
 
-Sveltia CMS needs a small OAuth helper so volunteers can log in with GitHub.
-The maintained one deploys to a free Cloudflare Worker in about ten minutes:
-<https://github.com/sveltia/sveltia-cms-auth>. Follow its README, then add the
-Worker URL as `base_url` in `config.yml`.
+Sveltia CMS needs an OAuth provider so volunteers can sign in with GitHub.
+**Because this site is on Netlify, there is nothing to deploy**: with
+`name: github` the CMS authenticates through `https://api.netlify.com/auth`,
+which is why `config.yml` has no `base_url`. You register a GitHub OAuth app
+once and paste its two values into Netlify. `docs/DEPLOY.md` step 3 has the
+exact screens and the callback URL, which has to match character for character.
 
-If you would rather volunteers not need GitHub accounts at all, the same config
-works with Decap CMS and a Git Gateway — but check current Netlify Identity
-availability first, as it is no longer offered to all new sites.
+Only if the site ever moves off Netlify would you need your own OAuth helper —
+<https://github.com/sveltia/sveltia-cms-auth> on a free Cloudflare Worker — and
+then `base_url` in `config.yml` points at it.
 
 ### 4. Set up the nightly rebuild — please do not skip this
 
@@ -137,9 +139,9 @@ filter drops past events *as of the build*, and `src/scripts/freshness.ts`
 re-checks in the visitor's browser — but the **HTML Google and link previews
 see** only updates when the site rebuilds.
 
-In Netlify: **Build & deploy → Build hooks** → create one, then attach it to a
-daily scheduled trigger. On Cloudflare Pages, a Cron Trigger hitting the deploy
-hook does the same job.
+Already written: `.github/workflows/nightly-rebuild.yml` runs daily and asks
+Netlify to rebuild. It needs one repository secret, `NETLIFY_BUILD_HOOK`, set
+to a Netlify build-hook URL — see `docs/DEPLOY.md` step 4.
 
 This is the third of three layers that stop the site rotting. All three are
 described in `src/lib/church.ts` and `src/scripts/freshness.ts`.
@@ -202,7 +204,7 @@ src/
   styles/tokens.css the entire design system — colour, type, space, motion
   i18n/ui.ts        interface translations
   lib/church.ts     data access, date formatting, "is this still upcoming?"
-  scripts/          ~2 KB of JavaScript, total
+  scripts/          ~7 KB of JavaScript, total (2.7 KB gzipped)
 docs/
   FACT-AUDIT.md     what was verified, what was not, and what contradicted what
   DESIGN.md         why the site looks and behaves the way it does
@@ -225,7 +227,7 @@ docs/
 
 - [ ] Set `repo:` in `public/admin/config.yml` (**required** — preflight blocks on it)
 - [ ] `npm run build && npm run preflight` — must pass with no blocking items
-- [ ] Deploy the OAuth worker and set `base_url`
+- [ ] Register the GitHub OAuth app and install it in Netlify (DEPLOY.md step 3)
 - [ ] **Set up the nightly rebuild** (step 4)
 - [ ] Work through `/en/review`
 - [ ] Replace `public/og-default.png` with a real share image (1200×630)
