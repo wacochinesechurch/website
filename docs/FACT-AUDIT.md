@@ -30,7 +30,7 @@ model separates the two and makes expiry automatic. See `DESIGN.md` and the `REA
 | Fact | Source |
 |---|---|
 | Name: **韦科华人教会 / Waco Chinese Church** | Site title, nav, footer, logo alt on all 9 pages |
-| Address: **1801 Gurley Ave, Waco, TX 76706** | Every page footer; Google; Yelp; Texas Comptroller; sheepatwork |
+| Address: **1801 Gurley Avenue, Waco, TX 76706** (the church asks for Avenue spelled out, so visiting speakers can read and type it without guessing) | Every page footer; Google; Yelp; Texas Comptroller; sheepatwork |
 | Coordinates **31.5375467, -97.1342783** | Google Maps, corroborated by sheepatwork |
 | Meets in **Emmanuel Baptist Church's building**, shared facility | Homepage caption; Texas Baptists (26 Aug 2024); Yelp photo caption |
 | **Sunday worship 11:00–12:30**, Sanctuary — 11:00–11:30 singing, 11:30–12:30 sermon | Live homepage **and** Google Business Profile (independent) — and confirmed by the client |

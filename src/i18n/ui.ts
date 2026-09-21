@@ -32,8 +32,8 @@ export const ui = {
     zh: '给远方游子的一个家。',
   },
   'site.description': {
-    en: 'A Chinese church in Waco, Texas. Worship is in Mandarin, with English interpretation on request. Students, families, professionals and neighbors together since 1993. Everyone is welcome.',
-    zh: '德州韦科的一间华人教会。主日以国语（普通话）敬拜，可应需要提供英文翻译。自 1993 年起，学生、家庭、职场人士与本地邻舍在此一同聚集。欢迎每一位朋友。',
+    en: 'A Chinese church in Waco, Texas. Worship is in Mandarin, and English interpretation is offered to anyone who needs it. Students, families, professionals and neighbors together since 1993. Everyone is welcome.',
+    zh: '德州韦科的一间华人教会。主日以国语（普通话）敬拜，并为需要的朋友主动提供英文翻译。自 1993 年起，学生、家庭、职场人士与本地邻舍在此一同聚集。欢迎每一位朋友。',
   },
 
   /* ---------------------------------------------------------- navigation */

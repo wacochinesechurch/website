@@ -33,14 +33,17 @@
     zh: 给远方游子的一个家。
 
   address:
-    line1: 1801 Gurley Ave
+    # Spelled out in full, not abbreviated to Ave. Visiting speakers and
+    # preachers have needed to read this address aloud and type it into a
+    # map, and the abbreviation cost them time.
+    line1: 1801 Gurley Avenue
     city: Waco
     state: TX
     zip: "76706"
     note:
       en: We are non-denominational, and share this building with Emmanuel Baptist Church, our partner congregation.
       zh: 我们不属于任何宗派，与伙伴教会以马内利浸信会共用这栋建筑。
-    mapsUrl: https://www.google.com/maps/search/?api=1&query=1801+Gurley+Ave%2C+Waco%2C+TX+76706
+    mapsUrl: https://www.google.com/maps/search/?api=1&query=1801+Gurley+Avenue%2C+Waco%2C+TX+76706
     lat: 31.5375467
     lng: -97.1342783
 
@@ -59,22 +62,22 @@
         en: The Sanctuary
         zh: 主堂
       summary:
-        en: The whole church together — singing, a message from Scripture, and time to talk afterwards. Younger children have their own group during the message.
-        zh: 全教会一同敬拜 —— 诗歌、证道，以及聚会后彼此交谈的时间。讲道时段，年纪较小的孩子有自己的聚会。
+        en: The whole church worships together, with a message from Scripture and time to talk afterwards. During the message, younger children are welcome to go to their own group, and just as welcome to stay with you.
+        zh: 全教会一同敬拜，有出于圣经的证道，聚会后还有彼此交谈的时间。讲道的时段，年纪较小的孩子可以去自己的聚会，也可以留在父母身边。
       schedule:
         - start: "11:00"
           end: "11:30"
           label:
-            en: Singing together
+            en: Worship in song
             zh: 诗歌敬拜
         - start: "11:30"
           end: "12:30"
           label:
-            en: Message — younger children go to their own group
-            zh: 主日讲道 —— 年纪较小的孩子前往儿童聚会
+            en: A message from Scripture. Children may go to their own group.
+            zh: 证道。孩子可以去自己的聚会。
       languages:
-        en: Mandarin, with English interpretation available on request.
-        zh: 以国语（普通话）进行，可应需要提供英文翻译。
+        en: Worship is in Mandarin. If you do not understand it, someone will bring you headphones and interpret into English. You will not have to ask.
+        zh: 主日以国语（普通话）敬拜。若你听不懂，同工会主动为你送上耳机，提供英文翻译，不需要你开口询问。
       status: verified
       featured: true
 
@@ -89,8 +92,8 @@
         en: The Fellowship Hall
         zh: 团契厅
       summary:
-        en: Dinner first, then singing, then Bible study in three groups — students, working adults, and English speakers. Come for any part of it.
-        zh: 先一起吃晚饭，然后唱诗，接着分成三个小组查经 —— 大学生、职青，以及英文组。任何一段你都可以来参加。
+        en: 'Dinner first, then worship in song, then Bible study in three groups: students, working adults, and English speakers. Come for any part of it.'
+        zh: 先一起吃晚饭，然后诗歌敬拜，接着分成三个小组查经：大学生、职青，以及英文组。任何一段你都可以来参加。
       schedule:
         - start: "18:00"
           end: "18:45"
@@ -100,7 +103,7 @@
         - start: "18:45"
           end: "19:15"
           label:
-            en: Singing
+            en: Worship in song
             zh: 赞美敬拜
         - start: "19:15"
           end: "20:30"
@@ -227,8 +230,8 @@
         en: Check by mail
         zh: 邮寄支票
       detail:
-        en: Mail to Waco Chinese Church, 1801 Gurley Ave, Waco, TX 76706.
-        zh: 邮寄至 Waco Chinese Church, 1801 Gurley Ave, Waco, TX 76706。
+        en: Mail to Waco Chinese Church, 1801 Gurley Avenue, Waco, TX 76706.
+        zh: 邮寄至 Waco Chinese Church, 1801 Gurley Avenue, Waco, TX 76706。
       value: ""
       instructions:
         en: Please email us first to confirm exactly who to make the check payable to.

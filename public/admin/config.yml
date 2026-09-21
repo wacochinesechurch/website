@@ -505,7 +505,7 @@ collections:
                     widget: object
                     required: false
                     collapsed: true
-                    hint: 'Leave this empty for anything that meets at 1801 Gurley Ave. The church address is set once, above.'
+                    hint: 'Leave this empty for anything that meets at 1801 Gurley Avenue. The church address is set once, above.'
                     fields:
                       - { name: line1, label: 'Street', widget: string }
                       - { name: city, label: 'City', widget: string, default: 'Waco' }

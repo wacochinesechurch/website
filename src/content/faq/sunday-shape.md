@@ -4,7 +4,8 @@ question:
   zh: 主日大概是什么样子？
 answer:
   en: |
-    Worship begins at 11:00 with about half an hour of singing together. From 11:30 there is a message from the Bible, usually finishing around 12:30.
+    We gather at 11:00 and begin with about half an hour of worship in song.
+    From 11:30 there is a message from the Bible, usually finishing around 12:30.
 
     You do not have to sing, stand, give, or say anything. Sitting quietly at the back and watching is a completely normal way to spend your first Sunday.
   zh: |
