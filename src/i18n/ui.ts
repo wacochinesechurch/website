@@ -59,8 +59,8 @@ export const ui = {
   'lang.toZh': { en: '切换到中文', zh: '中文' },
   'lang.toEn': { en: 'English', zh: 'Switch to English' },
   'lang.ariaSwitch': {
-    en: 'Switch language — this page in Chinese',
-    zh: '切换语言 — 本页的英文版本',
+    en: 'Switch language: this page in Chinese',
+    zh: '切换语言：本页的英文版本',
   },
 
   /* --------------------------------------------------------- core facts */
@@ -91,16 +91,16 @@ export const ui = {
   /* ------------------------------------------------------------- visit -- */
   'visit.title': { en: 'Planning your first visit', zh: '第一次来，该知道什么' },
   'visit.lede': {
-    en: "Walking into a church for the first time takes courage — especially in a new country. Here is exactly what will happen, so nothing is a surprise.",
-    zh: '第一次走进教会需要一点勇气 —— 尤其是在异乡。以下是你会经历的每一步，好让你心里有底。',
+    en: "Walking into a church for the first time takes courage, especially in a new country. Here is exactly what will happen, so nothing is a surprise.",
+    zh: '第一次走进教会需要一点勇气，尤其是在异乡。以下是你会经历的每一步，好让你心里有底。',
   },
   'visit.sundayFlow': { en: 'What Sunday looks like', zh: '主日的流程' },
   'visit.faq': { en: 'Common questions', zh: '常见问题' },
   'visit.arriving': { en: 'Arriving', zh: '抵达' },
   'visit.tellUs': { en: "Tell us you're coming", zh: '告诉我们你要来' },
   'visit.tellUsBody': {
-    en: "You never have to — you are welcome to simply show up and slip into a back row. But if you let us know, we can arrange for someone to look out for you at the door.",
-    zh: '这不是必须的 —— 你完全可以直接来，安静地坐在后排。但若你先告诉我们一声，我们可以安排人在门口留意你。',
+    en: "You never have to. You are welcome to simply show up and slip into a back row. But if you let us know, we can arrange for someone to look out for you at the door.",
+    zh: '这不是必须的。你完全可以直接来，安静地坐在后排。但若你先告诉我们一声，我们可以安排人在门口留意你。',
   },
 
   /* ------------------------------------------------------------ about --- */
@@ -172,7 +172,7 @@ export const ui = {
   /* ---------------------------------------------------------- contact --- */
   'contact.title': { en: 'Contact', zh: '联系我们' },
   'contact.lede': {
-    en: 'A real person reads these. Write in English or Chinese — whichever is easier.',
+    en: 'A real person reads these. Write in English or Chinese, whichever is easier.',
     zh: '这些留言由真人查看。中文或英文皆可，用你顺手的那一种就好。',
   },
   'contact.name': { en: 'Your name', zh: '你的称呼' },
@@ -186,7 +186,7 @@ export const ui = {
   'contact.topicOther': { en: 'Something else', zh: '其他' },
   'contact.follow': { en: 'Follow along', zh: '关注我们' },
   'contact.required': { en: 'required', zh: '必填' },
-  'contact.sentTitle': { en: 'Thank you — your message is on its way.', zh: '谢谢你，信息已经发送。' },
+  'contact.sentTitle': { en: 'Thank you. Your message is on its way.', zh: '谢谢你，信息已经发送。' },
   'contact.sentBody': {
     en: 'A real person reads these. You should hear back before long.',
     zh: '这些留言由真人查看，我们会尽快回复你。',
@@ -209,8 +209,8 @@ export const ui = {
    * translation, which is the one thing an English reader is not looking at.
    */
   'meta.fallbackNotice': {
-    en: 'English translation coming soon — showing Chinese for now.',
-    zh: '中文翻译稍后补上 —— 暂时显示英文。',
+    en: 'English translation coming soon. Showing Chinese for now.',
+    zh: '中文翻译稍后补上，暂时显示英文。',
   },
   /* Audience chips on events. The schema has always described these as
      driving chips; nothing rendered them until now. */

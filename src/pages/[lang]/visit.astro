@@ -27,7 +27,7 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
   locale={locale}
   title={t('nav.visit')}
   description={locale === 'en'
-    ? 'Everything you need to know before your first visit to Waco Chinese Church — when we meet, where to go, what happens on a Sunday, and what language is used.'
+    ? 'Everything you need to know before your first visit to Waco Chinese Church: when we meet, where to go, what happens on a Sunday, and what language is used.'
     : '第一次来韦科华人教会之前，你需要知道的一切：聚会时间、地点、主日流程，以及使用的语言。'}
 >
   <PageHeader
@@ -42,7 +42,7 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
         href={church.address.mapsUrl}
         target="_blank"
         rel="noopener noreferrer"
-        >{t('facts.directions')}<span class="visually-hidden"> — {t('meta.externalLink')}</span></a
+        >{t('facts.directions')}<span class="visually-hidden">, {t('meta.externalLink')}</span></a
       >
       {
         church.contact.email && (
@@ -71,7 +71,7 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
           }
           <a class="link-arrow" href={church.address.mapsUrl} target="_blank" rel="noopener noreferrer">
             {t('facts.openInMaps')}
-            <span class="visually-hidden"> — {t('meta.externalLink')}</span>
+            <span class="visually-hidden">, {t('meta.externalLink')}</span>
           </a>
         </div>
 
@@ -81,8 +81,8 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
         <div class="where__map" data-reveal>
           <p class="where__map-label ui">
             {locale === 'en'
-              ? 'The building is shared. Look for the Emmanuel Baptist Church sign — that is the right place.'
-              : '这栋建筑是共用的。请找 Emmanuel Baptist Church 的招牌 —— 那就是我们。'}
+              ? 'The building is shared. Look for the Emmanuel Baptist Church sign. That is the right place.'
+              : '这栋建筑是共用的。请找 Emmanuel Baptist Church 的招牌，那就是我们。'}
           </p>
         </div>
       </div>
@@ -128,8 +128,8 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
           <div class="faq__ask" data-reveal>
             <p class="faq__ask-text">
               {locale === 'en'
-                ? "Not answered here? Ask — parking, children, what to wear, anything. A real person reads these and will reply."
-                : '这里没写到的，直接问就好 —— 停车、孩子、穿着，任何问题都可以。这些信件由真人查看，会回复你。'}
+                ? "Not answered here? Just ask. Parking, children, what to wear, anything at all. A real person reads these and will reply."
+                : '这里没写到的，直接问就好。停车、孩子、穿着，任何问题都可以。这些信件由真人查看，会回复你。'}
             </p>
             <a class="btn btn--ink" href={localePath(locale, '/contact')}>
               {t('cta.contact')}

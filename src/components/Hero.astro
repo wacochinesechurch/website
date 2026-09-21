@@ -84,7 +84,7 @@ const heroFocus = focalPosition(heroMoment?.data.image.focus);
               <dd>
                 <a href={church.address.mapsUrl} target="_blank" rel="noopener noreferrer">
                   {church.address.line1}
-                  <span class="visually-hidden"> — {t('meta.externalLink')}</span>
+                  <span class="visually-hidden">, {t('meta.externalLink')}</span>
                 </a>
                 <span class="hero__fact-sub">
                   {church.address.city}, {church.address.state}

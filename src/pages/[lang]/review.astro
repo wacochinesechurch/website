@@ -67,7 +67,7 @@ for (const s of church.social) {
   if (s.status !== 'verified')
     push({
       area: 'Social',
-      item: `${s.platform} — ${s.url}`,
+      item: `${s.platform}: ${s.url}`,
       status: s.status as Row['status'],
       why: 'Channel is linked from the old site but recent activity could not be confirmed. Confirm this is the current, active channel before relying on it.',
       where: 'src/content/settings/church.yaml → social',
@@ -90,7 +90,7 @@ for (const f of fellowships) {
   if (f.data.meetsStatus !== 'verified')
     push({
       area: 'Fellowships',
-      item: `${f.data.name.en} / ${f.data.name.zh} — meeting time`,
+      item: `${f.data.name.en} / ${f.data.name.zh} (meeting time)`,
       status: f.data.meetsStatus as Row['status'],
       why: 'No meeting day, time or room has ever been published for this group. The card currently invites people to ask instead.',
       where: `src/content/fellowships/${f.id}.md → meets`,
@@ -99,7 +99,7 @@ for (const f of fellowships) {
   if (f.data.contactStatus !== 'verified')
     push({
       area: 'Fellowships',
-      item: `${f.data.name.en} / ${f.data.name.zh} — contact`,
+      item: `${f.data.name.en} / ${f.data.name.zh} (contact)`,
       status: f.data.contactStatus as Row['status'],
       why: 'Contact name taken from the old Contacts page; no email was ever published and the person may have moved on.',
       where: `src/content/fellowships/${f.id}.md → contactName`,
@@ -156,23 +156,23 @@ if (people.length === 0)
 const standing = [
   {
     area: 'Prayer meetings',
-    item: 'Wednesday meets at a private home — address held off the site',
+    item: 'Wednesday meets at a private home, with the address held off the site',
     status: 'needs-review' as const,
-    why: 'The Wednesday prayer meeting meets at a member\u2019s home, not at the church. The street address is deliberately NOT in this repository: the repo lives on GitHub, git history cannot be undone, and a public page is indexed permanently. The site says where it roughly is and asks people to email for the address. Whoever is hosting needs to know that requests will arrive by email, and the church should agree who answers them. Note for anyone editing later: the street name really is "3A", not "3rd" — do not "correct" it if it ever gets added elsewhere.',
+    why: 'The Wednesday prayer meeting meets at a member\u2019s home, not at the church. The street address is deliberately NOT in this repository: the repo lives on GitHub, git history cannot be undone, and a public page is indexed permanently. The site says where it roughly is and asks people to email for the address. Whoever is hosting needs to know that requests will arrive by email, and the church should agree who answers them. Note for anyone editing later: the street name really is "3A", not "3rd". Do not "correct" it if it ever gets added elsewhere.',
     where: 'src/content/settings/church.yaml → gatherings.prayer-wednesday.addressOnRequest',
   },
   {
     area: 'Prayer meetings',
     item: 'Zoom link and prayer-request form',
     status: 'needs-review' as const,
-    why: 'The Tuesday meeting can be joined online and has a Google Form for prayer requests. Neither link is published yet, at the church\u2019s request. The page says an online option exists without linking to it. Add the links when a permanent home for them is decided — a standing Zoom room and a form that does not expire.',
+    why: 'The Tuesday meeting can be joined online and has a Google Form for prayer requests. Neither link is published yet, at the church\u2019s request. The page says an online option exists without linking to it. Add the links when a permanent home for them is decided: a standing Zoom room and a form that does not expire.',
     where: 'src/content/settings/church.yaml → gatherings.prayer-tuesday.online',
   },
   {
     area: 'Photography',
     item: 'Consent for identifiable faces',
     status: 'needs-review' as const,
-    why: 'All 14 photographs were already published publicly by the church. Several show clearly identifiable faces, and two include a child or teenager. Moving a photo from a small gallery to a full-bleed hero is a meaningful change in prominence — worth confirming with those pictured.',
+    why: 'All 14 photographs were already published publicly by the church. Several show clearly identifiable faces, and two include a child or teenager. Moving a photo from a small gallery to a full-bleed hero is a meaningful change in prominence. Worth confirming with those pictured.',
     where: 'src/assets/moments/',
   },
   {
@@ -221,14 +221,14 @@ const standing = [
     area: 'History',
     item: 'The 2018 partnership is documented on one side only',
     status: 'needs-review' as const,
-    why: 'The Chinese About text states a formal 2018 partner-church signing with Emmanuel Baptist. Emmanuel’s own website does not mention a Chinese congregation anywhere. A Texas Baptists article from August 2024 does confirm Emmanuel shares its space with Waco Chinese Church, so the relationship is real — but the formal 2018 covenant rests on WCC’s own account. Worth confirming before it is stated as flatly as it is.',
+    why: 'The Chinese About text states a formal 2018 partner-church signing with Emmanuel Baptist. Emmanuel’s own website does not mention a Chinese congregation anywhere. A Texas Baptists article from August 2024 does confirm Emmanuel shares its space with Waco Chinese Church, so the relationship is real. But the formal 2018 covenant rests on WCC’s own account. Worth confirming before it is stated as flatly as it is.',
     where: 'src/content/settings/church.yaml → partners',
   },
   {
     area: 'Sermons',
     item: 'No sermon archive exists',
     status: 'needs-review' as const,
-    why: 'The old Sermons page listed no sermons at all and pointed at a fixed 2023 recording labelled as a live stream. The architecture here is complete — add entries to src/content/sermons/ and the indexed archive renders.',
+    why: 'The old Sermons page listed no sermons at all and pointed at a fixed 2023 recording labelled as a live stream. The architecture here is complete. Add entries to src/content/sermons/ and the indexed archive renders.',
     where: 'src/content/sermons/',
   },
 ] satisfies Row[];
@@ -256,7 +256,7 @@ const counts = {
     locale={locale}
     eyebrow="Internal"
     title="Content review checklist"
-    lede={`${rows.length} items need a decision from someone at the church. This page is generated from the content itself — fix a field and its row disappears on the next build. It is set to noindex and is not in the sitemap.`}
+    lede={`${rows.length} items need a decision from someone at the church. This page is generated from the content itself. Fix a field and its row disappears on the next build. It is set to noindex and is not in the sitemap.`}
   />
 
   <section class="section">

@@ -139,7 +139,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
                 aria-describedby="message-hint"></textarea>
               <p class="field__hint" id="message-hint">
                 {locale === 'en'
-                  ? 'Write in English or Chinese — whichever is easier.'
+                  ? 'Write in English or Chinese, whichever is easier.'
                   : '中文或英文皆可，用你顺手的那一种就好。'}
               </p>
             </div>
@@ -174,7 +174,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
               href={church.address.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              >{t('facts.directions')}<span class="visually-hidden"> — {t('meta.externalLink')}</span></a
+              >{t('facts.directions')}<span class="visually-hidden">, {t('meta.externalLink')}</span></a
             >
           </div>
 
@@ -186,8 +186,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
                   {social.map((s) => (
                     <li>
                       <a href={s.url} target="_blank" rel="noopener noreferrer">
-                        {pick(s.label, locale) || s.platform}
-                        <span class="visually-hidden"> — {t('meta.externalLink')}</span>
+                        {pick(s.label, locale) || s.platform}<span class="visually-hidden">, {t('meta.externalLink')}</span>
                       </a>
                     </li>
                   ))}

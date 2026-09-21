@@ -1,6 +1,6 @@
 ---
 caption:
-  en: The professionals' retreat in Galveston. Famous for crabs — you understand.
+  en: The professionals' retreat in Galveston. Famous for crabs, you understand.
   zh: 职青团契的退修会。Galveston，盛产螃蟹，你懂的。
 image:
   src: galveston-crabs.webp

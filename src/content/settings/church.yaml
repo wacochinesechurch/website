@@ -149,7 +149,7 @@
         en: This one can be joined online as well as in person.
         zh: 这场祷告会可以到现场，也可以在线上参加。
       summary:
-        en: The church praying together. Come in person or join online — and you can send a request in beforehand if you would like others to pray for something.
+        en: The church praying together. Come in person or join online. If you would like others to pray for something, you can send a request in beforehand.
         zh: 全教会一同祷告。可以到教会现场，也可以线上参加；若有代祷需要，也可以事先提交，让弟兄姊妹为你祷告。
       languages:
         en: Mandarin.
@@ -159,21 +159,21 @@
 
     - id: prayer-wednesday
       name:
-        en: Prayer Meeting — Baylor Bible Bears
-        zh: 祷告会 —— 大学生组（BBB）
+        en: 'Prayer Meeting: Baylor Bible Bears'
+        zh: 祷告会：大学生组（BBB）
       day: wednesday
       startTime: "19:30"
       endTime: "20:30"
       location:
-        en: A member's home near Baylor — not at the church
-        zh: Baylor 附近弟兄姊妹的家中 —— 不在教会
+        en: A member's home near Baylor, not at the church
+        zh: Baylor 附近弟兄姊妹的家中，不在教会
       # The street address is deliberately not stored here. It is a private
       # home, this repository is on GitHub, and git history cannot be undone.
       # Whoever is hosting sends it to people who ask — which also means the
       # site never goes stale when the host changes.
       addressOnRequest:
-        en: This one meets at a member's home rather than at the church, so we send the address out rather than posting it. Email us and we will pass it on — you are very welcome to come.
-        zh: 这场祷告会在弟兄姊妹家中聚会，不在教会，因此地址我们不公开张贴，而是来信索取。写信给我们，我们会把地址发给你 —— 非常欢迎你来。
+        en: This one meets at a member's home rather than at the church, so we send the address out rather than posting it. Email us and we will pass it on. You are very welcome to come.
+        zh: 这场祷告会在弟兄姊妹家中聚会，不在教会，因此地址我们不公开张贴，而是来信索取。写信给我们，我们会把地址发给你。非常欢迎你来。
       summary:
         en: The college group praying together, midweek.
         zh: 大学生组在周间一同祷告。

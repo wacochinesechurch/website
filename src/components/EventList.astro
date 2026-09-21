@@ -172,7 +172,7 @@ const t = useTranslations(locale);
                 >
                   {pick(e.data.registerLabel, locale) ||
                     (locale === 'en' ? 'Sign up' : '报名')}
-                  <span class="visually-hidden"> — {t('meta.externalLink')}</span>
+                  <span class="visually-hidden">, {t('meta.externalLink')}</span>
                 </a>
               )}
             </div>

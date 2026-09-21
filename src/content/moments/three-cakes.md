@@ -1,6 +1,6 @@
 ---
 caption:
-  en: Three cakes, three styles, one idea — sharing love and good food in the Lord.
+  en: 'Three cakes, three styles, one idea: sharing love and good food in the Lord.'
   zh: 三款不同的蛋糕有一个共同的主题：在主里面分享爱和美食
 image:
   src: three-cakes.webp

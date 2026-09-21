@@ -4,8 +4,8 @@ title:
   en: Mid-Autumn Festival gathering
   zh: 中秋聚会
 summary:
-  en: Mooncakes, a shared meal and music — everyone welcome, bring a friend.
-  zh: 月饼、团圆饭与音乐敬拜 —— 欢迎每一位，也欢迎带朋友来。
+  en: Mooncakes, a shared meal and worship music. Everyone welcome, bring a friend.
+  zh: 月饼、团圆饭与音乐敬拜。欢迎每一位，也欢迎带朋友来。
 start: 2026-09-25T18:00:00-05:00
 end: 2026-09-25T21:00:00-05:00
 location:

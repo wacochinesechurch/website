@@ -44,7 +44,7 @@ const youtube = church.social.find((s) => s.platform === 'youtube');
             rel="noopener noreferrer"
           >
             {t('sermons.allOnYouTube')}
-            <span class="visually-hidden"> — {t('meta.externalLink')}</span>
+            <span class="visually-hidden">, {t('meta.externalLink')}</span>
           </a>
         </div>
       )
@@ -132,8 +132,8 @@ const youtube = church.social.find((s) => s.platform === 'youtube');
             </h2>
             <p class="shelf__body">
               {locale === 'en'
-                ? 'We have not built a sermon-by-sermon archive on this site yet. The church’s YouTube channel holds what has been recorded, though nothing new has been posted there since December 2023. An indexed archive — speaker, date, passage and series, in both languages — is ready here the moment someone starts filling it in.'
-                : '本站尚未建立逐篇的讲道存档。教会录制的内容保存在 YouTube 频道上，不过自 2023 年 12 月起未再上传新视频。这里已备好中英双语的索引架构 —— 讲员、日期、经文与系列 —— 随时可以启用。'}
+                ? 'We have not built a sermon-by-sermon archive on this site yet. The church’s YouTube channel holds what has been recorded, though nothing new has been posted there since December 2023. An indexed archive is ready here in both languages, with room for speaker, date, passage and series. Sermons appear the moment someone starts filling it in.'
+                : '本站尚未建立逐篇的讲道存档。教会录制的内容保存在 YouTube 频道上，不过自 2023 年 12 月起未再上传新视频。这里已备好中英双语的索引架构，留有讲员、日期、经文与系列的位置，随时可以启用。'}
             </p>
             {youtube && (
               <a
@@ -143,7 +143,7 @@ const youtube = church.social.find((s) => s.platform === 'youtube');
                 rel="noopener noreferrer"
               >
                 {t('sermons.watchOnYouTube')}
-                <span class="visually-hidden"> — {t('meta.externalLink')}</span>
+                <span class="visually-hidden">, {t('meta.externalLink')}</span>
               </a>
             )}
           </div>

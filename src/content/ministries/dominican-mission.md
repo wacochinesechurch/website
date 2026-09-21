@@ -1,6 +1,6 @@
 ---
 name:
-  en: Short-term mission — Dominican Republic
+  en: Short-term mission to the Dominican Republic
   zh: 多米尼加短宣
 summary:
   en: Ariell went on a mission trip to the Dominican Republic in the summer of 2023.

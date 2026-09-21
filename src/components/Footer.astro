@@ -61,7 +61,7 @@ const verifiedSocial = church.social.filter((s) => s.status !== 'unverified');
           >
             {church.address.line1}<br />
             {church.address.city}, {church.address.state} {church.address.zip}
-            <span class="visually-hidden"> — {t('meta.externalLink')}</span>
+            <span class="visually-hidden"> ({t('meta.externalLink')})</span>
           </a>
           {
             church.address.note && pick(church.address.note, locale) && (
@@ -133,7 +133,7 @@ const verifiedSocial = church.social.filter((s) => s.status !== 'unverified');
               <li>
                 <a href={s.url} target="_blank" rel="noopener noreferrer">
                   {pick(s.label, locale) || s.platform}
-                  <span class="visually-hidden"> — {t('meta.externalLink')}</span>
+                  <span class="visually-hidden"> ({t('meta.externalLink')})</span>
                 </a>
               </li>
             ))}

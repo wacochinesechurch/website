@@ -1,6 +1,6 @@
 ---
 caption:
-  en: The young people's retreat — worship, reflection, and learning to work as a team.
+  en: The young people's retreat. Worship, reflection, and learning to work as a team.
   zh: 少年们的退修会：敬拜，反思，培养团队协同合作能力
 image:
   src: retreat-teamwork.webp

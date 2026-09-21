@@ -1,6 +1,6 @@
 ---
 name:
-  en: Short-term mission — Jena, Germany
+  en: Short-term mission to Jena, Germany
   zh: 德国耶拿短宣
 summary:
   en: Brother Lin Jianhui and Sister Chen Yan served with a church in Jena, Germany, over the summer of 2023.

@@ -25,7 +25,7 @@ const methods = church.giving.filter((m) => m.status !== 'unverified');
   locale={locale}
   title={t('give.title')}
   description={locale === 'en'
-    ? 'Ways to give to Waco Chinese Church in Waco, Texas — by Zelle, by check, or in person on a Sunday. If you are visiting, there is no obligation to give anything.'
+    ? 'Ways to give to Waco Chinese Church in Waco, Texas: by Zelle, by check, or in person on a Sunday. If you are visiting, there is no obligation to give anything.'
     : '奉献给德州韦科华人教会的方式：Zelle 转账、邮寄支票，或主日在教会现场奉献。若你是初次来访的朋友，请不要有任何负担。'}
 >
   <PageHeader
@@ -94,8 +94,8 @@ const methods = church.giving.filter((m) => m.status !== 'unverified');
         <p class="caveat__body">
           {
             locale === 'en'
-              ? 'For the exact name to make a check payable to, or anything about receipts and tax, please email us first — we would rather answer you directly than publish something that turns out to be wrong.'
-              : '关于支票抬头应填写的确切名称，或任何与收据、税务相关的问题，请先来信询问 —— 我们宁可直接回复你，也不愿在网上公布可能有误的信息。'
+              ? 'For the exact name to make a check payable to, or anything about receipts and tax, please email us first. We would rather answer you directly than publish something that turns out to be wrong.'
+              : '关于支票抬头应填写的确切名称，或任何与收据、税务相关的问题，请先来信询问。我们宁可直接回复你，也不愿在网上公布可能有误的信息。'
           }
         </p>
         {

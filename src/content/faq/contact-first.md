@@ -4,7 +4,7 @@ question:
   zh: 我可以先告诉你们我要来吗？
 answer:
   en: |
-    Yes, and it helps. Email **wacochinesechurch@gmail.com** and say which Sunday you are thinking of, and we can arrange for someone to look out for you — so you do not have to walk into a room of strangers on your own.
+    Yes, and it helps. Email **wacochinesechurch@gmail.com** and say which Sunday you are thinking of, and we can arrange for someone to look out for you. That way you do not have to walk into a room of strangers on your own.
 
     You do not have to do this. Turning up unannounced is entirely fine.
   zh: |

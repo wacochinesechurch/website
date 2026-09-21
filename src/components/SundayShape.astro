@@ -95,8 +95,7 @@ const gatherings = church.gatherings.filter(
                   rel="noopener noreferrer"
                 >
                   {g.address.line1}, {g.address.city}, {g.address.state}{' '}
-                  {g.address.zip}
-                  <span class="visually-hidden"> — {t('meta.externalLink')}</span>
+                  {g.address.zip}<span class="visually-hidden">. {t('meta.externalLink')}</span>
                 </a>
                 {g.address.note && pick(g.address.note, locale) && (
                   <span class="gathering__elsewhere-note">

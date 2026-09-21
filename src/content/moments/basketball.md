@@ -1,6 +1,6 @@
 ---
 caption:
-  en: The church basketball team. You are the best — go, go, go!
+  en: The church basketball team. You are the best. Go, go, go!
   zh: 教会弟兄篮球队。加油，加油，加油！
 image:
   src: basketball.webp

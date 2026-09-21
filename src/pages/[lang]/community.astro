@@ -32,7 +32,7 @@ const active = await getMinistries('active');
   locale={locale}
   title={t('nav.community')}
   description={locale === 'en'
-    ? 'Fellowships for students, professionals, children, seniors and English speakers at Waco Chinese Church — and the work this church gives itself to.'
+    ? 'Fellowships for students, professionals, children, seniors and English speakers at Waco Chinese Church, along with the work this church gives itself to.'
     : '韦科华人教会的大学生、职青、儿童、长者与英文团契，以及这间教会所摆上的服事。'}
 >
   <PageHeader
@@ -95,8 +95,8 @@ const active = await getMinistries('active');
               </h3>
               <p class="record__note">
                 {locale === 'en'
-                  ? 'Recorded by the church itself. We have not confirmed which of these are still running — ask us and we will tell you what is happening now.'
-                  : '以下由教会自己记录。我们尚未确认其中哪些仍在进行 —— 欢迎来信询问目前的情况。'}
+                  ? 'Recorded by the church itself. We have not confirmed which of these are still running. Ask us and we will tell you what is happening now.'
+                  : '以下由教会自己记录。我们尚未确认其中哪些仍在进行。欢迎来信询问目前的情况。'}
               </p>
               <ul class="ministries ministries--record" role="list" data-reveal-group>
                 {past.map((m) => (
