@@ -63,10 +63,15 @@ const moments = (await getMoments()).slice(0, limit);
 
 <style>
   .strip-wrap {
-    /* break out of the shell so the strip runs to the screen edge — it
-       should feel like it continues past the frame, not like a widget */
-    width: 100vw;
-    margin-inline: calc(50% - 50vw);
+    /*
+     * No 100vw full-bleed here: this element is already a direct child of a
+     * full-width <section>, so it spans the screen without help. The old
+     * `width: 100vw; margin-inline: calc(50% - 50vw)` was redundant, and its
+     * sub-pixel rounding was making the English homepage scroll 4.5px
+     * sideways at 320px. The strip still runs to the screen edge; the
+     * padding-inline below is what insets its first and last card.
+     */
+    width: 100%;
   }
 
   .strip {
