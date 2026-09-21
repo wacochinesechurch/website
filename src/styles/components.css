@@ -22,7 +22,14 @@
     letter-spacing: 0.012em;
     line-height: 1.2;
     text-decoration: none;
-    white-space: nowrap;
+    /* Deliberately NOT white-space: nowrap. Several buttons carry the church's
+       email address, which is a single unbreakable 27-character token — with
+       nowrap it forced the page wider than a 320px phone and gave the whole
+       document a horizontal scrollbar. Ordinary short labels have room and
+       never wrap anyway. */
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
     cursor: pointer;
     border: var(--border-hair) solid var(--btn-border);
     border-radius: var(--r-md);

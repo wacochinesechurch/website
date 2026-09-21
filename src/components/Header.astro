@@ -435,4 +435,14 @@ const isCurrent = (href: string) =>
       font-size: 0.94em;
     }
   }
+
+  /* At 320px "Waco Chinese Church" cannot fit beside the language switch and
+     the menu button — it is a nowrap lockup and overflowed by ~49px. The
+     Chinese name is six glyphs and fits comfortably, so only the English
+     lockup falls back to the mark alone, which still links home. */
+  @media (max-width: 22rem) {
+    .site-header__brand :global(.wordmark__text:lang(en)) {
+      display: none;
+    }
+  }
 </style>
