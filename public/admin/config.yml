@@ -28,9 +28,16 @@ backend:
   # If the org or repo name differs, change this one line and redeploy.
   repo: wacochinesechurch/website
   branch: main
-  # Volunteers sign in with a free GitHub account. The `base_url` below points
-  # at the OAuth helper that makes that possible — see docs/DEPLOY.md step 3.
-  # Until it is set, /admin will load but sign-in will fail.
+  # Volunteers sign in with a free GitHub account.
+  #
+  # No `base_url` is needed: with `name: github` the CMS authenticates through
+  # https://api.netlify.com/auth by default, and this site is on Netlify. All
+  # that is required is installing a GitHub OAuth provider once, under
+  # Netlify → Project configuration → Security → Authentication providers.
+  # See docs/DEPLOY.md step 3.
+  #
+  # Only set base_url if you ever move off Netlify, in which case it points at
+  # a self-hosted OAuth helper such as sveltia-cms-auth on a Cloudflare Worker.
   # base_url: https://YOUR-WORKER.workers.dev
 
 # Lets an editor preview changes on a branch before they go live.

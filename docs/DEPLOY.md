@@ -37,20 +37,53 @@ credit the real domain rather than treating it as a duplicate.
 
 ## 3. Turn on CMS sign-in — 10 min
 
-`/admin` will load without this, but nobody can sign in.
+`/admin` already loads. Nobody can sign in until this is done.
 
-Sveltia CMS needs a small OAuth helper. The maintained one deploys free to a
-Cloudflare Worker: <https://github.com/sveltia/sveltia-cms-auth>. Follow its
-README — it is a GitHub OAuth app plus a one-command Worker deploy.
+Because the site is on Netlify, no separate OAuth server is needed — Netlify
+can be the OAuth provider. Two steps, and **both involve a secret, so they are
+yours to do, not something to delegate.**
 
-Then uncomment the last line of the `backend:` block in
-`public/admin/config.yml` and set it to your Worker URL:
+### a. Create a GitHub OAuth App
 
-```yaml
-base_url: https://your-worker.workers.dev
-```
+Go to **github.com → Settings → Developer settings → OAuth Apps → New OAuth App**
+(<https://github.com/settings/applications/new>) and enter exactly:
 
-Commit, push, done. Volunteers sign in at `/admin` with a free GitHub account.
+| Field | Value |
+|---|---|
+| Application name | `Waco Chinese Church CMS` |
+| Homepage URL | `https://www.wacochinesechurch.org` |
+| Authorization callback URL | `https://api.netlify.com/auth/done` |
+
+The callback URL must be exactly that, or sign-in fails with a redirect error.
+
+Register it, then **Generate a new client secret**. GitHub shows the secret
+once — copy it now along with the Client ID.
+
+### b. Give them to Netlify
+
+**Netlify → your project → Project configuration → Security → Authentication
+providers → Install provider → GitHub**, then paste the Client ID and Client
+Secret.
+
+That is it. `public/admin/config.yml` needs no change: with `backend: github`
+the CMS authenticates through `https://api.netlify.com/auth` by default, which
+is what you have just configured.
+
+### Check it
+
+Open `https://<your-site>/admin`, click **Login with GitHub**, authorise. You
+should land in the editor with Notices, Events, Church life photos and the
+rest down the left-hand side. Make a trivial edit, save, and watch a deploy
+start in Netlify.
+
+If sign-in fails, it is almost always the callback URL — it must be
+`https://api.netlify.com/auth/done`, not your own domain.
+
+### Adding volunteers
+
+Each volunteer needs a free GitHub account with **write access to the
+repository** (GitHub → the `wacochinesechurch` org → People / the repo's
+Settings → Collaborators). Without write access they can sign in but not save.
 
 ## 4. The nightly rebuild — 2 min, please do not skip
 
