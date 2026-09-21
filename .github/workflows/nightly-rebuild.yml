@@ -1,0 +1,40 @@
+name: Nightly rebuild
+
+# WHY THIS EXISTS
+#
+# A static site built on Tuesday still believes it is Tuesday. Two of the
+# three anti-staleness layers already work without this:
+#
+#   1. Build time  — getUpcomingEvents() drops anything already finished
+#   2. Read time   — src/scripts/freshness.ts re-checks in the visitor's
+#                    browser, so a human always sees the truth
+#
+# But the HTML that Google, Bing and link-preview bots read is whatever was
+# generated at the last build. Without a rebuild, a crawler can keep seeing a
+# finished event listed as upcoming — which is exactly how the previous site
+# ended up advertising a Lunar New Year party in September.
+#
+# This is layer 3. It asks Netlify to rebuild once a day. Nothing else.
+
+on:
+  schedule:
+    # 09:00 UTC — about 3am or 4am in Waco depending on daylight saving.
+    # Quiet hours either way.
+    - cron: '0 9 * * *'
+  # Lets anyone with repo access trigger a rebuild by hand from the Actions
+  # tab, which is handy if content looks stale and you do not want to wait.
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask Netlify to rebuild
+        run: |
+          if [ -z "${{ secrets.NETLIFY_BUILD_HOOK }}" ]; then
+            echo "::error::NETLIFY_BUILD_HOOK secret is not set — the nightly rebuild is doing nothing."
+            echo "Add it under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          code=$(curl -fsS -o /dev/null -w '%{http_code}' -X POST -d '{}' "${{ secrets.NETLIFY_BUILD_HOOK }}")
+          echo "Netlify responded $code"
