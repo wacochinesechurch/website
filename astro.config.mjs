@@ -34,7 +34,9 @@ export default defineConfig({
         defaultLocale: 'en',
         locales: { en: 'en-US', zh: 'zh-CN' },
       },
-      filter: (page) => !page.includes('/admin'),
+      // /review is noindex and disallowed in robots.txt. Listing it here as
+      // well told Google three different things about the same page.
+      filter: (page) => !page.includes('/admin') && !page.includes('/review'),
     }),
   ],
 

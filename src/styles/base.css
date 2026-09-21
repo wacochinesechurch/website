@@ -339,29 +339,34 @@
      with an IntersectionObserver fallback that sets [data-lit] elsewhere.
      --------------------------------------------------------------------- */
 
-  [data-reveal] {
+  [data-reveal],
+  [data-reveal-group] > * {
     --reveal-lift: 1.25rem;
     --reveal-delay: 0ms;
   }
 
   /* Fallback path: JS adds .js-reveal to <html>, then toggles [data-lit]. */
-  .js-reveal [data-reveal]:not([data-lit]) {
+  .js-reveal [data-reveal]:not([data-lit]),
+  .js-reveal [data-reveal-group] > *:not([data-lit]) {
     opacity: 0;
     transform: translate3d(0, var(--reveal-lift), 0);
   }
 
-  .js-reveal [data-reveal] {
+  .js-reveal [data-reveal],
+  .js-reveal [data-reveal-group] > * {
     transition:
       opacity var(--dur-reveal) var(--ease-settle) var(--reveal-delay),
       transform var(--dur-reveal) var(--ease-settle) var(--reveal-delay),
       filter var(--dur-reveal) var(--ease-settle) var(--reveal-delay);
   }
 
-  .js-reveal [data-reveal]:not([data-lit]) {
+  .js-reveal [data-reveal]:not([data-lit]),
+  .js-reveal [data-reveal-group] > *:not([data-lit]) {
     filter: saturate(0.55) brightness(0.94);
   }
 
-  .js-reveal [data-reveal][data-lit] {
+  .js-reveal [data-reveal][data-lit],
+  .js-reveal [data-reveal-group] > *[data-lit] {
     opacity: 1;
     transform: none;
     filter: none;
@@ -370,7 +375,8 @@
   /* Native scroll-driven path — preferred, runs off the main thread. */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
-      .js-reveal [data-reveal] {
+      .js-reveal [data-reveal],
+      .js-reveal [data-reveal-group] > * {
         transition: none;
       }
 

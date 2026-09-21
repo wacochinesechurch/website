@@ -9,9 +9,11 @@ interface Props {
   /** On the Visit page both gatherings are shown; the homepage shows Sunday. */
   showAll?: boolean;
   compact?: boolean;
+  /** Id for the section heading, so an enclosing <section> can point at it. */
+  headingId?: string;
 }
 
-const { locale, showAll = false, compact = false } = Astro.props;
+const { locale, showAll = false, compact = false, headingId } = Astro.props;
 const t = useTranslations(locale);
 const church = await getChurch();
 
@@ -41,6 +43,7 @@ const gatherings = church.gatherings.filter(
             ? 'So that nothing on your first morning is a surprise.'
             : '好让你第一次来的那个早上，不会有任何意外。'
         }
+        id={headingId}
       />
     )
   }
@@ -54,11 +57,11 @@ const gatherings = church.gatherings.filter(
             <p class="gathering__when ui">
               {formatWeekdayName(g.day, locale)}
               <span aria-hidden="true"> · </span>
-              <time>{formatTime(g.startTime, locale)}</time>
+              <time datetime={g.startTime}>{formatTime(g.startTime, locale)}</time>
               {g.endTime && (
                 <>
                   <span aria-hidden="true">–</span>
-                  <time>{formatTime(g.endTime, locale)}</time>
+                  <time datetime={g.endTime}>{formatTime(g.endTime, locale)}</time>
                 </>
               )}
             </p>

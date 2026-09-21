@@ -26,6 +26,7 @@ const nav = [
   { href: '/church-life', label: t('nav.life') },
   { href: '/sermons', label: t('nav.sermons') },
   { href: '/give', label: t('nav.give') },
+  { href: '/contact', label: t('nav.contact') },
 ] as const;
 
 const isCurrent = (href: string) =>
@@ -122,9 +123,6 @@ const isCurrent = (href: string) =>
           </li>
         ))
       }
-      <li>
-        <a href={localePath(locale, '/contact')}>{t('nav.contact')}</a>
-      </li>
     </ul>
 
     <div class="mobile-nav__foot ui">
@@ -181,6 +179,21 @@ const isCurrent = (href: string) =>
 
   .site-header[data-transparent]:not([data-stuck]) .langswitch {
     border-color: color-mix(in oklab, var(--c-paper) 40%, transparent);
+  }
+
+  /* --accent is the deep amber meant for paper, where it reads at 5.1:1. Over
+     the dark hero it falls to 3.5:1 and fails AA, so the current-page link
+     takes the accent built for dark surfaces — 11.6:1 on ink-900. */
+  .site-header[data-transparent]:not([data-stuck])
+    .site-header__nav
+    a[aria-current='page'] {
+    color: var(--c-lamp-300);
+  }
+
+  .site-header[data-transparent]:not([data-stuck])
+    .site-header__nav
+    a[aria-current='page']::after {
+    background: var(--c-lamp-300);
   }
 
   .site-header__inner {
@@ -413,6 +426,26 @@ const isCurrent = (href: string) =>
      the language switch and the menu button together overflowed the line by
      ~17px, giving the whole page a horizontal scroll. Tightening the gaps and
      the switch's minimum width reclaims ~29px, which clears it at 320. */
+  /* 369-379px was a dead zone: the tightening below started at 23rem (368px)
+     and the header only fits unaided from 380px, so the English wordmark plus
+     the language switch plus the menu button came to 379px of intrinsic width
+     and pushed the burger off-screen. 375px - the commonest phone width there
+     is - sat squarely inside it. This band closes the gap by tightening the
+     spacing only, keeping the church's name in full. */
+  @media (max-width: 24rem) {
+    .site-header__inner {
+      gap: var(--s-3);
+    }
+
+    .site-header__actions {
+      gap: var(--s-2);
+    }
+
+    .wordmark__text {
+      min-width: 0;
+    }
+  }
+
   @media (max-width: 23rem) {
     .site-header__inner {
       gap: var(--s-2);

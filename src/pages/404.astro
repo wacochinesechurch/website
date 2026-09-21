@@ -51,7 +51,7 @@ const sunday = church.gatherings.find((g) => g.id === 'sunday');
         {sunday && (
           <>
             <br />
-            {formatWeekdayName(sunday.day, 'en')} {formatTime(sunday.startTime, 'en')}
+            {formatWeekdayName(sunday.day, 'en')}{' '}{formatTime(sunday.startTime, 'en')}
             {' · '}
             <span lang="zh-CN" style="display:inline">
               {formatWeekdayName(sunday.day, 'zh')}{formatTime(sunday.startTime, 'zh')}

@@ -23,14 +23,17 @@
 
 type Demotable = HTMLElement & { dataset: { expires?: string } };
 
-const END_OF_DAY_MS = 24 * 60 * 60 * 1000 - 1;
-
+/**
+ * `data-expires` and `data-event-end` are always exact UTC instants, resolved
+ * at BUILD time by endOfDayInChurchTime() in src/lib/church.ts — because only
+ * the build has a timezone database to tell it when a day actually ends in
+ * Waco. That leaves this file with two numbers to compare, and no date maths
+ * of its own to get wrong.
+ */
 function hasPassed(iso: string, now: number): boolean {
   const t = Date.parse(iso);
   if (Number.isNaN(t)) return false;
-  // Date-only values ("2026-09-21") count as live until that day ends.
-  const isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(iso.trim());
-  return (isDateOnly ? t + END_OF_DAY_MS : t) < now;
+  return t < now;
 }
 
 function run() {

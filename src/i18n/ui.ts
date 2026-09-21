@@ -178,7 +178,7 @@ export const ui = {
   'contact.name': { en: 'Your name', zh: '你的称呼' },
   'contact.email': { en: 'Email', zh: '电子邮箱' },
   'contact.message': { en: 'Message', zh: '留言' },
-  'contact.send': { en: 'Send', zh: '送出' },
+  'contact.send': { en: 'Send', zh: '发送' },
   'contact.topic': { en: 'What is this about?', zh: '想聊什么？' },
   'contact.topicVisit': { en: "I'd like to visit", zh: '我想来参加聚会' },
   'contact.topicRide': { en: 'Getting there', zh: '交通与路线' },
@@ -186,7 +186,7 @@ export const ui = {
   'contact.topicOther': { en: 'Something else', zh: '其他' },
   'contact.follow': { en: 'Follow along', zh: '关注我们' },
   'contact.required': { en: 'required', zh: '必填' },
-  'contact.sentTitle': { en: 'Thank you — your message is on its way.', zh: '谢谢你，讯息已经送出。' },
+  'contact.sentTitle': { en: 'Thank you — your message is on its way.', zh: '谢谢你，信息已经发送。' },
   'contact.sentBody': {
     en: 'A real person reads these. You should hear back before long.',
     zh: '这些留言由真人查看，我们会尽快回复你。',

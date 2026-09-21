@@ -489,7 +489,10 @@ const timeline = defineCollection({
   loader: file('src/content/timeline/timeline.yaml'),
   schema: z.object({
     id: z.string(),
+    /** Sortable. Always a plain year, even when the label says otherwise. */
     year: z.string(),
+    /** Shown instead of `year` when a moment is not named by its number. */
+    label: biSoft.optional(),
     title: bi,
     body: biBody,
     image,

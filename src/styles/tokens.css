@@ -99,7 +99,7 @@
   --accent-hover: var(--c-lamp-700);
   --accent-solid: var(--c-lamp-500);
   --accent-soft: var(--c-lamp-100);
-  --accent-faint: var(--c-lamp-050);
+  --accent-faint: color-mix(in oklab, var(--c-lamp-400) 12%, var(--c-paper));
 
   --secondary: var(--c-clay-600);
   --tertiary: var(--c-pine-600);
@@ -174,6 +174,7 @@
   --s-4: 1rem;
   --s-5: 1.25rem;
   --s-6: 1.5rem;
+  --s-7: 1.75rem;
   --s-8: 2rem;
   --s-10: 2.5rem;
   --s-12: 3rem;

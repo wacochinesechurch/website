@@ -136,6 +136,16 @@ function initMenu() {
   window.matchMedia('(min-width: 68rem)').addEventListener('change', (e) => {
     if (e.matches && !panel.hidden) close();
   });
+
+  /**
+   * The back/forward cache restores a page exactly as it was left. If the
+   * visitor left by tapping a link INSIDE the menu — which is the only reason
+   * the menu exists — then going back restores the site with the menu open,
+   * <main> inert and the page unscrollable, with no event to undo it.
+   */
+  window.addEventListener('pageshow', (e) => {
+    if ((e as PageTransitionEvent).persisted && !panel.hidden) close();
+  });
 }
 
 /* ------------------------------------------------------ language memory --- */
@@ -169,6 +179,17 @@ function initReveal() {
   if (!document.documentElement.classList.contains('js-reveal')) return;
   if (reduceMotion()) return;
 
+  /**
+   * .js-reveal holds every [data-reveal] block at opacity: 0 until this
+   * observer lights it. If the observer cannot be built, that class is the
+   * difference between a page and a blank screen — so drop it and let
+   * everything render unanimated instead.
+   */
+  if (typeof IntersectionObserver === 'undefined') {
+    document.documentElement.classList.remove('js-reveal');
+    return;
+  }
+
   const targets = document.querySelectorAll<HTMLElement>(
     '[data-reveal], [data-reveal-group] > *',
   );
@@ -197,10 +218,33 @@ function initReveal() {
 
 /* ---------------------------------------------------------------- init --- */
 function init() {
-  rememberLocale();
-  initHeader();
-  initMenu();
-  initReveal();
+  /**
+   * Each step is isolated. These ran in a bare sequence before, so an
+   * exception in initMenu() — on any browser with a gap this script does not
+   * anticipate — meant initReveal() never ran, and every [data-reveal] block
+   * stayed at opacity: 0. A menu bug rendered the whole page blank.
+   */
+  const step = (name: string, fn: () => void) => {
+    try {
+      fn();
+    } catch (err) {
+      console.warn(`[wcc] ${name} failed to initialise`, err);
+    }
+  };
+
+  step('locale memory', rememberLocale);
+  step('header', initHeader);
+  step('menu', initMenu);
+
+  let revealReady = false;
+  step('reveal', () => {
+    initReveal();
+    revealReady = true;
+  });
+
+  // Last resort. .js-reveal is what holds content at opacity: 0 while it waits
+  // to be lit, so if reveal did not finish wiring up, that class has to go.
+  if (!revealReady) document.documentElement.classList.remove('js-reveal');
 }
 
 if (document.readyState === 'loading') {

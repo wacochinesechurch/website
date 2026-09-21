@@ -105,7 +105,6 @@ collections:
     description: >-
       A one-line notice shown at the very top of every page. It REMOVES ITSELF
       on the date you set, so you never have to remember to take it down.
-    filter: { field: draft, value: false }
     fields:
       - { name: title, label: 'Notice', <<: *en_zh_text }
       - { name: body, label: 'A little more (optional)', <<: *en_zh_long, required: false }
@@ -189,7 +188,7 @@ collections:
           - { label: 'Seniors', value: seniors }
           - { label: 'English speakers', value: english }
           - { label: 'People visiting for the first time', value: newcomers }
-      - { name: registerUrl, label: 'Sign-up link (optional)', widget: string, required: false }
+      - { name: registerUrl, label: 'Sign-up link (optional)', widget: string, required: false, pattern: ['^https?://.+', 'Must start with https:// - paste the whole link out of your browser bar'] }
       - { name: registerLabel, label: 'Sign-up button text', <<: *en_zh_text, required: false }
       - { name: archive, label: 'Keep in the archive once it has passed', widget: boolean, default: true }
       - { name: draft, label: 'Save as draft (not published)', widget: boolean, default: false }
@@ -391,7 +390,7 @@ collections:
       - { name: name, label: 'Name', <<: *en_zh_text }
       - { name: role, label: 'Role', <<: *en_zh_text }
       - { name: bio, label: 'A short introduction (optional)', <<: *en_zh_markdown, required: false }
-      - { name: email, label: 'Email (optional)', widget: string, required: false }
+      - { name: email, label: 'Email (optional)', widget: string, required: false, pattern: ['^\S+@\S+\.\S+$', 'That does not look like an email address'] }
       - name: group
         label: 'Group'
         widget: select
@@ -457,7 +456,7 @@ collections:
                   - { name: state, label: 'State', widget: string }
                   - { name: zip, label: 'ZIP', widget: string }
                   - { name: note, label: 'Note about the building', <<: *en_zh_long, required: false }
-                  - { name: mapsUrl, label: 'Google Maps link', widget: string, required: false }
+                  - { name: mapsUrl, label: 'Google Maps link', widget: string, required: false, pattern: ['^https?://.+', 'Must start with https:// - paste the whole link out of your browser bar'] }
                   - { name: lat, label: 'Latitude', widget: number, required: false, value_type: float }
                   - { name: lng, label: 'Longitude', widget: number, required: false, value_type: float }
 
@@ -476,6 +475,21 @@ collections:
                   - { name: startTime, label: 'Starts (24-hour, e.g. 11:00)', widget: string, pattern: ['^\d{2}:\d{2}$', 'Use HH:MM, e.g. 11:00 or 18:00'] }
                   - { name: endTime, label: 'Ends (24-hour)', widget: string, required: false, pattern: ['^\d{2}:\d{2}$', 'Use HH:MM'] }
                   - { name: location, label: 'Room', <<: *en_zh_text }
+                  - name: address
+                    label: 'Street address - ONLY if it does not meet at the church'
+                    widget: object
+                    required: false
+                    collapsed: true
+                    hint: 'Leave this empty for anything that meets at 1801 Gurley Ave. The church address is set once, above.'
+                    fields:
+                      - { name: line1, label: 'Street', widget: string }
+                      - { name: city, label: 'City', widget: string, default: 'Waco' }
+                      - { name: state, label: 'State', widget: string, default: 'TX' }
+                      - { name: zip, label: 'ZIP', widget: string }
+                      - { name: mapsUrl, label: 'Map link', widget: string, required: false, pattern: ['^https?://.+', 'Must start with https:// - paste the whole link out of your browser bar'] }
+                      - { name: note, label: 'Note about the location', <<: *en_zh_long, required: false }
+                  - { name: addressOnRequest, label: 'Meets in a private home - how to ask for the address', <<: *en_zh_long, required: false, hint: 'Use this INSTEAD of a street address when a gathering meets in someone home. Never type a home address into this site: it would be published publicly and kept in the repository history forever.' }
+                  - { name: online, label: 'Can it also be joined online?', <<: *en_zh_long, required: false }
                   - { name: summary, label: 'What happens', <<: *en_zh_long, required: false }
                   - name: schedule
                     label: 'Running order'
@@ -486,6 +500,17 @@ collections:
                       - { name: start, label: 'From', widget: string }
                       - { name: end, label: 'To', widget: string, required: false }
                       - { name: label, label: 'What', <<: *en_zh_text }
+                  - name: groups
+                    label: 'Groups it splits into'
+                    widget: list
+                    required: false
+                    collapsed: false
+                    summary: '{{fields.name.en}}'
+                    hint: 'The Friday Bible study splits into three. Leave this empty for a gathering that does not split.'
+                    fields:
+                      - { name: name, label: 'Group name', <<: *en_zh_text }
+                      - { name: audience, label: 'Who it is for', <<: *en_zh_long }
+                      - { name: note, label: 'Anything else', <<: *en_zh_long, required: false }
                   - { name: languages, label: 'Language note', <<: *en_zh_long, required: false }
                   - { <<: *verification }
                   - { name: featured, label: 'Show prominently', widget: boolean, default: true }
@@ -494,7 +519,7 @@ collections:
                 label: 'Contact'
                 widget: object
                 fields:
-                  - { name: email, label: 'Email', widget: string, required: false }
+                  - { name: email, label: 'Email', widget: string, required: false, pattern: ['^\S+@\S+\.\S+$', 'That does not look like an email address'] }
                   - { <<: *verification, name: emailStatus, label: 'Email confirmed?' }
                   - { name: phone, label: 'Phone', widget: string, required: false }
                   - { <<: *verification, name: phoneStatus, label: 'Phone confirmed?', default: unverified }
@@ -507,7 +532,7 @@ collections:
                 fields:
                   - { name: platform, label: 'Platform', widget: string }
                   - { name: label, label: 'Label', <<: *en_zh_text, required: false }
-                  - { name: url, label: 'Link', widget: string }
+                  - { name: url, label: 'Link', widget: string, pattern: ['^https?://.+', 'Must start with https:// - paste the whole link out of your browser bar'] }
                   - { <<: *verification }
 
               - name: giving
@@ -534,7 +559,7 @@ collections:
                 summary: '{{fields.name.en}}'
                 fields:
                   - { name: name, label: 'Name', <<: *en_zh_text }
-                  - { name: url, label: 'Website', widget: string, required: false }
+                  - { name: url, label: 'Website', widget: string, required: false, pattern: ['^https?://.+', 'Must start with https:// - paste the whole link out of your browser bar'] }
                   - { name: relationship, label: 'The relationship', <<: *en_zh_long }
                   - { name: since, label: 'Since', widget: string, required: false }
 
@@ -552,7 +577,8 @@ collections:
             summary: '{{fields.year}} — {{fields.title.en}}'
             fields:
               - { name: id, label: 'Short id', widget: string }
-              - { name: year, label: 'Year', widget: string }
+              - { name: year, label: 'Year', widget: string, hint: 'Just the number. It is what puts the moments in order.' }
+              - { name: label, label: 'Show this instead of the year (optional)', <<: *en_zh_text, required: false, hint: 'For a moment that is not named by its number, e.g. Today.' }
               - { name: title, label: 'Heading', <<: *en_zh_text }
               - { name: body, label: 'What happened', <<: *en_zh_markdown }
               - { <<: *verification }

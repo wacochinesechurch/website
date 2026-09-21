@@ -1,6 +1,6 @@
 ---
 import { localePath, pick, type Locale } from '@i18n/config';
-import { getLiveAnnouncements } from '@lib/church';
+import { getLiveAnnouncements, endOfDayInChurchTime } from '@lib/church';
 
 interface Props {
   locale: Locale;
@@ -20,7 +20,7 @@ const notice = live[0];
     <aside
       class="notice"
       data-tone={notice.data.tone}
-      data-expires={notice.data.showUntil.toISOString()}
+      data-expires={endOfDayInChurchTime(notice.data.showUntil).toISOString()}
       aria-label={locale === 'en' ? 'Church notice' : '教会通知'}
     >
       <div class="shell shell--wide notice__inner">

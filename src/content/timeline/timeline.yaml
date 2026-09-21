@@ -94,7 +94,8 @@
   status: verified
 
 - id: "today"
-  year: "Today"
+  year: "2026"
+  label: { en: "Today", zh: "今天" }
   title:
     en: Wave after wave
     zh: 一波又一波

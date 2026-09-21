@@ -114,9 +114,12 @@ export function isUpcoming(
   const finish = ev.end ?? ev.start;
   // An event is "upcoming" until the end of the day it finishes, so a
   // Saturday retreat does not vanish at 00:01 on Saturday morning.
-  const endOfDay = new Date(finish);
-  endOfDay.setHours(23, 59, 59, 999);
-  return endOfDay.getTime() >= now.getTime();
+  //
+  // End of day in WACO, not on the build machine. setHours() would resolve in
+  // whatever timezone the builder happens to run in — UTC on Netlify, local on
+  // a volunteer's laptop — which made an evening event drop off the homepage
+  // at 6:59pm while it was still going on.
+  return endOfDayInChurchTime(finish).getTime() >= now.getTime();
 }
 
 const notDraft = <T extends { data: { draft?: boolean } }>(e: T) => !e.data.draft;
@@ -146,7 +149,10 @@ export async function getLiveAnnouncements() {
   const all = await getCollection('announcements', notDraft);
   const now = buildNow();
   return all
-    .filter((a) => a.data.showUntil.getTime() >= now.getTime())
+    // showUntil means "hide it AFTER this date", so the notice is live for
+    // the whole of that day in Waco — not until 7am, which is where noon UTC
+    // lands (see churchDate() in content.config.ts).
+    .filter((a) => endOfDayInChurchTime(a.data.showUntil).getTime() >= now.getTime())
     .sort((a, b) => a.data.showUntil.getTime() - b.data.showUntil.getTime());
 }
 
@@ -189,7 +195,11 @@ export async function getFaq(topic?: string) {
 
 export async function getTimeline() {
   const all = await getCollection('timeline');
-  return all.sort((a, b) => Number(a.data.year) - Number(b.data.year));
+  // A non-numeric year sorts last deterministically. It used to produce NaN,
+  // which a comparator treats as 0 — so the order was really just file order,
+  // and would have changed the day someone reordered the YAML.
+  const key = (y: string) => (Number.isFinite(Number(y)) ? Number(y) : Infinity);
+  return all.sort((a, b) => key(a.data.year) - key(b.data.year));
 }
 
 export async function getPage(id: string) {
@@ -197,6 +207,64 @@ export async function getPage(id: string) {
 }
 
 /* --------------------------------------------------------- structured data */
+
+/* ---------------------------------------------------------------- expiry --- */
+/**
+ * Milliseconds to add to a Waco wall-clock reading (parsed as if UTC) to get
+ * the real instant it names.
+ */
+function churchOffsetMs(at: Date): number {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: CHURCH_TIMEZONE,
+    hour12: false,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  }).formatToParts(at);
+  const get = (type: string) => Number(parts.find((p) => p.type === type)!.value);
+  const asUTC = Date.UTC(
+    get('year'),
+    get('month') - 1,
+    get('day'),
+    get('hour') % 24,
+    get('minute'),
+    get('second'),
+  );
+  // asUTC has whole-second resolution, so strip the milliseconds from the
+  // other side too — otherwise they leak into the offset and push the
+  // result a second past midnight into the following day.
+  return at.getTime() - at.getUTCMilliseconds() - asUTC;
+}
+
+/**
+ * The exact instant a calendar day ENDS in Waco.
+ *
+ * Dates here are stored as noon UTC (see churchDate() in content.config.ts) so
+ * that a bare "2026-10-05" cannot drift across a date line when it is
+ * formatted for America/Chicago. That makes them right for DISPLAY and wrong
+ * for EXPIRY: noon UTC is 7am in Waco, so anything expiring "on" its own date
+ * disappeared on the morning of the very day it was meant to be read.
+ *
+ * Expiry is therefore resolved HERE, at build time, where the full timezone
+ * database is available — leaving the browser only two instants to compare.
+ */
+export function endOfDayInChurchTime(date: Date): Date {
+  const ymd = new Intl.DateTimeFormat('en-CA', {
+    timeZone: CHURCH_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
+
+  // Resolved twice, so a day containing a DST change lands on the offset
+  // actually in force at the END of that day rather than the start.
+  const wall = Date.parse(`${ymd}T23:59:59.999Z`);
+  const first = wall + churchOffsetMs(new Date(wall));
+  return new Date(wall + churchOffsetMs(new Date(first)));
+}
 
 /**
  * schema.org markup so Google can answer "what time is the Chinese church in
@@ -249,10 +317,22 @@ export async function churchJsonLd(locale: Locale, siteUrl: string) {
           repeatFrequency: 'P1W',
           scheduleTimezone: CHURCH_TIMEZONE,
         },
+        /**
+         * A gathering that does NOT meet at the church must not be published
+         * with the church's address attached. The Wednesday prayer meeting is
+         * in a member's home: it gets a name and no address at all, because
+         * the only correct address is one we deliberately do not store.
+         */
         location: {
           '@type': 'Place',
           name: pick(g.location, locale),
-          address: formatAddress(church),
+          ...(g.addressOnRequest
+            ? {}
+            : {
+                address: g.address
+                  ? `${g.address.line1}, ${g.address.city}, ${g.address.state} ${g.address.zip}`
+                  : formatAddress(church),
+              }),
         },
       })),
   };

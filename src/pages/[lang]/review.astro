@@ -360,9 +360,17 @@ const counts = {
     justify-content: space-between;
   }
 
+  /* Grid children default to min-width: auto, so one unbreakable token - a
+     bare YouTube channel URL - set the row's minimum to 506px and pushed
+     nearly 200px of the page off the side of a phone. */
+  .row > * {
+    min-width: 0;
+  }
+
   .row__item {
     margin: 0;
     font-size: var(--fs-md);
+    overflow-wrap: anywhere;
   }
 
   .row__why {

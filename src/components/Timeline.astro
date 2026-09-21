@@ -29,7 +29,7 @@ const entries = await getTimeline();
     entries.map((e) => (
       <li class="tl-entry" data-reveal>
         <div class="tl-entry__marker" aria-hidden="true" />
-        <p class="tl-entry__year">{e.data.year}</p>
+        <p class="tl-entry__year">{e.data.label ? pick(e.data.label, locale) : e.data.year}</p>
         <div class="tl-entry__body">
           <h3 class="tl-entry__title">{pick(e.data.title, locale)}</h3>
           <div class="tl-entry__prose prose">

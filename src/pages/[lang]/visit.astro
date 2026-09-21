@@ -90,7 +90,7 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
   {/* ---- 2. WHAT HAPPENS ---- */}
   <section class="section" data-surface="warm" aria-labelledby="shape-title">
     <div class="shell">
-      <SundayShape locale={locale} showAll />
+      <SundayShape locale={locale} showAll headingId="shape-title" />
     </div>
   </section>
 

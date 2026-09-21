@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import { pick, formatDate, formatDateRange, type Locale } from '@i18n/config';
 import { useTranslations } from '@i18n/ui';
 import { resolveImage, focalPosition } from '@lib/images';
+import { endOfDayInChurchTime } from '@lib/church';
 
 type EventEntry = {
   id: string;
@@ -54,7 +55,18 @@ const timeFmt = new Intl.DateTimeFormat(locale === 'zh' ? 'zh-CN' : 'en-US', {
   {
     events.map((e) => {
       const img = resolveImage(e.data.image?.src);
-      const endIso = (e.data.end ?? e.data.start).toISOString();
+      /*
+        When this event stops being "upcoming", as an exact instant.
+
+        Not simply `end ?? start`: dates are stored at noon UTC, which is 7am
+        in Waco, so an all-day event used to announce that it had passed on
+        the morning it happened. An event with no stated end time runs until
+        the end of its day — a Saturday picnic does not expire at 10:01am.
+      */
+      const expiresAt = e.data.end && !e.data.allDay
+        ? e.data.end
+        : endOfDayInChurchTime(e.data.end ?? e.data.start);
+      const endIso = expiresAt.toISOString();
       const startIso = e.data.start.toISOString();
       return (
         <li
