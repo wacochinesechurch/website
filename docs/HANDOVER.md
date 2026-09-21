@@ -155,10 +155,38 @@ working. It also handles language negotiation at the edge.
 
 ```bash
 npm install
-npm run dev      # http://localhost:4321
-npm run build    # writes dist/
-npm run preview  # serve the built site
+npm run dev        # http://localhost:4321
+npm run build      # writes dist/
+npm run preview    # serve the built site
+npm run preflight  # pre-deploy checks — run before every launch
+npm run fonts      # regenerate font subsets (see below)
 ```
+
+### `npm run preflight`
+
+Run it after a build, before any deploy. It fails on things that would be
+embarrassing in public and has already caught several: dead internal links,
+leftover placeholders, pages missing a description, an English page with no
+Chinese counterpart, a past event still sitting in an "upcoming" list, broken
+structured data, and any street address other than the church's own appearing
+on a page.
+
+```bash
+npm run build && npm run preflight
+```
+
+### `npm run fonts`
+
+Only needed after adding a substantial amount of new Chinese copy:
+
+```bash
+npm run build && npm run fonts && npm run build
+```
+
+It rebuilds the font subsets from the glyphs the rendered pages actually use.
+Needs `python3 -m pip install --user fonttools brotli` and the `@fontsource`
+packages. Skipping it is safe — characters outside the subset fall back to the
+system Chinese font, not to tofu.
 
 ## Where things are
 
@@ -195,7 +223,8 @@ docs/
 
 ## Before launch
 
-- [ ] Set `repo:` in `public/admin/config.yml`
+- [ ] Set `repo:` in `public/admin/config.yml` (**required** — preflight blocks on it)
+- [ ] `npm run build && npm run preflight` — must pass with no blocking items
 - [ ] Deploy the OAuth worker and set `base_url`
 - [ ] **Set up the nightly rebuild** (step 4)
 - [ ] Work through `/en/review`

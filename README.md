@@ -58,7 +58,8 @@ structurally impossible.
 
 | | |
 |---|---|
-| [`docs/HANDOVER.md`](docs/HANDOVER.md) | **Start here.** How to edit the site, and how to deploy it |
+| [`docs/DEPLOY.md`](docs/DEPLOY.md) | **Start here to go live.** Push, host, CMS sign-in, domain switch |
+| [`docs/HANDOVER.md`](docs/HANDOVER.md) | How church volunteers edit the site, day to day |
 | [`docs/FACT-AUDIT.md`](docs/FACT-AUDIT.md) | Verified / outdated / missing, and every contradiction found |
 | [`docs/DESIGN.md`](docs/DESIGN.md) | Why it looks and behaves the way it does |
 
