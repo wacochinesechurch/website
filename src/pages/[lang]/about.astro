@@ -37,8 +37,8 @@ const hasBeliefs =
       ? 'A handful of students, a long way from home'
       : '一小群离家很远的学生'}
     lede={locale === 'en'
-      ? 'This church was not planted by a denomination or a mission board. It was started by students who needed one, and it has been handing itself on to the next set of students ever since.'
-      : '这间教会不是由某个宗派或差会所植立的。它是由一群需要它的学生开始的，此后便一届一届地，交到下一批学生手中。'}
+      ? 'No denomination and no mission board planted this church. Students who needed one started it, so they could worship Christ in their own language, and it has been handed on to the next set of students ever since.'
+      : '这间教会不是由哪个宗派或差会植立的。是一群需要教会的学生开始的，为要用自己的语言敬拜基督；此后便一届一届，交到下一批学生手中。'}
   />
 
   {/* ---- The timeline: the church's own history, verbatim ---- */}
@@ -129,6 +129,9 @@ const hasBeliefs =
   <section class="section verse" data-surface="ink" aria-labelledby="verse-title">
     <div class="shell">
       <div class="verse__inner" data-reveal>
+        <p class="eyebrow verse__eyebrow">
+          {locale === 'en' ? 'What this church is built on' : '教会的根基'}
+        </p>
         <h2 class="visually-hidden" id="verse-title">
           {locale === 'en' ? 'Our foundational verse' : '教会的根基经文'}
         </h2>
@@ -255,6 +258,11 @@ const hasBeliefs =
     line-height: var(--lh-relaxed);
     color: var(--c-paper-raised);
     text-wrap: balance;
+  }
+
+  .verse__eyebrow {
+    margin: 0 0 var(--s-5);
+    color: var(--c-lamp-400);
   }
 
   .verse__ref {
