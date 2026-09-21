@@ -31,6 +31,19 @@
 
   body {
     min-height: 100svh;
+    /*
+     * A safety net against horizontal scroll, and a fix for a real one.
+     *
+     * Full-bleed sections use `width: 100vw` with a compensating negative
+     * margin. In several engines 100vw includes the vertical scrollbar, so on
+     * a page tall enough to scroll it resolves a few pixels wider than the
+     * viewport and the whole document gains a horizontal scrollbar. That was
+     * costing 4px on the English homepage at 320px.
+     *
+     * `clip` rather than `hidden` on purpose: `hidden` would make this a
+     * scroll container and break the sticky header. `clip` does not.
+     */
+    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
