@@ -423,8 +423,13 @@ const isCurrent = (href: string) =>
     }
 
     .langswitch__item {
-      min-width: 2.1rem;
-      padding-inline: 0.42rem;
+      min-width: 1.9rem;
+      padding-inline: 0.34rem;
+    }
+
+    .site-header__burger {
+      width: 2.5rem;
+      height: 2.5rem;
     }
 
     .wordmark__text {
@@ -440,7 +445,9 @@ const isCurrent = (href: string) =>
      the menu button — it is a nowrap lockup and overflowed by ~49px. The
      Chinese name is six glyphs and fits comfortably, so only the English
      lockup falls back to the mark alone, which still links home. */
-  @media (max-width: 22rem) {
+  /* 23rem, not 22 — measured at 360px the English lockup still overflowed the
+     header by 18px. The Chinese name fits at every width and is untouched. */
+  @media (max-width: 23rem) {
     .site-header__brand :global(.wordmark__text:lang(en)) {
       display: none;
     }
