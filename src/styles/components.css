@@ -99,6 +99,10 @@
     display: inline-flex;
     align-items: center;
     gap: 0.45em;
+    /* WCAG 2.2 asks for a 24x24 minimum target. At this font size the line
+       box is only 22px, so the hit area is padded out vertically without
+       changing how the link looks. */
+    min-height: 24px;
     font-family: var(--font-ui);
     font-size: var(--fs-sm);
     font-weight: 600;

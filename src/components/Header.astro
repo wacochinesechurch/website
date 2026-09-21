@@ -408,4 +408,31 @@ const isCurrent = (href: string) =>
       display: none;
     }
   }
+
+  /* Below about 368px — iPhone SE and the smaller Androids — the wordmark,
+     the language switch and the menu button together overflowed the line by
+     ~17px, giving the whole page a horizontal scroll. Tightening the gaps and
+     the switch's minimum width reclaims ~29px, which clears it at 320. */
+  @media (max-width: 23rem) {
+    .site-header__inner {
+      gap: var(--s-2);
+    }
+
+    .site-header__actions {
+      gap: var(--s-2);
+    }
+
+    .langswitch__item {
+      min-width: 2.1rem;
+      padding-inline: 0.42rem;
+    }
+
+    .wordmark__text {
+      min-width: 0;
+    }
+
+    .wordmark__primary {
+      font-size: 0.94em;
+    }
+  }
 </style>

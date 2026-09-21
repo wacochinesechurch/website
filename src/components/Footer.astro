@@ -275,7 +275,15 @@ const verifiedSocial = church.social.filter((s) => s.status !== 'unverified');
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--s-3);
+    gap: var(--s-2);
+  }
+
+  /* 24x24 minimum hit area (WCAG 2.2). The visual spacing is unchanged —
+     the list gap shrinks by the amount the links grow. */
+  .site-footer__nav ul a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
   }
 
   /* -------------------------------------------------------------- bottom */
@@ -303,6 +311,14 @@ const verifiedSocial = church.social.filter((s) => s.status !== 'unverified');
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  .site-footer__social a,
+  .site-footer__email,
+  .site-footer__address a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
   }
 
   /* ------------------------------------------------------------- layout */
