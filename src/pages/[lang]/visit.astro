@@ -41,7 +41,8 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
         class="btn btn--solid"
         href={church.address.mapsUrl}
         target="_blank"
-        rel="noopener noreferrer">{t('facts.directions')}</a
+        rel="noopener noreferrer"
+        >{t('facts.directions')}<span class="visually-hidden"> — {t('meta.externalLink')}</span></a
       >
       {
         church.contact.email && (
@@ -70,6 +71,7 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
           }
           <a class="link-arrow" href={church.address.mapsUrl} target="_blank" rel="noopener noreferrer">
             {t('facts.openInMaps')}
+            <span class="visually-hidden"> — {t('meta.externalLink')}</span>
           </a>
         </div>
 

@@ -84,6 +84,7 @@ const heroFocus = focalPosition(heroMoment?.data.image.focus);
               <dd>
                 <a href={church.address.mapsUrl} target="_blank" rel="noopener noreferrer">
                   {church.address.line1}
+                  <span class="visually-hidden"> — {t('meta.externalLink')}</span>
                 </a>
                 <span class="hero__fact-sub">
                   {church.address.city}, {church.address.state}
@@ -126,7 +127,7 @@ const heroFocus = focalPosition(heroMoment?.data.image.focus);
               src={heroImage}
               alt={heroAlt}
               widths={[420, 640, 900, 1200]}
-              sizes="(min-width: 64rem) 42vw, 92vw"
+              sizes="(min-width: 64rem) min(42vw, 30rem), min(92vw, 30rem)"
               loading="eager"
               style={`object-position:${heroFocus}`}
             />

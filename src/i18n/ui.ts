@@ -212,6 +212,16 @@ export const ui = {
     en: 'English translation coming soon — showing Chinese for now.',
     zh: '中文翻译稍后补上 —— 暂时显示英文。',
   },
+  /* Audience chips on events. The schema has always described these as
+     driving chips; nothing rendered them until now. */
+  'audience.everyone': { en: 'Everyone', zh: '欢迎所有人' },
+  'audience.students': { en: 'Students', zh: '学生' },
+  'audience.families': { en: 'Families', zh: '家庭' },
+  'audience.children': { en: 'Children', zh: '儿童' },
+  'audience.professionals': { en: 'Working people', zh: '职青' },
+  'audience.seniors': { en: 'Seniors', zh: '长者' },
+  'audience.english': { en: 'English speakers', zh: '英文组' },
+  'audience.newcomers': { en: 'Newcomers', zh: '新朋友' },
   'meta.externalLink': { en: 'Opens in a new tab', zh: '在新标签页打开' },
 } as const satisfies Record<string, Record<Locale, string>>;
 

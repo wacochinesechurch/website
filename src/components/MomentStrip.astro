@@ -36,6 +36,13 @@ const moments = (await getMoments()).slice(0, limit);
       moments.map((m) => {
         const img = resolveImage(m.data.image.src);
         if (!img) return null;
+        /* A wide item is 27rem on a phone and 30rem on a desktop, not 19/22.
+           One `sizes` for both under-declared the wide ones, so they fetched
+           an image narrower than the box they are painted into. */
+        const sizes =
+          m.data.weight === 'wide'
+            ? '(min-width: 64rem) 30rem, min(84vw, 27rem)'
+            : '(min-width: 64rem) 22rem, min(68vw, 19rem)';
         return (
           <li class="strip__item" data-weight={m.data.weight}>
             <figure class="strip__figure">
@@ -44,7 +51,7 @@ const moments = (await getMoments()).slice(0, limit);
                   src={img}
                   alt={pick(m.data.image.alt, locale)}
                   widths={[320, 480, 720]}
-                  sizes="(min-width: 64rem) 22rem, 68vw"
+                  sizes={sizes}
                   loading="lazy"
                   decoding="async"
                   style={`object-position:${focalPosition(m.data.image.focus)}`}

@@ -101,6 +101,22 @@ const t = useTranslations(locale);
               {!e.data.allDay && (
                 <span class="event__time">{formatClockTime(e.data.start, locale)}</span>
               )}
+
+              {/* Filled in by src/scripts/freshness.ts against the visitor's
+                  own clock — "tomorrow", "in 3 days" — and left hidden when
+                  the event is further off than a fortnight. A baked-in
+                  relative label would be a lie by Tuesday, which is why it is
+                  computed at read time rather than at build time. */}
+              {variant === 'upcoming' && (
+                <span
+                  class="event__relative ui"
+                  data-relative-date={startIso}
+                  data-locale={locale}
+                  hidden
+                >
+                  <span data-relative-slot />
+                </span>
+              )}
             </p>
 
             {/*
@@ -128,6 +144,20 @@ const t = useTranslations(locale);
               <p class="event__fallback ui">{t('meta.fallbackNotice')}</p>
             )}
 
+            {/* The schema has always described audience as driving chips.
+                Nothing rendered them, so the field a volunteer fills in did
+                nothing at all. "everyone" is the default and says nothing
+                worth a chip, so it is not shown on its own. */}
+            {e.data.audience.filter((a) => a !== 'everyone').length > 0 && (
+              <ul class="event__audience" role="list">
+                {e.data.audience
+                  .filter((a) => a !== 'everyone')
+                  .map((a) => (
+                    <li class="chip chip--quiet">{t(`audience.${a}` as any)}</li>
+                  ))}
+              </ul>
+            )}
+
             <div class="event__foot">
               {e.data.location && pick(e.data.location, locale) && (
                 <p class="event__where ui">{pick(e.data.location, locale)}</p>
@@ -142,6 +172,7 @@ const t = useTranslations(locale);
                 >
                   {pick(e.data.registerLabel, locale) ||
                     (locale === 'en' ? 'Sign up' : '报名')}
+                  <span class="visually-hidden"> — {t('meta.externalLink')}</span>
                 </a>
               )}
             </div>
@@ -244,6 +275,20 @@ const t = useTranslations(locale);
     font-weight: 600;
     color: var(--accent);
     font-variant-numeric: lining-nums;
+  }
+
+  .event__relative {
+    color: var(--accent-hover);
+    font-weight: 600;
+  }
+
+  .event__audience {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   .event__fallback {

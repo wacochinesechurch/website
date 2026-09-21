@@ -173,7 +173,8 @@ const social = church.social.filter((s) => s.status !== 'unverified');
               class="link-arrow"
               href={church.address.mapsUrl}
               target="_blank"
-              rel="noopener noreferrer">{t('facts.directions')}</a
+              rel="noopener noreferrer"
+              >{t('facts.directions')}<span class="visually-hidden"> — {t('meta.externalLink')}</span></a
             >
           </div>
 
@@ -186,6 +187,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
                     <li>
                       <a href={s.url} target="_blank" rel="noopener noreferrer">
                         {pick(s.label, locale) || s.platform}
+                        <span class="visually-hidden"> — {t('meta.externalLink')}</span>
                       </a>
                     </li>
                   ))}

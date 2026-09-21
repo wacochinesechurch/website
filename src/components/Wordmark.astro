@@ -84,8 +84,10 @@ const secondaryLang = locale === 'en' ? 'zh-CN' : 'en-US';
 
   /* The light warms when you hover the brand — a tiny, one-off delight that
      restates the whole idea in half a second. */
-  a:hover .wordmark__light,
-  a:focus-visible .wordmark__light {
+  /* The <a> is in Header/Footer, not here, so Astro's scoping meant these
+     selectors could never match and the effect never ran. */
+  :global(a):hover .wordmark__light,
+  :global(a):focus-visible .wordmark__light {
     fill: var(--c-lamp-300);
   }
 

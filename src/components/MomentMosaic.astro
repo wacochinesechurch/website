@@ -24,6 +24,14 @@ const moments = await getMoments();
     moments.map((m, i) => {
       const img = resolveImage(m.data.image.src);
       if (!img) return null;
+      /* Above 68rem the grid is three columns and a wide tile spans two of
+         them. A single `sizes` claiming 32vw told the browser to fetch an
+         image for a third of the width, so wide tiles arrived at roughly half
+         the resolution they are displayed at. */
+      const sizes =
+        m.data.weight === 'wide'
+          ? '(min-width: 68rem) 64vw, (min-width: 44rem) 48vw, 92vw'
+          : '(min-width: 68rem) 32vw, (min-width: 44rem) 48vw, 92vw';
       return (
         <li class="tile" data-weight={m.data.weight} data-i={i % 6}>
           <figure class="tile__figure">
@@ -32,7 +40,7 @@ const moments = await getMoments();
                 src={img}
                 alt={pick(m.data.image.alt, locale)}
                 widths={[360, 560, 860, 1200]}
-                sizes="(min-width: 68rem) 32vw, (min-width: 44rem) 48vw, 92vw"
+                sizes={sizes}
                 loading={i < 3 ? 'eager' : 'lazy'}
                 decoding="async"
                 style={`object-position:${focalPosition(m.data.image.focus)}`}
@@ -83,8 +91,13 @@ const moments = await getMoments();
     aspect-ratio: 3 / 2;
   }
 
-  .tile[data-i='0'] .tile__media,
-  .tile[data-i='4'] .tile__media {
+  /* The square rhythm applies only where the photo has no shape of its own.
+     These two selectors used to have the same specificity as the ones above
+     and simply came later, so an authored `wide` was silently discarded — on
+     the FIRST tile, which is wide, and which still spanned two columns while
+     being forced to 1:1. */
+  .tile[data-weight='normal'][data-i='0'] .tile__media,
+  .tile[data-weight='normal'][data-i='4'] .tile__media {
     aspect-ratio: 1 / 1;
   }
 

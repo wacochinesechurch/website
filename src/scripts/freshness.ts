@@ -105,6 +105,9 @@ function run() {
             : rtf.format(Math.round(days / 7), 'week');
         const slot = el.querySelector('[data-relative-slot]') ?? el;
         slot.textContent = label;
+        // The label is rendered hidden, because until this runs there is
+        // nothing truthful to put in it.
+        el.hidden = false;
       } catch {
         /* Intl.RelativeTimeFormat missing — the absolute date already shows */
       }

@@ -113,7 +113,9 @@
     font-family: var(--font-ui);
     font-size: var(--fs-sm);
     font-weight: 600;
-    color: var(--accent);
+    /* --accent is 4.93:1 on paper but only 4.44:1 on the sunk surface, and
+       this link appears on both. --accent-hover clears AA on either. */
+    color: var(--accent-hover);
     text-decoration: none;
   }
 
