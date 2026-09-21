@@ -1,7 +1,11 @@
 # Netlify / Cloudflare Pages edge redirects.
-# Language negotiation happens here, before any HTML is served.
-/  /zh  302  Language=zh
-/  /en  302
+#
+# Language negotiation happens here, before any HTML is served. The `!` forces
+# the rule: without it Netlify serves dist/index.html (the no-JS language gate)
+# and never applies the redirect, so the negotiation silently never ran.
+# The gate page stays in the build as a fallback for hosts without this feature.
+/  /zh  302!  Language=zh
+/  /en  302!
 
 # Legacy Squarespace URLs -> their new homes, so years of existing links,
 # bookmarks and search results keep working.
