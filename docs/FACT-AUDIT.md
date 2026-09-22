@@ -48,6 +48,10 @@ model separates the two and makes expiry automatic. See `DESIGN.md` and the `REA
 | 14 church-life photographs with bilingual captions | /church-life — all captured September 2023 |
 | **Younger children have their own group during the Sunday message** | Confirmed by the church, 21 Sep 2026 |
 | **Friday Bible study splits into three groups**: Baylor Bible Bears (BBB) for college students, the Study Group for 职青, and an English-speaking group | Confirmed by the church, 21 Sep 2026 |
+| **No dress code**; most wear long pants or jeans, long or short sleeves, some wear shorts | Confirmed by the church, 21 Sep 2026 |
+| **You do not have to be a Christian to come** | Confirmed by the church, 21 Sep 2026 |
+| **Parking**: a large lot directly in front of the church's front door | Confirmed by the church, 21 Sep 2026 |
+| **Arrive around five to ten minutes before 11 a.m.**; 11:00 is when it begins | Confirmed by the church, 21 Sep 2026 |
 | Non-denominational | Absence of any denominational claim in all church-controlled text, plus client confirmation |
 
 ---

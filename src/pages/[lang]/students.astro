@@ -75,8 +75,7 @@ const hotpotImg = resolveImage(hotpot?.data.image.src);
               <p class="door__tag chip">{locale === 'en' ? 'Easier first step' : '比较轻松的第一步'}</p>
               <h3 class="door__title">{pick(friday.name, locale)}</h3>
               <p class="door__when ui">
-                {formatWeekdayName(friday.day, locale)}{' '}
-                {formatTime(friday.startTime, locale)}
+                {formatWeekdayName(friday.day, locale)}{locale === 'en' ? ' ' : ''}{formatTime(friday.startTime, locale)}
               </p>
               <p class="door__body">
                 {locale === 'en'
@@ -93,8 +92,7 @@ const hotpotImg = resolveImage(hotpot?.data.image.src);
               <p class="door__tag chip chip--quiet">{locale === 'en' ? 'The main service' : '主要聚会'}</p>
               <h3 class="door__title">{pick(sunday.name, locale)}</h3>
               <p class="door__when ui">
-                {formatWeekdayName(sunday.day, locale)}{' '}
-                {formatTime(sunday.startTime, locale)}
+                {formatWeekdayName(sunday.day, locale)}{locale === 'en' ? ' ' : ''}{formatTime(sunday.startTime, locale)}
               </p>
               <p class="door__body">
                 {locale === 'en'

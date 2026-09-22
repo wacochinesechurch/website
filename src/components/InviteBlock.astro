@@ -74,8 +74,7 @@ const sunday = church.gatherings.find((g) => g.id === 'sunday');
             <div class="invite__row">
               <span class="invite__label ui">{t('facts.sunday')}</span>
               <span class="invite__value">
-                {formatWeekdayName(sunday.day, locale)}{' '}
-                {formatTime(sunday.startTime, locale)}
+                {formatWeekdayName(sunday.day, locale)}{locale === 'en' ? ' ' : ''}{formatTime(sunday.startTime, locale)}
               </span>
             </div>
           )
