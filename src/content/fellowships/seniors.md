@@ -8,7 +8,10 @@ summary:
 audience:
   en: Older members of the church and their friends
   zh: 教会的年长弟兄姊妹与他们的朋友
-meetsStatus: unverified
+meets:
+  en: Online. Email us for the time.
+  zh: 线上聚会，时间请来信询问。
+meetsStatus: verified
 contactName:
   en: Sister Maggie Vasut
   zh: 李东武姐妹
