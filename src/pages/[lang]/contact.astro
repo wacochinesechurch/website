@@ -78,7 +78,15 @@ const social = church.social.filter((s) => s.status !== 'unverified');
           >
             <input type="hidden" name="form-name" value="contact" />
             <input type="hidden" name="locale" value={locale} />
-            <p class="visually-hidden">
+            {/* aria-hidden matters here. visually-hidden only moves this off
+                screen, so a screen reader met a fourth field, "Leave this
+                empty", among three required ones. Filling it makes Netlify
+                classify the message as spam and drop it, while the visitor
+                still sees the confirmation, because that is driven by ?sent=1
+                alone. A stranger’s message vanished and nobody was told.
+                Safe to hide: the input is tabindex="-1", so nothing
+                focusable is being hidden. */}
+            <p class="visually-hidden" aria-hidden="true">
               <label>
                 {locale === 'en' ? 'Leave this empty' : '请留空'}
                 <input name="bot-field" tabindex="-1" autocomplete="off" />

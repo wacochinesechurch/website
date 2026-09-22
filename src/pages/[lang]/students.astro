@@ -180,13 +180,24 @@ const hotpotImg = resolveImage(hotpot?.data.image.src);
             </h2>
             <p class="group__body">{pick(studentGroup.data.summary, locale)}</p>
 
-            {/* The church publishes a named contact but no meeting time for
-                this group, so the page asks rather than asserts. */}
-            <p class="group__ask">
-              {locale === 'en'
-                ? 'The church lists a contact for this group but hasn’t published a meeting time. Ask and we’ll tell you when they next meet.'
-                : '教会为这个团契列出了联系人，但未公布聚会时间。来信询问，我们会告诉你他们下次什么时候聚。'}
-            </p>
+            {/*
+              Rendered from the content, never hardcoded. This block used to say
+              the church had not published a meeting time for this group. It
+              had: students.md carries meets with meetsStatus: verified, and
+              this very page prints "Friday Bible Study, 6:00 PM" a hundred
+              lines above. The page stated the time and then denied it existed,
+              which a nervous student reads as "this may have stopped running".
+            */}
+            {studentGroup.data.meetsStatus !== 'unverified' &&
+            pick(studentGroup.data.meets, locale) ? (
+              <p class="group__ask">{pick(studentGroup.data.meets, locale)}</p>
+            ) : (
+              <p class="group__ask">
+                {locale === 'en'
+                  ? 'Email us and we’ll tell you when this group next meets.'
+                  : '来信问一声，我们会告诉你这个团契下次什么时候聚。'}
+              </p>
+            )}
             <a class="btn btn--ink" href={localePath(locale, '/contact')}>
               {t('cta.contact')}
             </a>

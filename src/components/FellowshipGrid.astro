@@ -85,6 +85,17 @@ const fellowships = featuredOnly ? all.filter((f) => f.data.featured) : all;
             the old fellowship page, which listed five groups with no time,
             no place and a "Join us now" button that went nowhere.
           */}
+          {/* The students link used to sit inside !showMeets. students.md has
+              meetsStatus: verified, so showMeets is always true and the branch
+              was dead code: the Baylor Bible Bears card, the one place a
+              student actually clicks, carried no link at all. */}
+          {f.id === 'students' && (
+            <p class="fellowship__ask ui">
+              <a href={localePath(locale, '/students')}>
+                {locale === 'en' ? 'More for Baylor students' : '更多学生事工的内容'}
+              </a>
+            </p>
+          )}
           {!showMeets &&
             (f.id === 'students' ? (
               /* A whole page exists for students; sending them to a generic
