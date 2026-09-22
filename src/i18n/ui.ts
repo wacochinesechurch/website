@@ -33,7 +33,7 @@ export const ui = {
   },
   'site.description': {
     en: 'A non-denominational Chinese church in Waco, Texas, started in 1993. Sunday worship is at 11 a.m. in Mandarin, with English interpretation through headphones. Baylor students, families, working people and neighbors from around Waco.',
-    zh: '德州韦科的一间华人教会，1993 年开始。主日上午十一点用普通话敬拜，听不懂也没关系，会有人送上耳机，给你翻成英文。这里有 Baylor 的学生，有上班的，有带着孩子的家庭，也有本地的邻居。欢迎你来。',
+    zh: '德州韦科的一间华人教会，1993 年开始。主日上午十一点用华语敬拜，听不懂也没关系，会有人送上耳机，给你翻成英文。这里有 Baylor 的学生，有上班的，有带着孩子的家庭，也有本地的邻居。欢迎你来。',
   },
 
   /* ---------------------------------------------------------- navigation */
@@ -99,8 +99,8 @@ export const ui = {
   'visit.arriving': { en: 'Arriving', zh: '抵达' },
   'visit.tellUs': { en: "Tell us you’re coming", zh: '告诉我们你要来' },
   'visit.tellUsBody': {
-    en: "You never have to. You’re welcome to simply show up and slip into a back row. But if you let us know, we can arrange for someone to look out for you at the door.",
-    zh: '这不是必须的。你完全可以直接来，安静地坐在后排。但若你先告诉我们一声，我们可以安排人在门口留意你。',
+    en: "You never have to. You’re welcome to simply show up and slip into a back row. But if you let us know, we’ll be expecting you, and anything you need can be ready before you arrive.",
+    zh: '这不是必须的。你完全可以直接来，安静地坐在后排。但若你先告诉我们一声，我们心里有数，你需要的东西也能先准备好。',
   },
 
   /* ------------------------------------------------------------ about --- */

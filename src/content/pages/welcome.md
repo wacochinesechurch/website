@@ -13,7 +13,7 @@ body:
 
     Maybe you’ve just landed in Texas and everything is unfamiliar: the roads, the accents, the food, the silence of a new apartment. If so, you’re the kind of person this church was started for. In December 1993 it was a handful of Chinese students at Baylor a long way from home, and that hasn’t really changed.
   zh: |
-    我们用普通话敬拜，因为那是我们大多数人用来思想和祷告的语言。我们当中有从国内来的，有在这里长大的，也有把这间教会当作自己教会的美国弟兄姊妹。有 Baylor 的学生，有上班的，有带着小孩的家庭，也有韦科本地的邻舍。
+    我们用华语敬拜，因为那是我们大多数人用来思想和祷告的语言。我们当中有从国内来的，有在这里长大的，也有把这间教会当作自己教会的美国弟兄姊妹。有 Baylor 的学生，有上班的，有带着小孩的家庭，也有韦科本地的邻舍。
 
     我们当中有人从小在教会长大，也有人在朋友带他来吃周五晚餐之前，从没进过教堂。在这里，两种情况都再普通不过。
 

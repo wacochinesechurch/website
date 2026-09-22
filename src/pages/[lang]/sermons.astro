@@ -24,7 +24,7 @@ const youtube = church.social.find((s) => s.platform === 'youtube');
   title={t('nav.sermons')}
   description={locale === 'en'
     ? 'Sermons and worship recordings from Waco Chinese Church in Waco, Texas. Messages are preached in Mandarin on Sunday mornings and kept on the church YouTube channel.'
-    : '德州韦科华人教会的讲道与敬拜录像。主日上午的讲道用普通话，影音内容保存在教会的 YouTube 频道上。'}
+    : '德州韦科华人教会的讲道与敬拜录像。主日上午的讲道用华语，影音内容保存在教会的 YouTube 频道上。'}
 >
   <PageHeader
     locale={locale}
@@ -32,7 +32,7 @@ const youtube = church.social.find((s) => s.platform === 'youtube');
     title={t('sermons.title')}
     lede={locale === 'en'
       ? 'Messages are preached in Mandarin on Sunday mornings. The church’s YouTube channel holds recordings going back several years; the most recent was posted in December 2023.'
-      : '主日上午的讲道用普通话。教会的 YouTube 频道保存了过去数年的录像，最近一次上传是在 2023 年 12 月。'}
+      : '主日上午的讲道用华语。教会的 YouTube 频道保存了过去数年的录像，最近一次上传是在 2023 年 12 月。'}
   >
     {
       youtube && (

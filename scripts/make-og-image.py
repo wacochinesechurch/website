@@ -112,7 +112,7 @@ def main():
 
         d.text((X, 496), f'Sundays {clock} · {line1}, {city}, Texas',
                font=F('sans600', 26), fill=PAPER)
-        d.text((X, 538), '主日上午十一点 · 普通话敬拜，提供英文翻译',
+        d.text((X, 538), '主日上午十一点 · 华语敬拜，提供英文翻译',
                font=F('sc400', 23), fill=MUTED)
 
         img = img.quantize(colors=256, method=Image.MEDIANCUT, dither=Image.FLOYDSTEINBERG)
