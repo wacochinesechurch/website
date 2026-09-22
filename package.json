@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "fonts": "node scripts/build-fonts.mjs",
+    "og-image": "python3 scripts/make-og-image.py",
     "preflight": "node scripts/preflight.mjs"
   },
   "dependencies": {
@@ -25,5 +26,10 @@
     "esbuild@0.27.7": true,
     "esbuild@0.25.12": true,
     "sharp@0.34.5": true
+  },
+  "devDependencies": {
+    "@fontsource/noto-serif-sc": "^5.3.0",
+    "@fontsource/source-sans-3": "^5.3.0",
+    "@fontsource/source-serif-4": "^5.3.0"
   }
 }
