@@ -29,7 +29,7 @@ const first = timeline.find((e) => e.data.year === '1993');
 /*
   The transparent header is light text, and it works because the dark hero sits
   directly beneath it. A published notice goes ABOVE the hero and pushes it
-  down, leaving that light text over the notice's pale background — the whole
+  down, leaving that light text over the notice’s pale background — the whole
   header, wordmark, language switch and menu button, simply disappeared. So
   whenever a notice is showing, the header is solid.
 */
@@ -97,7 +97,7 @@ const hasNotice = (await getLiveAnnouncements()).length > 0;
     </div>
   </section>
 
-  {/* 5 — WHAT IT LOOKS LIKE. The church's own photographs and captions. */}
+  {/* 5 — WHAT IT LOOKS LIKE. The church’s own photographs and captions. */}
   <section class="section" data-surface="ink" aria-labelledby="life-title">
     <div class="shell">
       <SectionHeader
@@ -182,7 +182,7 @@ const hasNotice = (await getLiveAnnouncements()).length > 0;
               </h2>
               <p class="story__body">
                 {locale === 'en'
-                  ? 'In December 1993 an evangelist brought a few students to Baylor and began a monthly gathering. By 1995 they had a room in a Baptist church on Gurley Avenue. They are still in it.'
+                  ? 'In December 1993 an evangelist brought a few students to Baylor and began a monthly gathering. By 1995 they had a room in a Baptist church on Gurley Avenue. They’re still in it.'
                   : '1993 年 12 月，一位传道人带着几位学生来到 Baylor，开始了每月一次的聚会。到了 1995 年，他们在 Gurley 大道一间浸信会里有了自己的空间。直到今天，他们仍在那里。'}
               </p>
               <a class="link-arrow" href={localePath(locale, '/about')}>

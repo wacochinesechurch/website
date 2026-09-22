@@ -4,16 +4,16 @@ question:
   zh: 聚会用什么语言？
 answer:
   en: |
-    Sunday worship is in Mandarin. If you do not understand it, you do not need
+    Sunday worship is in Mandarin. If you don’t understand it, you don’t need
     to ask anyone for help. Someone will notice, bring you headphones, and
     interpret into English for you.
 
-    If you would rather it were arranged beforehand, email us and we will be
+    If you would rather it were arranged beforehand, email us and we’ll be
     watching for you.
 
-    There is also an English Fellowship made up of American friends and Chinese American young people, if English is the language you think in.
+    There’s also an English Fellowship made up of American friends and Chinese American young people, if English is the language you think in.
   zh: |
-    主日崇拜以国语（普通话）进行。若你听不懂，不必特地开口询问；
+    主日崇拜用普通话。若你听不懂，不必特地开口询问；
     同工会留意到，为你送上耳机，提供英文翻译。
 
     若你希望事先安排好，来信告诉我们，我们会留意等候你。

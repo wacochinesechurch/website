@@ -13,7 +13,7 @@
 
      1. BUILD TIME  — getUpcomingEvents() drops anything already finished.
      2. READ TIME   — this file. The browser re-checks every dated element
-                      against the visitor's actual clock and demotes anything
+                      against the visitor’s actual clock and demotes anything
                       that has since passed. Works even if nobody rebuilds.
      3. SCHEDULED   — a daily rebuild (see netlify.toml / the deploy notes)
                       so the HTML itself stays honest for crawlers too.

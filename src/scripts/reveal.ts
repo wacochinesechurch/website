@@ -171,7 +171,7 @@ function rememberLocale() {
 /* -------------------------------------------------------------- reveal --- */
 /**
  * Fallback for browsers without CSS scroll-driven animations. The class
- * `js-reveal` is only added (in BaseLayout's inline script) when native
+ * `js-reveal` is only added (in BaseLayout’s inline script) when native
  * support is absent AND motion is allowed, so this observer is a no-op in
  * modern Chrome/Safari and never runs for reduced-motion visitors.
  */

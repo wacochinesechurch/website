@@ -4,7 +4,7 @@ question:
   zh: 有吃的吗？
 answer:
   en: |
-    On Friday, yes. The evening starts with dinner together at 6:00pm before anything else happens. You are welcome to come just for that.
+    On Friday, yes. The evening starts with dinner together at 6:00pm before anything else happens. You’re welcome to come just for that.
 
     Chinese food features heavily in the life of this church. Hotpot has been known to solve most problems.
   zh: |

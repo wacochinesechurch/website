@@ -184,14 +184,40 @@ const bigImages = files
 for (const f of bigImages)
   warn(`${(statSync(f).size / 1024).toFixed(0)} KB image  ${relative(DIST, f)}`);
 
-/* ------------------------------------------------------------- 9. privacy */
-const PRIVATE = [/\b\d{3,5}\s+(South|North|East|West|S\.|N\.|E\.|W\.)\s+\w+\s+(Street|St|Avenue|Ave)/i];
+/* ------------------------------------------------------------- 9. privacy
+   The Wednesday prayer meeting is in a member's home. That address is kept out
+   of this repository on purpose, because the repo is public and git history
+   cannot be unpublished.
+
+   These checks FAIL the build rather than warn. A warning scrolls past, and
+   this is the one class of mistake that cannot be taken back once deployed.
+
+   They exist because the leak that actually happened was not an address at
+   all. It was a note to future editors explaining which spelling of the street
+   name was correct, which published the distinctive half of it while
+   explaining why it must never be published. The old pattern here required a
+   compass word and could never have caught that, so the second rule looks for
+   anyone NAMING a street rather than writing one out. Neither rule contains
+   the private value itself, which would simply move the leak into this file. */
+const PRIVATE = [
+  // A written-out street address that is not the church's.
+  {
+    re: /\b\d{2,5}\s+(?:[A-Za-z0-9.]+\s+){0,3}(Street|St\.|Avenue|Ave\.|Road|Rd\.|Drive|Dr\.|Lane|Ln\.|Court|Ct\.|Boulevard|Blvd\.)\b/i,
+    what: 'street address',
+  },
+  // Someone telling the reader what a street is CALLED.
+  {
+    re: /street\s+(?:name|address)[^.]{0,60}?["\u201c\u2018']([^"\u201d\u2019']{1,24})["\u201d\u2019']/i,
+    what: 'a street being named in prose',
+  },
+];
 for (const f of pages) {
   const text = strip(read(f));
-  for (const re of PRIVATE) {
+  for (const { re, what } of PRIVATE) {
     const m = text.match(re);
-    // the church's own address is expected; anything else is not
-    if (m && !m[0].includes('Gurley')) warn(`possible private address in ${relative(DIST, f)}: ${m[0]}`);
+    // The church's own address is expected anywhere. Nothing else is.
+    if (m && !m[0].includes('Gurley'))
+      fail(`${what} on a public page  ${relative(DIST, f)}: ${JSON.stringify(m[0].slice(0, 70))}`);
   }
 }
 

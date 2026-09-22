@@ -4,21 +4,21 @@
 
    TRANSLATION PRINCIPLE
 
-   These are not mechanical mirrors of each other. Each language is written
+   These aren’t mechanical mirrors of each other. Each language is written
    the way that language actually greets a stranger.
 
    English church copy tends toward the direct and personal:
-     "Plan your visit" / "We'd love to meet you"
+     "Plan your visit" / "We’d love to meet you"
 
    Chinese church copy tends toward the hospitable and slightly more formal,
    and uses 弟兄姊妹 / 新朋友 rather than a literal calque of "visitor":
      「初次来访」/「期待与你相见」
 
    So "Plan your visit" is NOT 「计划你的访问」 (which reads like a hotel
-   booking). It is 「初次来访」 — "coming for the first time".
+   booking). It’s 「初次来访」 — "coming for the first time".
 
-   Simplified Chinese throughout, per the congregation's mainland-majority
-   background and the existing site's usage.
+   Simplified Chinese throughout, per the congregation’s mainland-majority
+   background and the existing site’s usage.
    ========================================================================= */
 
 import type { Locale } from './config';
@@ -29,11 +29,11 @@ export const ui = {
   'site.nameOther': { en: '韦科华人教会', zh: 'Waco Chinese Church' },
   'site.tagline': {
     en: 'A home for people far from home.',
-    zh: '给远方游子的一个家。',
+    zh: '离家再远，这里也有个家。',
   },
   'site.description': {
-    en: 'A Chinese church in Waco, Texas. Worship is in Mandarin, and English interpretation is offered to anyone who needs it. Students, families, professionals and neighbors together since 1993. Everyone is welcome.',
-    zh: '德州韦科的一间华人教会。主日以国语（普通话）敬拜，并为需要的朋友主动提供英文翻译。自 1993 年起，学生、家庭、职场人士与本地邻舍在此一同聚集。欢迎每一位朋友。',
+    en: 'A non-denominational Chinese church in Waco, Texas, started in 1993. Sunday worship is at 11 a.m. in Mandarin, with English interpretation through headphones. Baylor students, families, working people and neighbors from around Waco.',
+    zh: '德州韦科的一间华人教会，1993 年开始。主日上午十一点用普通话敬拜，听不懂也没关系，会有人送上耳机，给你翻成英文。这里有 Baylor 的学生，有上班的，有带着孩子的家庭，也有本地的邻居。欢迎你来。',
   },
 
   /* ---------------------------------------------------------- navigation */
@@ -70,7 +70,7 @@ export const ui = {
   'facts.languages': { en: 'Languages', zh: '语言' },
   'facts.when': { en: 'When', zh: '时间' },
   'facts.where': { en: 'Where', zh: '地点' },
-  'facts.who': { en: 'Who it is for', zh: '适合谁' },
+  'facts.who': { en: 'Who it’s for', zh: '适合谁' },
   'facts.directions': { en: 'Get directions', zh: '查看路线' },
   'facts.openInMaps': { en: 'Open in Google Maps', zh: '在 Google 地图中打开' },
 
@@ -97,9 +97,9 @@ export const ui = {
   'visit.sundayFlow': { en: 'What Sunday looks like', zh: '主日的流程' },
   'visit.faq': { en: 'Common questions', zh: '常见问题' },
   'visit.arriving': { en: 'Arriving', zh: '抵达' },
-  'visit.tellUs': { en: "Tell us you're coming", zh: '告诉我们你要来' },
+  'visit.tellUs': { en: "Tell us you’re coming", zh: '告诉我们你要来' },
   'visit.tellUsBody': {
-    en: "You never have to. You are welcome to simply show up and slip into a back row. But if you let us know, we can arrange for someone to look out for you at the door.",
+    en: "You never have to. You’re welcome to simply show up and slip into a back row. But if you let us know, we can arrange for someone to look out for you at the door.",
     zh: '这不是必须的。你完全可以直接来，安静地坐在后排。但若你先告诉我们一声，我们可以安排人在门口留意你。',
   },
 
@@ -113,7 +113,7 @@ export const ui = {
   'community.title': { en: 'Find your people', zh: '找到你的同路人' },
   'community.fellowships': { en: 'Fellowships', zh: '团契' },
   'community.fellowshipsLede': {
-    en: 'Sunday is the whole church together. Fellowships are where you are actually known.',
+    en: 'Sunday is the whole church together. Fellowships are where you’re actually known.',
     zh: '主日是全教会聚在一起；而团契，是真正有人认识你的地方。',
   },
   'community.serving': { en: 'Serving together', zh: '一同服事' },
@@ -128,7 +128,7 @@ export const ui = {
 
   /* ------------------------------------------------------------- life --- */
   'life.title': { en: 'Church life', zh: '教会生活' },
-  'life.upcoming': { en: "What's coming up", zh: '近期活动' },
+  'life.upcoming': { en: "What’s coming up", zh: '近期活动' },
   'life.noUpcoming': {
     en: 'Nothing on the calendar right now. Sunday worship and Friday Bible study continue as usual.',
     zh: '目前日历上暂无特别活动。主日崇拜与周五查经照常进行。',
@@ -165,7 +165,7 @@ export const ui = {
   'give.methods': { en: 'Ways to give', zh: '奉献方式' },
   'give.questions': { en: 'Questions about giving', zh: '关于奉献的疑问' },
   'give.noPressure': {
-    en: 'If you are visiting, please do not feel any obligation to give. This page is here for members who have asked how.',
+    en: 'If you’re visiting, please don’t feel any obligation to give. This page is here for members who have asked how.',
     zh: '若你是初次来访的朋友，请不要有任何负担。这一页是为询问奉献方式的弟兄姊妹预备的。',
   },
 
@@ -180,7 +180,7 @@ export const ui = {
   'contact.message': { en: 'Message', zh: '留言' },
   'contact.send': { en: 'Send', zh: '发送' },
   'contact.topic': { en: 'What is this about?', zh: '想聊什么？' },
-  'contact.topicVisit': { en: "I'd like to visit", zh: '我想来参加聚会' },
+  'contact.topicVisit': { en: "I’d like to visit", zh: '我想来参加聚会' },
   'contact.topicRide': { en: 'Getting there', zh: '交通与路线' },
   'contact.topicPrayer': { en: 'A prayer request', zh: '代祷需要' },
   'contact.topicOther': { en: 'Something else', zh: '其他' },
@@ -196,7 +196,7 @@ export const ui = {
   'meta.updated': { en: 'Updated', zh: '更新于' },
   'meta.notFoundTitle': { en: 'Page not found', zh: '找不到这个页面' },
   'meta.notFoundBody': {
-    en: "That page has moved or never existed. Here's the way back.",
+    en: "That page has moved or never existed. Here’s the way back.",
     zh: '这个页面可能已移动或从未存在。以下是回去的路。',
   },
   'meta.needsReview': {

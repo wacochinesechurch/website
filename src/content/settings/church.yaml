@@ -19,7 +19,7 @@
   name:
     en: Waco Chinese Church
     zh: 韦科华人教会
-  # The church's own materials use 韦城华人教会 in the historical narrative
+  # The church’s own materials use 韦城华人教会 in the historical narrative
   # and on the 25th-anniversary video. Both are in use; the interface
   # standardises on 韦科 (the logo/footer form) and notes 韦城 in the history.
   nameVariant:
@@ -30,7 +30,7 @@
 
   tagline:
     en: A home for people far from home.
-    zh: 给远方游子的一个家。
+    zh: 离家再远，这里也有个家。
 
   address:
     # Spelled out in full, not abbreviated to Ave. Visiting speakers and
@@ -41,7 +41,7 @@
     state: TX
     zip: "76706"
     note:
-      en: We are non-denominational, and share this building with Emmanuel Baptist Church, our partner congregation.
+      en: We’re non-denominational, and share this building with Emmanuel Baptist Church, our partner congregation.
       zh: 我们不属于任何宗派，与伙伴教会以马内利浸信会共用这栋建筑。
     mapsUrl: https://www.google.com/maps/search/?api=1&query=1801+Gurley+Avenue%2C+Waco%2C+TX+76706
     lat: 31.5375467
@@ -76,8 +76,8 @@
             en: A message from Scripture. Children may go to their own group.
             zh: 证道。孩子可以去自己的聚会。
       languages:
-        en: Worship is in Mandarin. If you do not understand it, someone will bring you headphones and interpret into English. You will not have to ask.
-        zh: 主日以国语（普通话）敬拜。若你听不懂，同工会主动为你送上耳机，提供英文翻译，不需要你开口询问。
+        en: Worship is in Mandarin. If you don’t understand it, someone will bring you headphones and interpret into English. You won’t have to ask.
+        zh: 聚会用普通话。听不懂的话，会有人注意到你，把耳机递给你，给你翻成英文。不用你开口问。
       status: verified
       featured: true
 
@@ -131,7 +131,7 @@
             zh: 希望以英文查经的朋友
       languages:
         en: Mandarin, with a group that studies in English.
-        zh: 以国语（普通话）进行，另有一组以英文查经。
+        zh: 普通话。英文组用英文查经。
       status: verified
       featured: true
 
@@ -153,7 +153,7 @@
         zh: 全教会一同祷告。可以到教会现场，也可以线上参加；若有代祷需要，也可以事先提交，让弟兄姊妹为你祷告。
       languages:
         en: Mandarin.
-        zh: 以国语（普通话）进行。
+        zh: 用普通话。
       status: verified
       featured: false
 
@@ -165,21 +165,21 @@
       startTime: "19:30"
       endTime: "20:30"
       location:
-        en: A member's home near Baylor, not at the church
+        en: A member’s home near Baylor, not at the church
         zh: Baylor 附近弟兄姊妹的家中，不在教会
       # The street address is deliberately not stored here. It is a private
       # home, this repository is on GitHub, and git history cannot be undone.
       # Whoever is hosting sends it to people who ask — which also means the
       # site never goes stale when the host changes.
       addressOnRequest:
-        en: This one meets at a member's home rather than at the church, so we send the address out rather than posting it. Email us and we will pass it on. You are very welcome to come.
+        en: This one meets at a member’s home rather than at the church, so we send the address out rather than posting it. Email us and we’ll pass it on. You’re very welcome to come.
         zh: 这场祷告会在弟兄姊妹家中聚会，不在教会，因此地址我们不公开张贴，而是来信索取。写信给我们，我们会把地址发给你。非常欢迎你来。
       summary:
         en: The college group praying together, midweek.
         zh: 大学生组在周间一同祷告。
       languages:
         en: Mandarin.
-        zh: 以国语（普通话）进行。
+        zh: 用普通话。
       status: verified
       featured: false
 
@@ -204,7 +204,7 @@
         zh: YouTube 频道
       url: https://www.youtube.com/@wacochinesechurchmedia1963
       # Nothing has been published to this channel since 2023-12-10. It is
-      # linked because it holds the church's back catalogue, but it is not a
+      # linked because it holds the church’s back catalogue, but it is not a
       # live feed and the site must not imply otherwise.
       status: needs-review
 
@@ -217,7 +217,7 @@
         en: Zelle
         zh: Zelle 转账
       detail:
-        en: Send through your own bank's Zelle service to the church email address.
+        en: Send through your own bank’s Zelle service to the church email address.
         zh: 透过你所属银行的 Zelle 服务，转账至教会的电子邮箱。
       value: wacochinesechurch@gmail.com
       instructions:

@@ -1,6 +1,6 @@
 ---
 caption:
-  en: There is nothing hotpot cannot fix. If one round will not do it, have two.
+  en: There’s nothing hotpot can’t fix. If one round won’t do it, have two.
   zh: 没有什么是火锅不能解决的，一顿不行就两顿。
 image:
   src: hotpot.webp

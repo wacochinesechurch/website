@@ -18,7 +18,7 @@ const t = useTranslations(locale);
 const church = await getChurch();
 
 /* The homepage shows the two main ways in (Sunday and Friday). The Visit page
-   passes showAll and lists the prayer meetings too — useful once you are
+   passes showAll and lists the prayer meetings too — useful once you’re
    looking, clutter before that. */
 const gatherings = church.gatherings.filter(
   (g) => g.status !== 'unverified' && (showAll || g.featured),
@@ -158,7 +158,7 @@ const gatherings = church.gatherings.filter(
       <aside class="reassure" data-reveal>
         <p class="reassure__text">
           {locale === 'en'
-            ? 'You do not have to sing, stand, give, or say anything. Sitting at the back and watching is a completely normal way to spend a first Sunday.'
+            ? 'You don’t have to sing, stand, give, or say anything. Sitting at the back and watching is a completely normal way to spend a first Sunday.'
             : '你不需要唱、不需要站、不需要奉献，也不需要发言。第一次来，坐在后面安静地看着，是再正常不过的事。'}
         </p>
         <a class="link-arrow" href={localePath(locale, '/visit')}>

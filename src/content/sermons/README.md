@@ -2,7 +2,7 @@
 
 **This folder is intentionally empty.**
 
-The old site's Sermons page listed no sermons at all — just two plain-text
+The old site’s Sermons page listed no sermons at all — just two plain-text
 links, one of which advertised a weekly "Sunday 10:45 am live stream" that was
 in fact a fixed recording from 17 September 2023.
 

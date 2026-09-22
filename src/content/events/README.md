@@ -3,7 +3,7 @@
 Every file here is one event, in both languages.
 
 **You never have to delete a past event.** An event knows its own date: once
-`start` (or `end`) has passed, it stops appearing under "What's coming up" and
+`start` (or `end`) has passed, it stops appearing under "What’s coming up" and
 moves into the archive automatically. That is the whole point — the old site
 went stale because taking things down was a manual job nobody remembered.
 

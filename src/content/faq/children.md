@@ -8,12 +8,12 @@ answer:
     message begins, younger children are welcome to go to their own group.
     Most families find it helps, and we would gladly have your children there.
 
-    They are just as welcome to stay with you. Plenty of children do, and a
+    They’re just as welcome to stay with you. Plenty of children do, and a
     restless child in the pew bothers nobody here. The group exists to help
     you, not to be expected of you.
 
-    If you want to check that it suits your child's age, say so when you
-    arrive or email ahead and we will tell you what to expect.
+    If you want to check that it suits your child’s age, say so when you
+    arrive or email ahead and we’ll tell you what to expect.
   zh: |
     聚会一开始，全教会一同敬拜。讲道开始后，年纪较小的孩子可以前往自己的聚会。
     多数家庭都觉得这样对孩子有益，我们也很欢迎你的孩子来。

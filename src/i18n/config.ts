@@ -147,7 +147,7 @@ export function otherLocale(locale: Locale): Locale {
  *
  * Chinese date convention is 2026年9月21日 (year-first), English is
  * "September 21, 2026". Intl handles this correctly — never hand-roll it.
- * `timeZone` is pinned to the church's own zone so an event never shifts a
+ * `timeZone` is pinned to the church’s own zone so an event never shifts a
  * day for a visitor reading from Shanghai.
  */
 export const CHURCH_TIMEZONE = 'America/Chicago';
@@ -195,7 +195,7 @@ export function formatWeekday(date: Date | string, locale: Locale): string {
   });
 }
 
-/** ISO date string (YYYY-MM-DD) in the church's timezone, for <time datetime>. */
+/** ISO date string (YYYY-MM-DD) in the church’s timezone, for <time datetime>. */
 export function isoDate(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   if (Number.isNaN(d.getTime())) return '';

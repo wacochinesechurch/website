@@ -1,6 +1,6 @@
 ---
 caption:
-  en: Harvest season is the season for sharing the vegetables you cannot buy here. The Chinese ones go fast.
+  en: Harvest season is the season for sharing the vegetables you can’t buy here. The Chinese ones go fast.
   zh: 丰收的季节是分享稀罕蔬菜的季节。中国特色的蔬菜，很抢手。
 image:
   src: harvest-vegetables.webp

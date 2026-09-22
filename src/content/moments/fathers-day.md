@@ -1,6 +1,6 @@
 ---
 caption:
-  en: Showing off the Father's Day presents, with some pride.
+  en: Showing off the Father’s Day presents, with some pride.
   zh: 弟兄们自豪地展示父亲节礼物
 image:
   src: fathers-day.webp

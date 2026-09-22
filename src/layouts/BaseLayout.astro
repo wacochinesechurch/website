@@ -21,7 +21,7 @@ interface Props {
   description?: string;
   /** Social share image, absolute or site-relative. */
   ogImage?: string;
-  /** Suppress the header's translucent-over-hero treatment. */
+  /** Suppress the header’s translucent-over-hero treatment. */
   solidHeader?: boolean;
   noindex?: boolean;
   bodyClass?: string;
@@ -81,7 +81,7 @@ const jsonLd = await churchJsonLd(locale, site);
         Self-hosted and subset to the glyphs this site actually uses.
 
         Google Fonts was serving 1.8 MB on /en and 2.7 MB on /zh — it splits
-        the CJK faces into ~100 generic buckets and this site's text lands in
+        the CJK faces into ~100 generic buckets and this site’s text lands in
         dozens of them. Subsetting to the 676 Chinese characters the church
         has actually written takes a /zh page from 2716 KB to 265 KB, removes
         a 227 KB render-blocking third-party stylesheet, and drops the

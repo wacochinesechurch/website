@@ -18,7 +18,7 @@ const t = useTranslations(locale);
 const church = await getChurch();
 
 /* getFaq() already drops `unverified` entries, so a question the church has
-   not answered yet simply is not asked here — rather than being asked and
+   not answered yet simply isn’t asked here — rather than being asked and
    left hanging, which is worse than silence. */
 const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
 ---
@@ -81,7 +81,7 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
         <div class="where__map" data-reveal>
           <p class="where__map-label ui">
             {locale === 'en'
-              ? 'The building is shared. Look for the Emmanuel Baptist Church sign. That is the right place.'
+              ? 'The building is shared. Look for the Emmanuel Baptist Church sign. That’s the right place.'
               : '这栋建筑是共用的。请找 Emmanuel Baptist Church 的招牌，那就是我们。'}
           </p>
         </div>
@@ -140,7 +140,7 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
     )
   }
 
-  {/* ---- 4. TELL US YOU'RE COMING ---- */}
+  {/* ---- 4. TELL US YOU’RE COMING ---- */}
   <section class="section section--tight" aria-labelledby="tellus-title">
     <div class="shell">
       <div class="tellus" data-reveal>

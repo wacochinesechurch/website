@@ -13,7 +13,7 @@ looking at the photograph. Filenames in this directory are provisional.
    Retreat in Galveston. Time to catch and share crabs.
 
 3. 职青团契赶赴弟兄姐妹家献上生日祝福和美丽的蛋糕
-   Fellowship of Professionals celebrated the brother and sister's birthday with homemade cakes. Yummy!
+   Fellowship of Professionals celebrated the brother and sister’s birthday with homemade cakes. Yummy!
 
 4. 美食一顿来欢迎新同工的加入
    Welcome the new co-workers to the church with Chinese food
@@ -22,7 +22,7 @@ looking at the photograph. Filenames in this directory are provisional.
    Seniors make mooncakes to be shared on Mid-Autumn Festival
 
 6. 三款不同的蛋糕有一个共同的主题：在主里面分享爱和美食
-   Beautiful cakes of different styles are calling us to share them with each other in God's love.
+   Beautiful cakes of different styles are calling us to share them with each other in God’s love.
 
 7. 后勤组弟兄姐妹为2023中秋聚会做最后准备
    Preparation for the Mid-Autumn Festival gathering
@@ -34,7 +34,7 @@ looking at the photograph. Filenames in this directory are provisional.
    (no English caption published)
 
 10. 没有什么是火锅不能解决的，一顿不行就两顿.
-    Everyone's favorite food: Chinese hotpot
+    Everyone’s favorite food: Chinese hotpot
 
 11. 教会弟兄篮球队.
     Church basketball team, you are the best! Go, go, go!
@@ -43,7 +43,7 @@ looking at the photograph. Filenames in this directory are provisional.
     Grandpas and grandmas are practicing Taiji, Chinese Kongfu
 
 13. 弟兄们们自豪展示父亲节礼物.
-    They are proudly exhibiting the presents they got for the Father's Day.
+    They are proudly exhibiting the presents they got for the Father’s Day.
 
 14. 2023中秋音乐敬拜
     The 2023 Mid-Autumn Festival Worship Concert

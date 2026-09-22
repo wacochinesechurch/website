@@ -16,7 +16,7 @@ const t = useTranslations(locale);
 const church = await getChurch();
 
 /* The three named fellowship contacts the church publishes. None has an
-   email address attached, so the page says who they are and routes the
+   email address attached, so the page says who they’re and routes the
    message through the church address rather than inventing a mailbox. */
 const contacts = (await getFellowships()).filter(
   (f) => f.data.contactStatus !== 'unverified' && pick(f.data.contactName, locale),
@@ -58,7 +58,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
               revealed from the query string.
 
               role="status" alone did NOT announce it. A live region only
-              announces content that changes while it is being watched, and
+              announces content that changes while it’s being watched, and
               this text is present from the first byte and merely hidden — so
               a screen reader user submitted the form and was told nothing.
               Focus is moved to it instead, which is both reliable and what a
@@ -196,7 +196,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
           }
 
           {/*
-            No phone number appears anywhere in the church's public material,
+            No phone number appears anywhere in the church’s public material,
             so none is offered. An invented or guessed number would be worse
             than no number at all.
           */}
@@ -237,7 +237,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
             eyebrow={locale === 'en' ? 'By group' : '各团契'}
             title={locale === 'en' ? 'Who to ask' : '可以找谁'}
             lede={locale === 'en'
-              ? 'These are the people the church lists for each fellowship. Email the church address above and say who you are trying to reach.'
+              ? 'These are the people the church lists for each fellowship. Email the church address above and say who you’re trying to reach.'
               : '以下是教会为各团契列出的联系人。请写信到上方的教会邮箱，并说明你想找哪一位。'}
             id="who-title"
           />

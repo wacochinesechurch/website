@@ -43,9 +43,9 @@ const t = useTranslations(locale);
 ---
 
 {/*
-  data-event-end is read by src/scripts/freshness.ts in the visitor's browser.
+  data-event-end is read by src/scripts/freshness.ts in the visitor’s browser.
   Even if nobody rebuilds this site for six months, an event that has passed
-  stops presenting itself as upcoming on the reader's actual clock.
+  stops presenting itself as upcoming on the reader’s actual clock.
 */}
 <ul
   class="events"
@@ -102,7 +102,7 @@ const t = useTranslations(locale);
                 <span class="event__time">{formatClockTime(e.data.start, locale)}</span>
               )}
 
-              {/* Filled in by src/scripts/freshness.ts against the visitor's
+              {/* Filled in by src/scripts/freshness.ts against the visitor’s
                   own clock — "tomorrow", "in 3 days" — and left hidden when
                   the event is further off than a fortnight. A baked-in
                   relative label would be a lie by Tuesday, which is why it is

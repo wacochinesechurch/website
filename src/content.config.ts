@@ -114,7 +114,7 @@ const image = z
 
 /* -------------------------------------------------------------------------
    SETTINGS — the facts that appear everywhere.
-   Editing Sunday's start time here changes it on every page at once. This is
+   Editing Sunday’s start time here changes it on every page at once. This is
    the single most important thing to keep volunteer-editable.
    ------------------------------------------------------------------------- */
 const settings = defineCollection({
@@ -173,7 +173,7 @@ const settings = defineCollection({
           })
           .optional(),
         /**
-         * For a gathering that meets somewhere private — a member's home —
+         * For a gathering that meets somewhere private — a member’s home —
          * where publishing the street address is not appropriate. The site
          * says where it roughly is and routes the exact address through a
          * person. The address is deliberately NOT stored in this repository,
@@ -193,7 +193,7 @@ const settings = defineCollection({
             }),
           )
           .default([]),
-        /** Where a gathering splits into groups — Friday's Bible study does. */
+        /** Where a gathering splits into groups — Friday’s Bible study does. */
         groups: z
           .array(
             z.object({
@@ -483,7 +483,7 @@ const pages = defineCollection({
 });
 
 /* -------------------------------------------------------------------------
-   TIMELINE — the church's history, as a scroll narrative.
+   TIMELINE — the church’s history, as a scroll narrative.
    ------------------------------------------------------------------------- */
 const timeline = defineCollection({
   loader: file('src/content/timeline/timeline.yaml'),

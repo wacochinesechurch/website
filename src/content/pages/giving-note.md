@@ -7,7 +7,7 @@ lede:
   zh: ""
 body:
   en: |
-    If you are visiting, please do not feel any obligation. Nothing here depends on you giving anything, and nobody will be watching.
+    If you’re visiting, please don’t feel any obligation. Nothing here depends on you giving anything, and nobody will be watching.
 
     This page exists because members have asked how.
   zh: |

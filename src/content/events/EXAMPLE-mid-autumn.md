@@ -21,7 +21,7 @@ image:
   focus: { x: 38, y: 42 }
 registerUrl: https://example.com/change-me
 registerLabel:
-  en: Let us know you're coming
+  en: Let us know you’re coming
   zh: 报名参加
 draft: true
 ---

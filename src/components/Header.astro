@@ -425,13 +425,13 @@ const isCurrent = (href: string) =>
   /* Below about 368px — iPhone SE and the smaller Androids — the wordmark,
      the language switch and the menu button together overflowed the line by
      ~17px, giving the whole page a horizontal scroll. Tightening the gaps and
-     the switch's minimum width reclaims ~29px, which clears it at 320. */
+     the switch’s minimum width reclaims ~29px, which clears it at 320. */
   /* 369-379px was a dead zone: the tightening below started at 23rem (368px)
      and the header only fits unaided from 380px, so the English wordmark plus
      the language switch plus the menu button came to 379px of intrinsic width
      and pushed the burger off-screen. 375px - the commonest phone width there
      is - sat squarely inside it. This band closes the gap by tightening the
-     spacing only, keeping the church's name in full. */
+     spacing only, keeping the church’s name in full. */
   @media (max-width: 24rem) {
     .site-header__inner {
       gap: var(--s-3);

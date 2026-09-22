@@ -24,7 +24,7 @@ const youtube = church.social.find((s) => s.platform === 'youtube');
   title={t('nav.sermons')}
   description={locale === 'en'
     ? 'Sermons and worship recordings from Waco Chinese Church in Waco, Texas. Messages are preached in Mandarin on Sunday mornings and kept on the church YouTube channel.'
-    : '德州韦科华人教会的讲道与敬拜录像。主日上午的讲道以国语（普通话）进行，影音内容保存在教会的 YouTube 频道上。'}
+    : '德州韦科华人教会的讲道与敬拜录像。主日上午的讲道用普通话，影音内容保存在教会的 YouTube 频道上。'}
 >
   <PageHeader
     locale={locale}
@@ -32,7 +32,7 @@ const youtube = church.social.find((s) => s.platform === 'youtube');
     title={t('sermons.title')}
     lede={locale === 'en'
       ? 'Messages are preached in Mandarin on Sunday mornings. The church’s YouTube channel holds recordings going back several years; the most recent was posted in December 2023.'
-      : '主日上午的讲道以国语（普通话）进行。教会的 YouTube 频道保存了过去数年的录像，最近一次上传是在 2023 年 12 月。'}
+      : '主日上午的讲道用普通话。教会的 YouTube 频道保存了过去数年的录像，最近一次上传是在 2023 年 12 月。'}
   >
     {
       youtube && (
@@ -132,7 +132,7 @@ const youtube = church.social.find((s) => s.platform === 'youtube');
             </h2>
             <p class="shelf__body">
               {locale === 'en'
-                ? 'We have not built a sermon-by-sermon archive on this site yet. The church’s YouTube channel holds what has been recorded, though nothing new has been posted there since December 2023. An indexed archive is ready here in both languages, with room for speaker, date, passage and series. Sermons appear the moment someone starts filling it in.'
+                ? 'We haven’t built a sermon-by-sermon archive on this site yet. The church’s YouTube channel holds what has been recorded, though nothing new has been posted there since December 2023. An indexed archive is ready here in both languages, with room for speaker, date, passage and series. Sermons appear the moment someone starts filling it in.'
                 : '本站尚未建立逐篇的讲道存档。教会录制的内容保存在 YouTube 频道上，不过自 2023 年 12 月起未再上传新视频。这里已备好中英双语的索引架构，留有讲员、日期、经文与系列的位置，随时可以启用。'}
             </p>
             {youtube && (

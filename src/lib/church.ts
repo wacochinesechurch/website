@@ -25,7 +25,7 @@ export function formatAddress(church: Church, multiline = false): string {
 }
 
 /**
- * Render "HH:MM" in the reader's language.
+ * Render "HH:MM" in the reader’s language.
  *
  * English gets "11:00 AM". Chinese gets "上午11:00" — the 上午/下午 marker is
  * not optional politeness, it is how a Chinese reader expects a time of day
@@ -73,7 +73,7 @@ export function formatTimeRange(
  * Events used to format their own times with a bare Intl call, which on the
  * Chinese pages produced "18:30": 24-hour, no 晚上, and unlike every other
  * time on the site. This routes them through the one place that knows the
- * church's timezone and how Chinese actually names the parts of a day.
+ * church’s timezone and how Chinese actually names the parts of a day.
  */
 export function formatClockTime(date: Date, locale: Locale): string {
   const parts = new Intl.DateTimeFormat('en-GB', {
@@ -136,7 +136,7 @@ export function isUpcoming(
   //
   // End of day in WACO, not on the build machine. setHours() would resolve in
   // whatever timezone the builder happens to run in — UTC on Netlify, local on
-  // a volunteer's laptop — which made an evening event drop off the homepage
+  // a volunteer’s laptop — which made an evening event drop off the homepage
   // at 6:59pm while it was still going on.
   return endOfDayInChurchTime(finish).getTime() >= now.getTime();
 }
@@ -338,8 +338,8 @@ export async function churchJsonLd(locale: Locale, siteUrl: string) {
         },
         /**
          * A gathering that does NOT meet at the church must not be published
-         * with the church's address attached. The Wednesday prayer meeting is
-         * in a member's home: it gets a name and no address at all, because
+         * with the church’s address attached. The Wednesday prayer meeting is
+         * in a member’s home: it gets a name and no address at all, because
          * the only correct address is one we deliberately do not store.
          */
         location: {

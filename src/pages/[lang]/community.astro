@@ -19,7 +19,7 @@ const t = useTranslations(locale);
   DESIGN DECISION — one page, two bands.
 
   The old site split 团契 (Fellowship) and 服侍 (Serving) into separate
-  top-level pages. But they are two halves of one question a visitor is
+  top-level pages. But they’re two halves of one question a visitor is
   asking: "where would I fit?" A fellowship is who you belong with; a
   ministry is what you give yourself to. Splitting them across the navigation
   made both harder to find and neither easier to understand.
@@ -50,7 +50,7 @@ const active = await getMinistries('active');
         eyebrow={locale === 'en' ? 'Belonging' : '归属'}
         title={t('community.fellowships')}
         lede={locale === 'en'
-          ? 'Five groups, gathered around the stage of life you are actually in.'
+          ? 'Five groups, gathered around the stage of life you’re actually in.'
           : '五个团契，按你此刻所处的人生阶段而聚。'}
         id="fellowships-title"
       />
@@ -60,9 +60,9 @@ const active = await getMinistries('active');
 
   {/* ---- BAND 2: what this church gives itself to ----
        Every item the church published about its serving work is dated 2023
-       and has not been updated since. Presenting it as current activity
+       and hasn’t been updated since. Presenting it as current activity
        would repeat the exact mistake that made the old site untrustworthy.
-       So it is presented as a record, with the year attached. ---- */}
+       So it’s presented as a record, with the year attached. ---- */}
   {
     (active.length > 0 || past.length > 0) && (
       <section class="section" data-surface="warm" aria-labelledby="serving-title">
@@ -95,7 +95,7 @@ const active = await getMinistries('active');
               </h3>
               <p class="record__note">
                 {locale === 'en'
-                  ? 'Recorded by the church itself. We have not confirmed which of these are still running. Ask us and we will tell you what is happening now.'
+                  ? 'Recorded by the church itself. We haven’t confirmed which of these are still running. Ask us and we’ll tell you what is happening now.'
                   : '以下由教会自己记录。我们尚未确认其中哪些仍在进行。欢迎来信询问目前的情况。'}
               </p>
               <ul class="ministries ministries--record" role="list" data-reveal-group>
@@ -137,7 +137,7 @@ const active = await getMinistries('active');
           </h2>
           <p class="students-cta__body">
             {locale === 'en'
-              ? 'This church began as a Baylor student fellowship in 1993 and has been catching new arrivals ever since. There is a page written specifically for you.'
+              ? 'This church began as a Baylor student fellowship in 1993 and has been catching new arrivals ever since. There’s a page written specifically for you.'
               : '这间教会 1993 年正是从 Baylor 的学生团契开始的，此后一直在接住每一批新来的人。有一页是专门为你写的。'}
           </p>
         </div>

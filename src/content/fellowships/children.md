@@ -1,6 +1,6 @@
 ---
 name:
-  en: Children's Program
+  en: Children’s Program
   zh: 儿童团契
 summary:
   en: Younger children have their own group during the Sunday message, so parents can listen while the children have something of their own.

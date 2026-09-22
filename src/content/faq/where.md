@@ -6,7 +6,7 @@ answer:
   en: |
     1801 Gurley Avenue, Waco, TX 76706.
 
-    We are a non-denominational church, and we share this building with Emmanuel Baptist Church, our partner congregation. That is why the sign outside says Emmanuel Baptist. You are in the right place. Sunday worship is in the Sanctuary; Friday Bible study is in the Fellowship Hall.
+    We’re a non-denominational church, and we share this building with Emmanuel Baptist Church, our partner congregation. That’s why the sign outside says Emmanuel Baptist. You’re in the right place. Sunday worship is in the Sanctuary; Friday Bible study is in the Fellowship Hall.
   zh: |
     地址是 1801 Gurley Avenue, Waco, TX 76706。
 
