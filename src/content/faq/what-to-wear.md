@@ -9,9 +9,9 @@ answer:
 
     Wear what you're comfortable in.
   zh: |
-    没有什么着装要求。多数人穿长裤或牛仔裤，长袖短袖都有，也有人穿短裤来。
+    教会没有着装要求。多数人穿长裤或牛仔裤，长袖短袖都有，也有人穿短裤。
 
-    你穿得舒服就好。
+    请您穿着自己觉得舒适自在的衣服前来。
 topic: practical
 status: verified
 order: 50

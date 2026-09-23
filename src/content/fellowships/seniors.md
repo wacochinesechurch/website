@@ -4,7 +4,7 @@ name:
   zh: 荣耀冠冕团契
 summary:
   en: The elders of our church. They make the mooncakes, they practice taiji together, and they have prayed this congregation through a lot of years.
-  zh: 教会的长者们。中秋的月饼是他们做的，太极是他们一起打的，这间教会许多年的路，也是他们一路祷告走过来的。
+  zh: 教会的长者们。中秋的月饼是他们做的，太极是他们一起打的；这间教会多年来的路，也是他们一路祷告走过来的。
 audience:
   en: Older members of the church and their friends
   zh: 教会的年长弟兄姊妹与他们的朋友

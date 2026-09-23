@@ -41,7 +41,7 @@ const past = await getPastEvents(12);
     eyebrow={t('nav.life')}
     title={locale === 'en'
       ? 'What a year here looks like'
-      : '这里的一年，大概是这样'}
+      : '这里的一年，是这样过的'}
     lede={locale === 'en'
       ? 'Mooncakes made by the grandparents, hotpot on someone’s floor, crabs in Galveston, a basketball team that’s definitely the best. These are the church’s own photographs and its own captions.'
       : '爷爷奶奶做的月饼、谁家地板上的火锅、Galveston 的螃蟹，还有一支肯定是最强的篮球队。以下照片与文字，都出自教会自己。'}
@@ -99,7 +99,7 @@ const past = await getPastEvents(12);
             title={t('life.archive')}
             lede={locale === 'en'
               ? 'Kept on purpose. A church that has been here since 1993 should be able to show its own back catalogue.'
-              : '刻意保留下来。一间自 1993 年就在这里的教会，应该拿得出自己的过往。'}
+              : '这些是特意保留下来的。一间自 1993 年就在这里的教会，理应拿得出自己的过往。'}
             id="past-title"
           />
           <EventList locale={locale} events={past} variant="archive" />

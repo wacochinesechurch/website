@@ -10,9 +10,9 @@ answer:
     until a friend brought them to a Friday dinner. Both are ordinary here,
     and you're welcome exactly as you are.
   zh: |
-    不需要。你不是基督徒，一样可以来。
+    当然可以。您不必是基督徒，一样可以来。
 
-    这里有人从小在教会长大，也有人是朋友带着来吃了一顿周五晚餐，才第一次走进教会。两种都很平常。你就照你现在的样子来，就很好。
+    这里有人从小在教会长大，也有人直到朋友带他来吃周五晚餐，才第一次走进教会。这两种情况在这里都很平常。您就照着现在的样子来，我们诚挚欢迎您。
 topic: belief
 status: verified
 order: 60

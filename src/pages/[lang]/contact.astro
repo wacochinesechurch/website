@@ -30,12 +30,12 @@ const social = church.social.filter((s) => s.status !== 'unverified');
   title={t('contact.title')}
   description={locale === 'en'
     ? 'Get in touch with Waco Chinese Church at 1801 Gurley Avenue, Waco, Texas. Email us, get directions, or find out who to ask about each fellowship. Write in English or Chinese.'
-    : '与德州韦科华人教会联系。教会位于 1801 Gurley Avenue，你可以写信给我们、查看路线，或找到各团契的联系人。中文或英文留言都可以。'}
+    : '与德州韦科华人教会联系。教会位于 1801 Gurley Avenue，您可以写信给我们、查看路线，或找到各团契的联系人。中文或英文留言皆可。'}
 >
   <PageHeader
     locale={locale}
     eyebrow={t('contact.title')}
-    title={locale === 'en' ? 'Talk to a person' : '找个人聊聊'}
+    title={locale === 'en' ? 'Talk to a person' : '与我们当中的一位谈谈'}
     lede={t('contact.lede')}
   />
 
@@ -148,7 +148,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
               <p class="field__hint" id="message-hint">
                 {locale === 'en'
                   ? 'Write in English or Chinese, whichever is easier.'
-                  : '中文或英文皆可，用你顺手的那一种就好。'}
+                  : '中文或英文皆可，请用您更方便的一种。'}
               </p>
             </div>
 
@@ -246,7 +246,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
             title={locale === 'en' ? 'Who to ask' : '可以找谁'}
             lede={locale === 'en'
               ? 'These are the people the church lists for each fellowship. Email the church address above and say who you’re trying to reach.'
-              : '以下是教会为各团契列出的联系人。请写信到上方的教会邮箱，并说明你想找哪一位。'}
+              : '以下是教会为各团契列出的联系人。请写信到上方的教会邮箱，并说明您想找哪一位。'}
             id="who-title"
           />
           <ul class="whos" role="list" data-reveal-group>

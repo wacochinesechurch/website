@@ -28,7 +28,7 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
   title={t('nav.visit')}
   description={locale === 'en'
     ? 'Everything you need to know before your first visit to Waco Chinese Church: when we meet, where to go, what happens on a Sunday, and what language is used.'
-    : '第一次来韦科华人教会之前，你需要知道的一切：聚会时间、地点、主日流程，以及使用的语言。'}
+    : '初次来韦科华人教会之前，您需要知道的一切：聚会的时间与地点、主日的流程，以及所使用的语言。'}
 >
   <PageHeader
     locale={locale}
@@ -82,7 +82,7 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
           <p class="where__map-label ui">
             {locale === 'en'
               ? 'The building is shared. Look for the Emmanuel Baptist Church sign. That’s the right place.'
-              : '这栋建筑是共用的。请找 Emmanuel Baptist Church 的招牌，那就是我们。'}
+              : '这栋建筑是共用的。请认准 Emmanuel Baptist Church 的招牌，那里就是我们聚会的地方。'}
           </p>
         </div>
       </div>
@@ -103,7 +103,7 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
         <div class="shell">
           <SectionHeader
             locale={locale}
-            eyebrow={locale === 'en' ? 'Ahead of time' : '先说清楚'}
+            eyebrow={locale === 'en' ? 'Ahead of time' : '事先了解'}
             title={t('visit.faq')}
             id="faq-title"
           />
@@ -129,7 +129,7 @@ const faqs = (await getFaq()).filter((f) => pick(f.data.answer, locale).trim());
             <p class="faq__ask-text">
               {locale === 'en'
                 ? "Not answered here? Just ask. Parking, children, what to wear, anything at all. A real person reads these and will reply."
-                : '这里没写到的，直接问就好。停车、孩子、穿着，任何问题都可以。这些信件由真人查看，会回复你。'}
+                : '若这里没有您要找的答案，欢迎直接向我们提问。停车、孩子、穿着，任何问题都可以。您的留言会有人亲自阅读，并给您回复。'}
             </p>
             <a class="btn btn--ink" href={localePath(locale, '/contact')}>
               {t('cta.contact')}

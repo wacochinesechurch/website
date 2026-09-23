@@ -9,9 +9,9 @@ answer:
 
     You don’t have to sing, stand, give, or say anything. Sitting quietly at the back and watching is a completely normal way to spend your first Sunday.
   zh: |
-    十一点开始，先是大约半小时的诗歌敬拜。十一点半开始讲道，通常十二点半左右结束。
+    主日崇拜十一点开始，先是大约半小时的诗歌敬拜。十一点半开始讲道，通常在十二点半左右结束。
 
-    你不需要唱、不需要站、不需要奉献，也不需要发言。第一次来，安静地坐在后面看着，是再正常不过的方式。
+    您不必唱诗，不必起立，不必奉献，也不必发言。若是第一次来，安静地坐在后面看一看，也是再正常不过的。
 topic: sunday
 status: verified
 order: 15

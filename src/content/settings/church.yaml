@@ -77,7 +77,7 @@
             zh: 证道。孩子可以去自己的聚会。
       languages:
         en: Worship is in Mandarin. If you don’t understand it, someone will bring you headphones and interpret into English. You won’t have to ask.
-        zh: 聚会用华语。听不懂的话，会有人注意到你，把耳机递给你，给你翻成英文。不用你开口问。
+        zh: 崇拜以华语进行。若您听不懂，会有弟兄姊妹为您送上耳机，翻译成英文，无需您开口询问。
       status: verified
       featured: true
 
@@ -93,7 +93,7 @@
         zh: 团契厅
       summary:
         en: 'Dinner first, then worship in song, then Bible study in three groups: students, working adults, and English speakers. Come for any part of it.'
-        zh: 先一起吃晚饭，然后诗歌敬拜，接着分成三个小组查经：大学生、职青，以及英文组。任何一段你都可以来参加。
+        zh: 先一同用晚餐，然后诗歌敬拜，接着分为三个小组查经：大学生组、职青组与英文组。欢迎您参加其中任何一段。
       schedule:
         - start: "18:00"
           end: "18:45"
@@ -150,7 +150,7 @@
         zh: 这场祷告会可以到现场，也可以在线上参加。
       summary:
         en: The church praying together. Come in person or join online. If you would like others to pray for something, you can send a request in beforehand.
-        zh: 全教会一同祷告。可以到教会现场，也可以线上参加；若有代祷需要，也可以事先提交，让弟兄姊妹为你祷告。
+        zh: 全教会一同祷告。您可以到教会现场，也可以在线上参加。若有代祷事项，可以事先提交，让弟兄姊妹为您祷告。
       languages:
         en: Mandarin.
         zh: 用华语。
@@ -173,7 +173,7 @@
       # site never goes stale when the host changes.
       addressOnRequest:
         en: This one meets at a member’s home rather than at the church, so we send the address out rather than posting it. Email us and we’ll pass it on. You’re very welcome to come.
-        zh: 这场祷告会在弟兄姊妹家中聚会，不在教会，因此地址我们不公开张贴，而是来信索取。写信给我们，我们会把地址发给你。非常欢迎你来。
+        zh: 这场祷告会在弟兄姊妹的家中举行，而不在教会，因此我们不公开张贴地址。请来信与我们联系，我们会把地址发给您。诚挚欢迎您来参加。
       summary:
         en: The college group praying together, midweek.
         zh: 大学生组在周间一同祷告。
@@ -218,7 +218,7 @@
         zh: Zelle 转账
       detail:
         en: Send through your own bank’s Zelle service to the church email address.
-        zh: 透过你所属银行的 Zelle 服务，转账至教会的电子邮箱。
+        zh: 通过您所属银行的 Zelle 服务，转账至教会的电子邮箱。
       value: wacochinesechurch@gmail.com
       instructions:
         en: Most US banks include Zelle in their app. Add the address above as the recipient.

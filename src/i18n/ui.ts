@@ -33,7 +33,7 @@ export const ui = {
   },
   'site.description': {
     en: 'A non-denominational Chinese church in Waco, Texas, started in 1993. Sunday worship is at 11 a.m. in Mandarin, with English interpretation through headphones. Baylor students, families, working people and neighbors from around Waco.',
-    zh: '德州韦科的一间华人教会，1993 年开始。主日上午十一点用华语敬拜，听不懂也没关系，会有人送上耳机，给你翻成英文。这里有 Baylor 的学生，有上班的，有带着孩子的家庭，也有本地的邻居。欢迎你来。',
+    zh: '德州韦科的一间华人教会，不属任何宗派，始于 1993 年。主日上午十一点以华语敬拜，并备有耳机提供英文翻译。这里有 Baylor 的学生，有职场人士，有带着孩子的家庭，也有韦科本地的邻舍。我们诚挚欢迎您的到来。',
   },
 
   /* ---------------------------------------------------------- navigation */
@@ -89,18 +89,18 @@ export const ui = {
   'cta.ride': { en: 'Ask about getting there', zh: '询问交通' },
 
   /* ------------------------------------------------------------- visit -- */
-  'visit.title': { en: 'Planning your first visit', zh: '第一次来，该知道什么' },
+  'visit.title': { en: 'Planning your first visit', zh: '初次来访指南' },
   'visit.lede': {
     en: "Walking into a church for the first time takes courage, especially in a new country. Here is exactly what will happen, so nothing is a surprise.",
-    zh: '第一次走进教会需要一点勇气，尤其是在异乡。以下是你会经历的每一步，好让你心里有底。',
+    zh: '第一次走进教会需要一点勇气，尤其是身在异乡。以下是您来访时将经历的每一步，好让您事先心中有数。',
   },
   'visit.sundayFlow': { en: 'What Sunday looks like', zh: '主日的流程' },
   'visit.faq': { en: 'Common questions', zh: '常见问题' },
   'visit.arriving': { en: 'Arriving', zh: '抵达' },
-  'visit.tellUs': { en: "Tell us you’re coming", zh: '告诉我们你要来' },
+  'visit.tellUs': { en: "Tell us you’re coming", zh: '告诉我们您要来' },
   'visit.tellUsBody': {
     en: "You never have to. You’re welcome to simply show up and slip into a back row. But if you let us know, we’ll be expecting you, and anything you need can be ready before you arrive.",
-    zh: '这不是必须的。你完全可以直接来，安静地坐在后排。但若你先告诉我们一声，我们心里有数，你需要的东西也能先准备好。',
+    zh: '这并非必须。您完全可以直接前来，安静地坐在后排。不过，若您事先告诉我们一声，我们就会知道您要来，您需要的一切也可以在您到达之前预备妥当。',
   },
 
   /* ------------------------------------------------------------ about --- */
@@ -110,11 +110,11 @@ export const ui = {
   'about.timeline': { en: 'How we got here', zh: '一路走来' },
 
   /* -------------------------------------------------------- community --- */
-  'community.title': { en: 'Find your people', zh: '找到你的同路人' },
+  'community.title': { en: 'Find your people', zh: '找到您的同路人' },
   'community.fellowships': { en: 'Fellowships', zh: '团契' },
   'community.fellowshipsLede': {
     en: 'Sunday is the whole church together. Fellowships are where you’re actually known.',
-    zh: '主日是全教会聚在一起；而团契，是真正有人认识你的地方。',
+    zh: '主日是全教会一同聚集；而团契，则是真正有人认识您的地方。',
   },
   'community.serving': { en: 'Serving together', zh: '一同服事' },
   'community.servingLede': {
@@ -166,30 +166,30 @@ export const ui = {
   'give.questions': { en: 'Questions about giving', zh: '关于奉献的疑问' },
   'give.noPressure': {
     en: 'If you’re visiting, please don’t feel any obligation to give. This page is here for members who have asked how.',
-    zh: '若你是初次来访的朋友，请不要有任何负担。这一页是为询问奉献方式的弟兄姊妹预备的。',
+    zh: '若您是初次来访的朋友，请不要有任何负担。这一页是为询问奉献方式的弟兄姊妹预备的。',
   },
 
   /* ---------------------------------------------------------- contact --- */
   'contact.title': { en: 'Contact', zh: '联系我们' },
   'contact.lede': {
     en: 'A real person reads these. Write in English or Chinese, whichever is easier.',
-    zh: '这些留言由真人查看。中文或英文皆可，用你顺手的那一种就好。',
+    zh: '这些留言都有人亲自阅读。中文或英文皆可，请用您更方便的一种。',
   },
-  'contact.name': { en: 'Your name', zh: '你的称呼' },
+  'contact.name': { en: 'Your name', zh: '您的称呼' },
   'contact.email': { en: 'Email', zh: '电子邮箱' },
   'contact.message': { en: 'Message', zh: '留言' },
   'contact.send': { en: 'Send', zh: '发送' },
-  'contact.topic': { en: 'What is this about?', zh: '想聊什么？' },
+  'contact.topic': { en: 'What is this about?', zh: '留言主题' },
   'contact.topicVisit': { en: "I’d like to visit", zh: '我想来参加聚会' },
   'contact.topicRide': { en: 'Getting there', zh: '交通与路线' },
   'contact.topicPrayer': { en: 'A prayer request', zh: '代祷需要' },
   'contact.topicOther': { en: 'Something else', zh: '其他' },
   'contact.follow': { en: 'Follow along', zh: '关注我们' },
   'contact.required': { en: 'required', zh: '必填' },
-  'contact.sentTitle': { en: 'Thank you. Your message is on its way.', zh: '谢谢你，信息已经发送。' },
+  'contact.sentTitle': { en: 'Thank you. Your message is on its way.', zh: '谢谢您，您的留言已经发出。' },
   'contact.sentBody': {
     en: 'A real person reads these. You should hear back before long.',
-    zh: '这些留言由真人查看，我们会尽快回复你。',
+    zh: '这些留言都有人亲自阅读，我们会尽快回复您。',
   },
 
   /* ---------------------------------------------------------- meta/sys -- */

@@ -9,9 +9,9 @@ answer:
 
     If you arrive right at eleven, you haven't missed anything.
   zh: |
-    聚会十一点开始，多数人会提前五到十分钟到。
+    崇拜十一点开始，多数人会提前五到十分钟到。
 
-    就算你十一点整才到，也什么都没错过。
+    即使您十一点整才到，也并没有错过什么。
 topic: arriving
 status: verified
 order: 18

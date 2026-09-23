@@ -4,7 +4,7 @@ name:
   zh: 英文团契
 summary:
   en: Made up of American friends and Chinese American young people, with its own Bible study group on Friday evenings. If English is the language you think in, this is where you’ll feel most at home.
-  zh: 由美国朋友与华裔年轻人组成，周五晚上有自己的查经小组。如果英文是你思考时使用的语言，这里会让你最自在。
+  zh: 由美国朋友与华裔年轻人组成，周五晚上有自己的查经小组。如果英文是您思考时所用的语言，这里会是最让您感到自在的地方。
 audience:
   en: 'English speakers: American friends, Chinese Americans, second generation'
   zh: '以英文为主要语言的朋友：美国朋友、华裔、第二代'

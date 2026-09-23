@@ -10,7 +10,7 @@ answer:
   zh: |
     地址是 1801 Gurley Avenue, Waco, TX 76706。
 
-    我们是一间不属于任何宗派的教会，与伙伴教会以马内利浸信会（Emmanuel Baptist Church）共用这栋建筑，所以门口的招牌写的是 Emmanuel Baptist。没有走错，就是这里。主日崇拜在主堂，周五查经在团契厅。
+    我们是一间不属于任何宗派的教会，与伙伴教会以马内利浸信会（Emmanuel Baptist Church）共用这栋建筑，所以门口的招牌写的是 Emmanuel Baptist。您没有走错地方。主日崇拜在主堂，周五查经在团契厅。
 topic: arriving
 status: verified
 order: 20

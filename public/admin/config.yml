@@ -294,7 +294,7 @@ collections:
         widget: select
         default: mandarin
         options:
-          - { label: 'Mandarin 国语', value: mandarin }
+          - { label: 'Mandarin 华语', value: mandarin }
           - { label: 'English', value: english }
           - { label: 'Both', value: bilingual }
       - { name: summary, label: 'Summary (optional)', <<: *en_zh_long, required: false }

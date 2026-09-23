@@ -51,7 +51,7 @@ const active = await getMinistries('active');
         title={t('community.fellowships')}
         lede={locale === 'en'
           ? 'Five groups, gathered around the stage of life you’re actually in.'
-          : '五个团契，按你此刻所处的人生阶段而聚。'}
+          : '五个团契，按您此刻所处的人生阶段而聚。'}
         id="fellowships-title"
       />
       <FellowshipGrid locale={locale} />
@@ -96,7 +96,7 @@ const active = await getMinistries('active');
               <p class="record__note">
                 {locale === 'en'
                   ? 'Recorded by the church itself. We haven’t confirmed which of these are still running. Ask us and we’ll tell you what is happening now.'
-                  : '以下由教会自己记录。我们尚未确认其中哪些仍在进行。欢迎来信询问目前的情况。'}
+                  : '以下由教会自己记录。我们尚未确认其中哪些仍在进行。欢迎来信询问，我们会告诉您目前的情况。'}
               </p>
               <ul class="ministries ministries--record" role="list" data-reveal-group>
                 {past.map((m) => (
@@ -138,7 +138,7 @@ const active = await getMinistries('active');
           <p class="students-cta__body">
             {locale === 'en'
               ? 'This church began as a Baylor student fellowship in 1993 and has been catching new arrivals ever since. There’s a page written specifically for you.'
-              : '这间教会 1993 年正是从 Baylor 的学生团契开始的，此后一直在接住每一批新来的人。有一页是专门为你写的。'}
+              : '这间教会 1993 年正是从 Baylor 的学生团契开始的，此后一直在迎接一批又一批新来的人。有一页是专门为您写的。'}
           </p>
         </div>
         <a class="btn btn--solid btn--lg" href={localePath(locale, '/students')}>

@@ -1,7 +1,7 @@
 ---
 question:
   en: Where do I park?
-  zh: 停车停在哪里？
+  zh: 我该把车停在哪里？
 answer:
   en: |
     There's a parking lot right in front of the church, facing the front door.
@@ -11,9 +11,9 @@ answer:
     If it's your first time driving over, search for the church on Google Maps
     and it will bring you straight to it.
   zh: |
-    教会正门前面就是停车场，面对着大门，地方很大，从各个方向开过来基本上都看得到。
+    停车场就在教会前面，正对着大门。场地宽敞，从大多数方向开过来都能看见。
 
-    第一次开车过来的话，在 Google 地图上搜教会的名字，导航会直接把你带到门口。
+    若您是第一次开车前来，在 Google 地图上搜索教会的名字，导航便会直接把您带到门口。
 topic: arriving
 status: verified
 order: 22
