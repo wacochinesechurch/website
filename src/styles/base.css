@@ -211,7 +211,14 @@
     font-size: var(--fs-md);
   }
 
-  p {
+  /* `pretty` is what stops a paragraph ending on a single orphaned word. A
+     list item, a caption and a pull quote all end in a last line too, and
+     read just as badly when it holds one word, so they get it as well. */
+  p,
+  li,
+  dd,
+  blockquote,
+  figcaption {
     text-wrap: pretty;
   }
 
