@@ -13,6 +13,10 @@
         position: fixed; inset: 0; display: grid; place-items: center;
         padding: 2rem; text-align: center; color: #4a4038;
         font-family: 'Source Serif 4', Georgia, 'Songti SC', serif;
+        /* This covers the whole viewport. If the removal below ever fails
+           again, it must not be able to swallow the clicks meant for the
+           editor underneath it. */
+        pointer-events: none;
       }
       #boot p { max-width: 30rem; line-height: 1.7; }
       #boot strong { display: block; font-size: 1.3rem; margin-bottom: 0.6rem; color: #211c17; }
@@ -37,19 +41,46 @@
       exist: if it ever went away, every word would still be sitting in plain
       files in the repo, and any other Git-based CMS could read the same config.
     -->
-    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
+    <!--
+      Pinned deliberately. @sveltia/cms is a 0.x package, so a minor bump is
+      allowed to break things, and nobody here is watching for that. An
+      unpinned URL means the editor can stop working on a morning when not one
+      line of this repository changed, with no way to tell what happened.
+      To upgrade: read the release notes, raise the number, check /admin loads
+      and that a test edit saves.
+
+      type="module" is deliberately absent — the bundle is a classic script,
+      and Sveltia logs a warning asking for the attribute to be removed.
+    -->
+    <script src="https://unpkg.com/@sveltia/cms@0.220.0/dist/sveltia-cms.js"></script>
 
     <script>
-      window.addEventListener('load', () => {
-        setTimeout(() => {
-          const boot = document.getElementById('boot');
-          // The CMS replaces the page body once it mounts; if our boot notice
-          // is still the only thing here after a few seconds, something failed.
-          if (boot && document.querySelector('#nc-root, #app, .sveltia-cms')) {
-            boot.remove();
-          }
-        }, 2500);
-      });
+      // Remove the notice as soon as the editor actually mounts.
+      //
+      // This used to look for '#nc-root, #app, .sveltia-cms'. Sveltia mounts as
+      // <div class="sui app-shell">, so the selector never matched and a
+      // full-viewport overlay stayed on the page forever, on top of the very
+      // editor it was announcing. Rather than swap one guessed class name for
+      // another that the next release can rename, watch for ANY element
+      // arriving in <body> that is not this notice or a script — that is the
+      // editor, whatever it ends up calling itself.
+      (function () {
+        var boot = document.getElementById('boot');
+        if (!boot) return;
+        var mounted = function () {
+          return [].some.call(document.body.children, function (el) {
+            return el !== boot && el.tagName !== 'SCRIPT';
+          });
+        };
+        var done = function () { if (boot && boot.parentNode) boot.remove(); };
+        if (mounted()) return done();
+        var obs = new MutationObserver(function () {
+          if (mounted()) { obs.disconnect(); done(); }
+        });
+        obs.observe(document.body, { childList: true });
+        // If the editor never arrives, the notice has to stay — it is the only
+        // thing that tells a volunteer the script failed to load at all.
+      })();
     </script>
   </body>
 </html>

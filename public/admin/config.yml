@@ -28,12 +28,25 @@ backend:
   # If the org or repo name differs, change this one line and redeploy.
   repo: wacochinesechurch/website
   branch: main
+  # Only offer the "Sign in with an access token" button.
+  #
+  # The other button, "Sign in with GitHub", cannot work until the OAuth
+  # Worker described below exists and base_url points at it. Until then it
+  # opens a popup that says only "Not Found", which reads like a broken site
+  # rather than a missing setting. Hiding it removes the dead end.
+  #
+  # Delete this line once base_url is set, to bring the GitHub button back.
+  # The list may not be empty — that is a configuration error.
+  auth_methods: [token]
   # Volunteers sign in with a free GitHub account.
   #
   # The site is on Cloudflare Pages, so the CMS needs its own OAuth helper.
-  # Netlify used to provide one for free at api.netlify.com/auth, which is why
-  # this block had no base_url; that route died with the move and was never
-  # actually switched on, so nothing was lost.
+  # With no base_url, Sveltia falls back to Netlify's free broker at
+  # api.netlify.com/auth. That broker is still running, but it only brokers
+  # for domains registered to a Netlify site, and it is asked about
+  # wacochinesechurch.pages.dev — which Netlify has never heard of. So it
+  # answers 404 "Not Found". Nothing was decommissioned; this site was simply
+  # never one it could serve, and moving to Cloudflare did not change that.
   #
   # The replacement is sveltia-cms-auth, a small Cloudflare Worker that the
   # same Cloudflare account can host:
@@ -57,14 +70,27 @@ backend:
 # Lets an editor preview changes on a branch before they go live.
 publish_mode: editorial_workflow
 
-media_folder: src/assets/uploads
-public_folder: /src/assets/uploads
+# The church's 15 photographs live in src/assets/moments. Pointing the picker
+# at src/assets/uploads — which does not exist — showed volunteers an empty
+# library with no hint that the photos were one directory away.
+# src/lib/images.ts resolves either folder and strips either prefix, so
+# uploads keep working.
+media_folder: src/assets/moments
+public_folder: /src/assets/moments
 
-locale: en
+# `locale:` is deliberately absent. Sveltia ignores it and says so in the
+# console; it follows the browser's language instead, which is why the
+# sign-in screen appears in Chinese on a Chinese browser. For this church
+# that is the behaviour we want anyway.
 
 # Shown at the top of the editing interface.
-site_url: https://www.wacochinesechurch.org
-display_url: https://www.wacochinesechurch.org
+# These drive the CMS's "View site" link, so they have to point at what the
+# editor is actually editing. www.wacochinesechurch.org still serves the OLD
+# Squarespace site — sending a volunteer there to check their change meant
+# sending them to a site that had never heard of it.
+# AT GO-LIVE: change both back to https://www.wacochinesechurch.org
+site_url: https://wacochinesechurch.pages.dev
+display_url: https://wacochinesechurch.pages.dev
 logo_url: /favicon.svg
 
 # --- reusable field shapes ---------------------------------------------------
@@ -477,6 +503,10 @@ collections:
           - name: entries
             label: 'Church'
             widget: list
+            # church.yaml is a top-level YAML list, not a mapping. Without
+            # this, the CMS opens the form EMPTY and the first save rewrites
+            # the file nested under an "entries:" key, which fails the build.
+            root: true
             allow_add: false
             max: 1
             fields:
@@ -562,6 +592,12 @@ collections:
                   - { <<: *verification, name: emailStatus, label: 'Email confirmed?' }
                   - { name: phone, label: 'Phone', widget: string, required: false }
                   - { <<: *verification, name: phoneStatus, label: 'Phone confirmed?', default: unverified }
+                  # The Web3Forms key that switches the contact form on. It MUST be
+                  # declared here even though nobody will type it often: a field the
+                  # CMS does not know about is dropped from the file on the first save,
+                  # and dropping this one would silently turn the contact form off
+                  # again, with no error anywhere to say why.
+                  - { name: formKey, label: 'Contact form key (Web3Forms)', widget: string, required: false, hint: 'Public by design — it is visible in the page source. Leave as WEB3FORMS_ACCESS_KEY_HERE until a real key arrives; the form stays hidden until then.' }
 
               - name: social
                 label: 'Social channels'
@@ -613,6 +649,9 @@ collections:
           - name: entries
             label: 'Moments in our history'
             widget: list
+            # timeline.yaml is a top-level YAML list — see the note in
+            # "Church details" above. Same trap, same one-line fix.
+            root: true
             summary: '{{fields.year}} — {{fields.title.en}}'
             fields:
               - { name: id, label: 'Short id', widget: string }
