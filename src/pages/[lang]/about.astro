@@ -54,6 +54,29 @@ const hasBeliefs =
     </div>
   </section>
 
+  {/* ---- Beliefs: structure exists; content awaits the church ----
+       Nothing is invented here. If no approved statement of faith exists,
+       this section doesn’t render at all, and the omission is recorded on
+       the internal /review checklist. ---- */}
+  {
+    hasBeliefs && beliefs && (
+      <section class="section" aria-labelledby="beliefs-title">
+        <div class="shell">
+          <SectionHeader
+            locale={locale}
+            eyebrow={locale === 'en' ? 'Our mission' : '使命'}
+            title={pick(beliefs.data.title, locale)}
+            lede={pick(beliefs.data.lede, locale)}
+            id="beliefs-title"
+          />
+          <div class="prose" data-reveal>
+            <RichText markdown={pick(beliefs.data.body, locale)} />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   {/* ---- Partnership. Stated carefully: a partnership, NOT a denomination ---- */}
   {
     church.partners.length > 0 && (
@@ -97,29 +120,6 @@ const hasBeliefs =
                 : '韦科华人教会不属于任何宗派。自 1995 年起，我们在以马内利浸信会的建筑中聚会，并于 2018 年正式签约成为伙伴教会。但两者是各自独立的教会，我们并不是一间浸信会。'}
             </p>
           </aside>
-        </div>
-      </section>
-    )
-  }
-
-  {/* ---- Beliefs: structure exists; content awaits the church ----
-       Nothing is invented here. If no approved statement of faith exists,
-       this section doesn’t render at all, and the omission is recorded on
-       the internal /review checklist. ---- */}
-  {
-    hasBeliefs && beliefs && (
-      <section class="section" aria-labelledby="beliefs-title">
-        <div class="shell">
-          <SectionHeader
-            locale={locale}
-            eyebrow={locale === 'en' ? 'Theology' : '信仰'}
-            title={pick(beliefs.data.title, locale)}
-            lede={pick(beliefs.data.lede, locale)}
-            id="beliefs-title"
-          />
-          <div class="prose" data-reveal>
-            <RichText markdown={pick(beliefs.data.body, locale)} />
-          </div>
         </div>
       </section>
     )

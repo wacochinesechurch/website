@@ -101,7 +101,9 @@ model separates the two and makes expiry automatic. See `DESIGN.md` and the `REA
 - **When the seniors' fellowship meets.** Three of the five now have confirmed
   times (the Friday study groups) and the children's group meets during the
   Sunday message. 荣耀冠冕团契 is the remaining one with no published time.
-- **A statement of faith.** None exists publicly. The section is built and
+- **A doctrinal statement of faith.** None exists publicly. A MISSION statement does
+  exist, in the church's own words on wacochinesechurch.org, and is now published
+  on /about. The doctrinal section is built and
   hidden. *Not written here — this requires church approval.*
 - **Who leads the church.** No pastor, elder or staff member is named anywhere
   in public material. The Leadership section is built and does not render.
