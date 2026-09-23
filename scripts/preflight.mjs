@@ -192,10 +192,15 @@ for (const f of bigImages)
 for (const f of pages) {
   if (read(f).includes('WEB3FORMS_ACCESS_KEY_HERE'))
     fail(
-      `contact form still carries the placeholder access key  ${relative(DIST, f)}` +
-        '  —  get a free key at web3forms.com and set contact.formKey in church.yaml',
+      `contact form rendered with the placeholder access key  ${relative(DIST, f)}` +
+        '  —  it would swallow every message silently',
     );
 }
+// Not a failure: the page falls back to the email address, which is how the
+// rest of the site asks people to get in touch anyway. Just say so, so nobody
+// has to wonder why the form is missing.
+if (!pages.some((f) => read(f).includes('api.web3forms.com')))
+  note('contact form is off (no key in church.yaml → contact.formKey). The contact page shows the email address instead.');
 
 /* ------------------------------------------------------------- 9. privacy
    The Wednesday prayer meeting is in a member's home. That address is kept out

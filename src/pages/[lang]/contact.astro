@@ -13,7 +13,29 @@ export function getStaticPaths() {
 
 const locale = Astro.params.lang as Locale;
 const t = useTranslations(locale);
+
 const church = await getChurch();
+
+/*
+  The contact form only exists when there is a real key to send with.
+
+  Web3Forms, like every form service, will only deliver to an address whose
+  owner confirmed it, which is the whole point: otherwise anyone could aim it
+  at anyone. Nobody working on this site can open the church's inbox to click
+  that confirmation, so until someone who can does it, there is no key.
+
+  A form with a placeholder key renders perfectly, submits, shows the thank-you
+  message and throws the message away. On the only contact route this church
+  publishes, that is the worst failure available. So with no key the form is
+  not rendered at all and the page falls back to the address, which is already
+  how the rest of the site asks people to get in touch.
+
+  To switch it on: get a free key at web3forms.com using the church address,
+  and put it in church.yaml under contact.formKey. One line, no developer, no
+  redeploy beyond the usual.
+*/
+const formKey = church.contact.formKey;
+const hasForm = Boolean(formKey) && formKey !== 'WEB3FORMS_ACCESS_KEY_HERE';
 
 /* The three named fellowship contacts the church publishes. None has an
    email address attached, so the page says who they’re and routes the
@@ -50,8 +72,32 @@ const social = church.social.filter((s) => s.status !== 'unverified');
         {/* ------------------------------------------------------------- */}
         <div class="contact__form-wrap" data-reveal>
           <h2 class="contact__title" id="form-title">
-            {locale === 'en' ? 'Send a message' : '给我们留言'}
+            {hasForm
+              ? locale === 'en'
+                ? 'Send a message'
+                : '给我们留言'
+              : locale === 'en'
+                ? 'Write to us'
+                : '写信给我们'}
           </h2>
+
+          {!hasForm && (
+            <div class="contact__email-first">
+              <p class="contact__email-lede">
+                {locale === 'en'
+                  ? 'Email is the way to reach this church. A real person reads it, and you can write in English or Chinese.'
+                  : '写信是联系教会最直接的方式。信箱有真人查看，中文或英文都可以。'}
+              </p>
+              <p class="contact__email-big">
+                <a href={`mailto:${church.contact.email}`}>{church.contact.email}</a>
+              </p>
+              <p class="contact__email-note ui">
+                {locale === 'en'
+                  ? 'Plenty of people write about the same few things: coming for the first time, how to find the building, or asking the church to pray for something. Any of those is welcome.'
+                  : '大家来信问得最多的，无非是几件事：第一次想来、找不到地方、或者请教会为一件事祷告。哪一样都欢迎。'}
+              </p>
+            </div>
+          )}
 
           {/* The form posts to ?sent=1. On a static site nothing renders that
               by itself, so the confirmation is pre-rendered hidden and
@@ -63,10 +109,12 @@ const social = church.social.filter((s) => s.status !== 'unverified');
               a screen reader user submitted the form and was told nothing.
               Focus is moved to it instead, which is both reliable and what a
               keyboard user expects after a submit. */}
+          {hasForm && (
           <div class="form-sent" id="form-sent" role="status" tabindex="-1" hidden>
             <p class="form-sent__title">{t('contact.sentTitle')}</p>
             <p class="form-sent__body">{t('contact.sentBody')}</p>
           </div>
+          )}
 
           {/*
             Posts to Web3Forms, which emails the church. It used to post to
@@ -80,6 +128,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
             carries the canonical URL for the no-JavaScript case, and the
             script below rewrites it to wherever the visitor actually is.
           */}
+          {hasForm && (
           <form
             class="form"
             name="contact"
@@ -180,6 +229,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
               {t('contact.send')}
             </button>
           </form>
+          )}
         </div>
 
         {/* ---- Direct routes ---- */}
@@ -302,6 +352,42 @@ const social = church.social.filter((s) => s.status !== 'unverified');
   .contact {
     display: grid;
     gap: var(--s-12);
+  }
+
+  /* Shown instead of the form while there is no key. The address has to
+     carry the whole page on its own here, so it is given real size rather
+     than being another line of body copy. */
+  .contact__email-first {
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  .contact__email-lede {
+    margin: 0;
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--text);
+    max-width: var(--measure-narrow);
+  }
+
+  .contact__email-big {
+    margin: 0;
+    font-size: clamp(1.25rem, 3.2vw, 1.75rem);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .contact__email-big a {
+    color: var(--accent-hover);
+    text-decoration-thickness: from-font;
+  }
+
+  .contact__email-note {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--text-muted);
+    max-width: var(--measure-narrow);
   }
 
   .contact__title {

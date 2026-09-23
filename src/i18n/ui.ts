@@ -172,8 +172,8 @@ export const ui = {
   /* ---------------------------------------------------------- contact --- */
   'contact.title': { en: 'Contact', zh: '联系我们' },
   'contact.lede': {
-    en: 'A real person reads these. Write in English or Chinese, whichever is easier.',
-    zh: '这些留言都有人亲自阅读。中文或英文皆可，请用您更方便的一种。',
+    en: 'A real person reads what comes in. Write in English or Chinese, whichever is easier.',
+    zh: '来信都有人亲自阅读。中文或英文皆可，请用您更方便的一种。',
   },
   'contact.name': { en: 'Your name', zh: '您的称呼' },
   'contact.email': { en: 'Email', zh: '电子邮箱' },
