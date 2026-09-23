@@ -75,55 +75,34 @@ only ever a fallback: the gate page does the negotiation, and does it better,
 because it can read the visitor's saved choice. The rule is gone and nothing
 was lost.
 
-## 3. Turn on CMS sign-in — 10 min
+## 3. Turn on CMS sign-in — 15 min
 
-`/admin` already loads. Nobody can sign in until this is done.
+`/admin` loads without this, but nobody can sign in. That has been true since
+the beginning; it was never switched on.
 
-Because the site is on Netlify, no separate OAuth server is needed — Netlify
-can be the OAuth provider. Two steps, and **both involve a secret, so they are
-yours to do, not something to delegate.**
+Netlify used to offer a free OAuth broker at `api.netlify.com/auth`, which is
+why the CMS config had no `base_url`. That route went with the move. The
+replacement runs on the same Cloudflare account:
 
-### a. Create a GitHub OAuth App
+1. Deploy <https://github.com/sveltia/sveltia-cms-auth>. It is a Cloudflare
+   Worker and its README is a single command. You get a URL like
+   `https://sveltia-cms-auth.<subdomain>.workers.dev`.
+2. Register a GitHub OAuth app at
+   <https://github.com/settings/applications/new>:
 
-Go to **github.com → Settings → Developer settings → OAuth Apps → New OAuth App**
-(<https://github.com/settings/applications/new>) and enter exactly:
+   | Field | Value |
+   |---|---|
+   | Application name | Waco Chinese Church CMS |
+   | Homepage URL | `https://www.wacochinesechurch.org` |
+   | Authorization callback URL | `<worker URL>/callback` — exactly this |
 
-| Field | Value |
-|---|---|
-| Application name | `Waco Chinese Church CMS` |
-| Homepage URL | `https://www.wacochinesechurch.org` |
-| Authorization callback URL | `https://api.netlify.com/auth/done` |
+3. Put the client ID and secret into the Worker's environment variables, as
+   its README describes. **They never go into this repository.**
+4. Uncomment `base_url` at the bottom of the `backend:` block in
+   `public/admin/config.yml` and point it at the Worker. Commit and push.
 
-The callback URL must be exactly that, or sign-in fails with a redirect error.
-
-Register it, then **Generate a new client secret**. GitHub shows the secret
-once — copy it now along with the Client ID.
-
-### b. Give them to Netlify
-
-**Netlify → your project → Project configuration → Security → Authentication
-providers → Install provider → GitHub**, then paste the Client ID and Client
-Secret.
-
-That is it. `public/admin/config.yml` needs no change: with `backend: github`
-the CMS authenticates through `https://api.netlify.com/auth` by default, which
-is what you have just configured.
-
-### Check it
-
-Open `https://<your-site>/admin`, click **Login with GitHub**, authorise. You
-should land in the editor with Notices, Events, Church life photos and the
-rest down the left-hand side. Make a trivial edit, save, and watch a deploy
-start in Netlify.
-
-If sign-in fails, it is almost always the callback URL — it must be
-`https://api.netlify.com/auth/done`, not your own domain.
-
-### Adding volunteers
-
-Each volunteer needs a free GitHub account with **write access to the
-repository** (GitHub → the `wacochinesechurch` org → People / the repo's
-Settings → Collaborators). Without write access they can sign in but not save.
+Volunteers then sign in at `/admin` with a free GitHub account. They also need
+**write access to the repository**, or they can sign in but not save.
 
 ## 4. The nightly rebuild — 2 min, please do not skip
 

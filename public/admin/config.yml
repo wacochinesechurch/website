@@ -30,15 +30,29 @@ backend:
   branch: main
   # Volunteers sign in with a free GitHub account.
   #
-  # No `base_url` is needed: with `name: github` the CMS authenticates through
-  # https://api.netlify.com/auth by default, and this site is on Netlify. All
-  # that is required is installing a GitHub OAuth provider once, under
-  # Netlify → Project configuration → Security → Authentication providers.
-  # See docs/DEPLOY.md step 3.
+  # The site is on Cloudflare Pages, so the CMS needs its own OAuth helper.
+  # Netlify used to provide one for free at api.netlify.com/auth, which is why
+  # this block had no base_url; that route died with the move and was never
+  # actually switched on, so nothing was lost.
   #
-  # Only set base_url if you ever move off Netlify, in which case it points at
-  # a self-hosted OAuth helper such as sveltia-cms-auth on a Cloudflare Worker.
-  # base_url: https://YOUR-WORKER.workers.dev
+  # The replacement is sveltia-cms-auth, a small Cloudflare Worker that the
+  # same Cloudflare account can host:
+  #
+  #   1. Deploy https://github.com/sveltia/sveltia-cms-auth (one command, its
+  #      README covers it). It lands on a URL like
+  #      https://sveltia-cms-auth.<subdomain>.workers.dev
+  #   2. Register a GitHub OAuth app at
+  #      https://github.com/settings/applications/new
+  #        Application name:  Waco Chinese Church CMS
+  #        Homepage URL:      https://www.wacochinesechurch.org
+  #        Callback URL:      <worker URL>/callback      <- exactly this
+  #   3. Put the client id and secret into the Worker's environment variables,
+  #      as its README describes. They never enter this repository.
+  #   4. Uncomment base_url below and point it at the Worker.
+  #
+  # Until that is done /admin loads but nobody can sign in, which is the state
+  # it has always been in. Editing content by hand in the repo still works.
+  # base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
 
 # Lets an editor preview changes on a branch before they go live.
 publish_mode: editorial_workflow
