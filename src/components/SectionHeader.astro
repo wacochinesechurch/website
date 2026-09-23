@@ -61,12 +61,20 @@ const {
     max-width: 22ch;
   }
 
+  /* `ch` is the advance of the Latin "0", which is about half a Chinese
+     character, so 20ch was really about 11 characters and stayed 11 at every
+     screen size. For CJK the natural unit is `em`: one em is exactly one
+     character, so this reads as "fifteen characters a line" and means it. */
   .sec-head__title:lang(zh) {
-    max-width: 20ch;
+    max-width: 15em;
   }
 
   .sec-head[data-align='center'] .sec-head__title {
     max-width: 26ch;
+  }
+
+  .sec-head[data-align='center'] .sec-head__title:lang(zh) {
+    max-width: 18em;
   }
 
   .sec-head__lede {

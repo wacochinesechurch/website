@@ -47,7 +47,7 @@ const heroFocus = focalPosition(heroMoment?.data.image.focus);
   <div class="hero__inner shell shell--wide">
     <div class="hero__copy">
       <p class="hero__eyebrow eyebrow">
-        {locale === 'en' ? 'Waco, Texas · Since 1993' : '德州韦科 · 始于 1993 年'}
+        {locale === 'en' ? 'Waco, Texas · Since 1993' : '德州韦科 · 始于 1993年'}
       </p>
 
       <h1 class="hero__title">
@@ -226,6 +226,15 @@ const heroFocus = focalPosition(heroMoment?.data.image.focus);
 
   .hero__title-main {
     font-weight: 600;
+  }
+
+  /* base.css sets 0.01em on CJK headings and explains why: the em box is
+     already tight, so Latin's negative tracking closes gaps that are not
+     there. That rule lives in the base layer and this component lives in the
+     components layer, so it was silently losing. At 84px it was taking
+     1.85px off every character of 韦科华人教会. */
+  .hero__title-main:lang(zh) {
+    letter-spacing: 0.01em;
   }
 
   /* The second language is not a subtitle or a translation caption — it is

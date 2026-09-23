@@ -141,10 +141,20 @@
     line-height: var(--lh-prose-cjk);
 
     /* 中文与西文之间的间距.
-       text-autospace inserts the quarter-em that belongs between Chinese and
+       text-autospace inserts the sliver that belongs between Chinese and
        Latin, so 在Baylor读书 is spaced correctly without anyone having to
        type the space by hand. Measured: it widens that string from 219.8px
-       to 228.8px at 36px, which is the quarter em. Browsers without it fall
+       to 228.8px at 36px. That is 9px across the TWO boundaries in the
+       string, so an eighth of an em at each, not a quarter as this note
+       first claimed.
+
+       It does nothing where a literal space is already typed, because the
+       property only acts between adjacent characters of differing script.
+       That is why digits no longer carry a hand-typed space before 年/月/日:
+       Intl renders 2024年3月30日 with none, and the two must not disagree on
+       the same page. Latin WORDS keep their typed space, since Safari does
+       not implement text-autospace and would otherwise run 在Baylor读书
+       together on every iPhone and iPad. Browsers without it fall
        back to no spacing, which is what we had before.
 
        text-spacing-trim handles punctuation sitting against a line edge. It

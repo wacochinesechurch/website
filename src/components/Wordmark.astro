@@ -105,6 +105,12 @@ const secondaryLang = locale === 'en' ? 'zh-CN' : 'en-US';
     white-space: nowrap;
   }
 
+  /* Same as the hero: --tracking-snug is a Latin adjustment and the Chinese
+     wordmark was inheriting it. */
+  .wordmark__primary:lang(zh) {
+    letter-spacing: 0.01em;
+  }
+
   .wordmark__secondary {
     font-family: var(--font-ui);
     font-weight: 500;

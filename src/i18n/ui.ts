@@ -33,7 +33,7 @@ export const ui = {
   },
   'site.description': {
     en: 'A non-denominational Chinese church in Waco, Texas, started in 1993. Sunday worship is at 11 a.m. in Mandarin, with English interpretation through headphones. Baylor students, families, working people and neighbors from around Waco.',
-    zh: '德州韦科的一间华人教会，不属任何宗派，始于 1993 年。主日上午十一点以华语敬拜，并备有耳机提供英文翻译。这里有 Baylor 的学生，有职场人士，有带着孩子的家庭，也有韦科本地的邻舍。我们诚挚欢迎您的到来。',
+    zh: '德州韦科的一间华人教会，不属任何宗派，始于 1993年。主日上午十一点以华语敬拜，并备有耳机提供英文翻译。这里有 Baylor 的学生，有职场人士，有带着孩子的家庭，也有韦科本地的邻舍。我们诚挚欢迎您的到来。',
   },
 
   /* ---------------------------------------------------------- navigation */
@@ -185,7 +185,7 @@ export const ui = {
   'contact.topicPrayer': { en: 'A prayer request', zh: '代祷需要' },
   'contact.topicOther': { en: 'Something else', zh: '其他' },
   'contact.follow': { en: 'Follow along', zh: '关注我们' },
-  'contact.required': { en: 'required', zh: '必填' },
+  'contact.required': { en: ' (required)', zh: '（必填）' },
   'contact.sentTitle': { en: 'Thank you. Your message is on its way.', zh: '谢谢您，您的留言已经发出。' },
   'contact.sentBody': {
     en: 'A real person reads these. You should hear back before long.',

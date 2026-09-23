@@ -74,7 +74,7 @@
           end: "12:30"
           label:
             en: A message from Scripture. Children may go to their own group.
-            zh: 证道。孩子可以去自己的聚会。
+            zh: 证道，孩子可以去自己的聚会
       languages:
         en: Worship is in Mandarin. If you don’t understand it, someone will bring you headphones and interpret into English. You won’t have to ask.
         zh: 崇拜以华语进行。若您听不懂，会有弟兄姊妹为您送上耳机，翻译成英文，无需您开口询问。
@@ -131,7 +131,7 @@
             zh: 希望以英文查经的朋友
       languages:
         en: Mandarin, with a group that studies in English.
-        zh: 华语。英文组用英文查经。
+        zh: 华语，英文组用英文查经
       status: verified
       featured: true
 
@@ -153,7 +153,7 @@
         zh: 全教会一同祷告。您可以到教会现场，也可以在线上参加。若有代祷事项，可以事先提交，让弟兄姊妹为您祷告。
       languages:
         en: Mandarin.
-        zh: 用华语。
+        zh: 用华语
       status: verified
       featured: false
 
@@ -179,7 +179,7 @@
         zh: 大学生组在周间一同祷告。
       languages:
         en: Mandarin.
-        zh: 用华语。
+        zh: 用华语
       status: verified
       featured: false
 
@@ -258,5 +258,5 @@
         zh: 以马内利浸信会
       relationship:
         en: Our host and partner congregation since 1995, and formally covenanted partner churches since 2018. We share this building, and share work in Waco and in mission.
-        zh: 自 1995 年起接待我们的教会，2018 年正式签约成为伙伴教会。我们共用这栋建筑，也一同服事韦科本地与宣教工场。
+        zh: 自 1995年起接待我们的教会，2018年正式签约成为伙伴教会。我们共用这栋建筑，也一同服事韦科本地与宣教工场。
       since: "1995"
