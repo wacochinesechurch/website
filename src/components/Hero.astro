@@ -128,6 +128,7 @@ const heroFocus = focalPosition(heroMoment?.data.image.focus);
               widths={[420, 640, 900, 1200]}
               sizes="(min-width: 64rem) min(42vw, 30rem), min(92vw, 30rem)"
               loading="eager"
+              fetchpriority="high"
               style={`object-position:${heroFocus}`}
             />
           )

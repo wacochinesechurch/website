@@ -92,8 +92,12 @@ const jsonLd = await churchJsonLd(locale, site);
         a 227 KB render-blocking third-party stylesheet, and drops the
         third-party connection entirely.
 
-        Only the two Chinese SERIF weights are webfonted; Chinese UI labels
-        use the system sans already in the stack. See scripts/build-fonts.mjs.
+        Chinese is webfonted in two families: Noto Serif SC for prose and
+        headings, Noto Sans SC for UI labels, each in 400 and 600, and the
+        serif split again into a 29-glyph "brand" subset (the church name and
+        the group names, which are set large) and the rest. Six files, but a
+        browser only fetches the ones a page's glyphs actually land in.
+        See scripts/subset-fonts.py.
         ------------------------------------------------------------------ */}
     <link
       rel="preload"
@@ -102,15 +106,39 @@ const jsonLd = await churchJsonLd(locale, site);
       href="/fonts/source-serif-4-400.woff2"
       crossorigin
     />
+    {/* Measured on the deployed site: preloaded faces start downloading at
+        ~350ms, everything else at ~940ms, because the rest is discovered only
+        once layout runs. That left the 600 weights — the ones the headings are
+        set in — arriving around 1.15s, so a 74px Chinese headline rendered in
+        a fallback face and then jumped. Preloading them is what stops that,
+        and costs no extra bytes: these files were always going to be fetched,
+        just later. The hero image carries fetchpriority="high" so it does not
+        lose the bandwidth race this creates. */}
     {
       locale === 'zh' && (
-        <link
-          rel="preload"
-          as="font"
-          type="font/woff2"
-          href="/fonts/noto-serif-sc-rest-400.woff2"
-          crossorigin
-        />
+        <>
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/noto-serif-sc-rest-400.woff2"
+            crossorigin
+          />
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/noto-serif-sc-brand-600.woff2"
+            crossorigin
+          />
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/noto-serif-sc-rest-600.woff2"
+            crossorigin
+          />
+        </>
       )
     }
 
