@@ -9,6 +9,7 @@ import {
   LOCALE_META,
   LOCALES,
   swapLocale,
+  localePath,
   pathWithoutLocale,
   type Locale,
 } from '@i18n/config';
@@ -45,7 +46,11 @@ const here = pathWithoutLocale(Astro.url.pathname);
 const fullTitle =
   title === t('site.name') ? title : `${title} · ${t('site.name')}`;
 const desc = description ?? t('site.description');
-const canonical = `${site}${Astro.url.pathname.replace(/\/$/, '') || `/${locale}`}`;
+// Built from the same helper that builds every <a href> on the page, so the
+// canonical URL, the navigation and the sitemap can no longer disagree about
+// the address of a page. It resolves to the URL the host serves directly
+// rather than one that 308s.
+const canonical = `${site}${localePath(locale, here)}`;
 const ogImageUrl = ogImage
   ? ogImage.startsWith('http')
     ? ogImage
@@ -75,7 +80,7 @@ const jsonLd = await churchJsonLd(locale, site);
         />
       ))
     }
-    <link rel="alternate" hreflang="x-default" href={`${site}/en${here === '/' ? '' : here}`} />
+    <link rel="alternate" hreflang="x-default" href={`${site}${localePath('en', here)}`} />
 
     {/* --- Fonts --------------------------------------------------------
         Self-hosted and subset to the glyphs this site actually uses.

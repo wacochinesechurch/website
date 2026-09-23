@@ -32,10 +32,10 @@ const sunday = church.gatherings.find((g) => g.id === 'sunday');
       name="description"
       content="A Chinese church in Waco, Texas. Worship in Mandarin, with English interpretation offered to anyone who needs it. 德州韦科的华人教会，主日以华语敬拜，并主动提供英文翻译。"
     />
-    <link rel="canonical" href="https://www.wacochinesechurch.org/en" />
-    <link rel="alternate" hreflang="en-US" href="https://www.wacochinesechurch.org/en" />
-    <link rel="alternate" hreflang="zh-CN" href="https://www.wacochinesechurch.org/zh" />
-    <link rel="alternate" hreflang="x-default" href="https://www.wacochinesechurch.org/en" />
+    <link rel="canonical" href="https://www.wacochinesechurch.org/en/" />
+    <link rel="alternate" hreflang="en-US" href="https://www.wacochinesechurch.org/en/" />
+    <link rel="alternate" hreflang="zh-CN" href="https://www.wacochinesechurch.org/zh/" />
+    <link rel="alternate" hreflang="x-default" href="https://www.wacochinesechurch.org/en/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#14110e" />
 
@@ -62,9 +62,9 @@ const sunday = church.gatherings.find((g) => g.id === 'sunday');
             if (l.indexOf('zh') === 0) { guess = 'zh'; break; }
             if (l.indexOf('en') === 0) { guess = 'en'; break; }
           }
-          location.replace('/' + (saved || guess));
+          location.replace('/' + (saved || guess) + '/');
         } catch (e) {
-          location.replace('/en');
+          location.replace('/en/');
         }
       })();
     </script>
@@ -129,8 +129,8 @@ const sunday = church.gatherings.find((g) => g.id === 'sunday');
       </p>
 
       <div class="choose">
-        <a href="/en">English</a>
-        <a href="/zh" lang="zh-CN">中文</a>
+        <a href="/en/">English</a>
+        <a href="/zh/" lang="zh-CN">中文</a>
       </div>
     </div>
   </body>

@@ -93,7 +93,7 @@ visitor actually trips over.
 | Framework | Astro 5, fully static output |
 | Content | Markdown + YAML in `src/content/` |
 | Editing | Sveltia CMS at `/admin` (Decap/Netlify CMS config format) |
-| Hosting | Any static host — Netlify and Cloudflare Pages both free at this scale |
+| Hosting | Cloudflare Pages (free). Any static host works — nothing is welded to this one |
 | Runtime cost | **£0 / $0** beyond the domain name |
 | Server | None. There is nothing to patch, back up, or have breached |
 
@@ -115,22 +115,27 @@ Then edit `public/admin/config.yml` and set `repo: YOUR-ORG/YOUR-REPO`.
 
 ### 2. Deploy
 
-Connect the repo to Netlify or Cloudflare Pages. Build command `npm run build`,
-publish directory `dist`. `netlify.toml` already contains the build settings,
-security headers and cache rules.
+**Already done.** The repo is connected to Cloudflare Pages, and every push to
+`main` deploys to <https://wacochinesechurch.pages.dev>. A push to any other
+branch builds a preview at `<branch>.wacochinesechurch.pages.dev`.
+
+To rebuild this elsewhere: build command `npm run build`, output directory
+`dist`. `public/_headers` and `public/_redirects` carry the security headers,
+cache rules and redirects, and both Cloudflare Pages and Netlify read them, so
+the site is not tied to either.
 
 ### 3. Turn on CMS sign-in
 
-Sveltia CMS needs an OAuth provider so volunteers can sign in with GitHub.
-**Because this site is on Netlify, there is nothing to deploy**: with
-`name: github` the CMS authenticates through `https://api.netlify.com/auth`,
-which is why `config.yml` has no `base_url`. You register a GitHub OAuth app
-once and paste its two values into Netlify. `docs/DEPLOY.md` step 3 has the
-exact screens and the callback URL, which has to match character for character.
+**This is the one piece still outstanding.** `/admin` loads, but nobody can
+sign in until it is done.
 
-Only if the site ever moves off Netlify would you need your own OAuth helper —
-<https://github.com/sveltia/sveltia-cms-auth> on a free Cloudflare Worker — and
-then `base_url` in `config.yml` points at it.
+Sveltia CMS needs an OAuth provider so volunteers can sign in with GitHub.
+Netlify used to offer a free broker at `api.netlify.com/auth`, which is why
+`config.yml` has no `base_url` yet; that route went with the move to
+Cloudflare. The replacement is <https://github.com/sveltia/sveltia-cms-auth>,
+a free Cloudflare Worker on the same account, with `base_url` in `config.yml`
+pointing at it. `docs/DEPLOY.md` step 3 has the exact screens and the callback
+URL, which has to match character for character.
 
 ### 4. Set up the nightly rebuild — please do not skip this
 
@@ -139,9 +144,9 @@ filter drops past events *as of the build*, and `src/scripts/freshness.ts`
 re-checks in the visitor's browser — but the **HTML Google and link previews
 see** only updates when the site rebuilds.
 
-Already written: `.github/workflows/nightly-rebuild.yml` runs daily and asks
-Netlify to rebuild. It needs one repository secret, `NETLIFY_BUILD_HOOK`, set
-to a Netlify build-hook URL — see `docs/DEPLOY.md` step 4.
+**Already done.** `.github/workflows/nightly-rebuild.yml` runs daily and POSTs
+to the Cloudflare deploy hook held in the repository secret `DEPLOY_HOOK_URL`.
+It has been tested end to end — see `docs/DEPLOY.md` step 4.
 
 This is the third of three layers that stop the site rotting. All three are
 described in `src/lib/church.ts` and `src/scripts/freshness.ts`.
@@ -227,8 +232,8 @@ docs/
 
 - [ ] Set `repo:` in `public/admin/config.yml` (**required** — preflight blocks on it)
 - [ ] `npm run build && npm run preflight` — must pass with no blocking items
-- [ ] Register the GitHub OAuth app and install it in Netlify (DEPLOY.md step 3)
-- [ ] **Set up the nightly rebuild** (step 4)
+- [ ] Deploy the OAuth worker and register the GitHub OAuth app (DEPLOY.md step 3)
+- [x] ~~Set up the nightly rebuild~~ (step 4) — done and tested
 - [ ] Work through `/en/review`
 - [ ] Replace `public/og-default.png` with a real share image (1200×630)
 - [ ] Confirm the photographs may be used, especially the hero — see the
