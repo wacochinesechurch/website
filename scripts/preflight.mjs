@@ -64,8 +64,21 @@ for (const f of pages) {
     if (/^(https?:|mailto:|tel:|data:|#|\/\/)/.test(url)) continue;
     if (!url.startsWith('/')) continue;
     linkCount++;
-    const clean = url.split('#')[0].split('?')[0].replace(/\/$/, '') || '/';
-    if (routes.has(clean) || assets.has(clean) || assets.has(url)) continue;
+    const path = url.split('#')[0].split('?')[0];
+    const clean = path.replace(/\/$/, '') || '/';
+    if (routes.has(clean) || assets.has(clean) || assets.has(url)) {
+      // A link to a PAGE must carry its trailing slash, because that is the
+      // URL the host serves. `format: 'directory'` writes /en/about/index.html
+      // and Cloudflare Pages 308s /en/about to /en/about/, so a slash-free
+      // link costs every visitor a redirect round-trip and makes prefetch warm
+      // the redirect instead of the document. Files are exempt: /favicon.svg
+      // is a file, not a directory. Everything goes through localePath(), so
+      // if this ever fires, that helper is what to look at.
+      if (routes.has(clean) && !assets.has(clean) && !path.endsWith('/')) {
+        fail(`internal link missing its trailing slash  ${page}  →  ${url}`);
+      }
+      continue;
+    }
     if (clean === '/admin') continue; // CMS shell, served as a directory
     fail(`dead internal link  ${page}  →  ${url}`);
   }
