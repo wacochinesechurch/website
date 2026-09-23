@@ -139,8 +139,8 @@ const social = church.social.filter((s) => s.status !== 'unverified');
             <input
               type="hidden"
               name="redirect"
-              data-return-to={`/${locale}/contact?sent=1`}
-              value={new URL(`/${locale}/contact?sent=1`, Astro.site).href}
+              data-return-to={`/${locale}/contact/?sent=1`}
+              value={new URL(`/${locale}/contact/?sent=1`, Astro.site).href}
             />
             <input type="hidden" name="from_name" value="Waco Chinese Church website" />
             <input

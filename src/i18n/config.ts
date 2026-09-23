@@ -120,12 +120,26 @@ export function pathWithoutLocale(pathname: string): string {
 }
 
 /**
- * Build a localized href. Always returns a trailing-slash-free absolute path.
- * `rel` may be '/', '/visit', 'visit', or '/church-life/retreat-2026'.
+ * Build a localized href. Always returns an absolute path that ENDS IN A
+ * SLASH, because that is the URL the host actually serves.
+ *
+ * Astro's `format: 'directory'` writes /zh/visit/index.html, and every static
+ * host — Cloudflare Pages now, Netlify before it — serves that at /zh/visit/
+ * and 308s /zh/visit to it. Emitting the slash-free form meant every internal
+ * click paid a redirect round-trip before the document began loading, every
+ * prefetch warmed a redirect instead of a page, and the canonical tag
+ * disagreed with the sitemap about the address of the same page.
+ *
+ * `rel` may be '/', '/visit', 'visit', or '/church-life/retreat-2026'. A
+ * fragment or query stays at the end, where it belongs: '/visit#parking'
+ * becomes '/zh/visit/#parking', not '/zh/visit#parking/'. The CMS lets a
+ * volunteer type the href for a notice, so that case is not hypothetical.
  */
 export function localePath(locale: Locale, rel = '/'): string {
-  const clean = rel.replace(/^\/+|\/+$/g, '');
-  return clean ? `/${locale}/${clean}` : `/${locale}`;
+  const cut = rel.search(/[#?]/);
+  const suffix = cut === -1 ? '' : rel.slice(cut);
+  const clean = (cut === -1 ? rel : rel.slice(0, cut)).replace(/^\/+|\/+$/g, '');
+  return `/${locale}/${clean ? `${clean}/` : ''}${suffix}`;
 }
 
 /**

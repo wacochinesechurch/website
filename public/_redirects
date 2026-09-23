@@ -10,14 +10,14 @@
 
 # Legacy Squarespace URLs -> their new homes, so years of existing links,
 # bookmarks and search results keep working.
-/home            /en           301
-/about           /en/about     301
-/sermons         /en/sermons   301
-/fellowship      /en/community 301
-/new-page        /en/community 301
-/church-life     /en/church-life 301
-/contacts        /en/contact   301
-/giving          /en/give      301
-/latest-announcement  /en/church-life  301
-/cart            /en           301
-/donate          /en/give      301
+/home                 /en/              301
+/about                /en/about/        301
+/sermons              /en/sermons/      301
+/fellowship           /en/community/    301
+/new-page             /en/community/    301
+/church-life          /en/church-life/  301
+/contacts             /en/contact/      301
+/giving               /en/give/         301
+/latest-announcement  /en/church-life/  301
+/cart                 /en/              301
+/donate               /en/give/         301

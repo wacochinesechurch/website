@@ -16,7 +16,14 @@ import sitemap from '@astrojs/sitemap';
  */
 export default defineConfig({
   site: 'https://www.wacochinesechurch.org',
-  trailingSlash: 'ignore',
+
+  // The host has the final say here and it says "slash": `format: 'directory'`
+  // writes /en/about/index.html, which Cloudflare Pages (and Netlify before
+  // it) serves at /en/about/ while 308-ing /en/about to it. Declaring 'always'
+  // makes the dev server agree, so a slash-free link fails locally instead of
+  // silently costing every visitor a redirect round-trip in production. The
+  // sitemap already emitted the slash; now the links and the canonical do too.
+  trailingSlash: 'always',
 
   i18n: {
     locales: ['en', 'zh'],
