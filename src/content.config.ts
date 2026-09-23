@@ -214,6 +214,14 @@ const settings = defineCollection({
       emailStatus: verification,
       phone: z.string().optional(),
       phoneStatus: verification,
+      /**
+       * Web3Forms access key for the contact form. Public by design: it only
+       * permits sending to the address the key was registered to, so it is
+       * safe in the page source. Kept here rather than in code so the church
+       * can change it without a developer. Free, no account, from
+       * web3forms.com. preflight fails while it is still the placeholder.
+       */
+      formKey: z.string().default('WEB3FORMS_ACCESS_KEY_HERE'),
     }),
 
     social: z

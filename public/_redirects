@@ -1,17 +1,12 @@
-# Netlify / Cloudflare Pages edge redirects.
+# Redirects. Read by BOTH Netlify and Cloudflare Pages.
 #
-# Language negotiation at "/" is done by the gate page (src/pages/index.astro),
-# NOT here. Netlify serves an existing file in preference to a redirect rule,
-# so these two lines only apply if that page is ever missing from the build.
-#
-# They were briefly forced with `!`, which did make the edge rule fire — and in
-# doing so made it impossible for a returning visitor's saved language to be
-# read, because the only code that reads it lives on the page the force was
-# skipping. Accept-Language is a guess about a browser; `wcc-lang` is a choice
-# the reader actually made, and the choice has to win. The gate falls back to
-# Accept-Language itself when there is no saved choice, so nothing is lost.
-/  /zh  302  Language=zh
-/  /en  302
+# There is deliberately NO language redirect here. Cloudflare Pages cannot do
+# conditional redirects at all, and on Netlify the rule was only ever a
+# fallback: the gate page at "/" (src/pages/index.astro) does the negotiation,
+# and does it better, because it can read the visitor's saved choice from
+# localStorage. Accept-Language is a guess about a browser; wcc-lang is a
+# decision the reader actually made, and the decision has to win. With no JS
+# the gate is still a real page with the address and the service time on it.
 
 # Legacy Squarespace URLs -> their new homes, so years of existing links,
 # bookmarks and search results keep working.

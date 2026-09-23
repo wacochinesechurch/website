@@ -68,19 +68,43 @@ const social = church.social.filter((s) => s.status !== 'unverified');
             <p class="form-sent__body">{t('contact.sentBody')}</p>
           </div>
 
+          {/*
+            Posts to Web3Forms, which emails the church. It used to post to
+            Netlify Forms, which exists only on Netlify, so changing host
+            would have left a form that looked perfectly fine and silently
+            went nowhere.
+
+            `redirect` must be an absolute URL, and that is a trap while the
+            domain still points at the old site: a hard-coded canonical URL
+            would send anyone who submits the form to Squarespace. So it
+            carries the canonical URL for the no-JavaScript case, and the
+            script below rewrites it to wherever the visitor actually is.
+          */}
           <form
             class="form"
             name="contact"
             method="POST"
-            data-netlify="true"
-            netlify-honeypot="bot-field"
-            action={`/${locale}/contact?sent=1`}
+            action="https://api.web3forms.com/submit"
           >
-            <input type="hidden" name="form-name" value="contact" />
+            <input type="hidden" name="access_key" value={church.contact.formKey} />
+            <input
+              type="hidden"
+              name="redirect"
+              data-return-to={`/${locale}/contact?sent=1`}
+              value={new URL(`/${locale}/contact?sent=1`, Astro.site).href}
+            />
+            <input type="hidden" name="from_name" value="Waco Chinese Church website" />
+            <input
+              type="hidden"
+              name="subject"
+              value={locale === 'en'
+                ? 'New message from the church website'
+                : '教会网站上的新留言'}
+            />
             <input type="hidden" name="locale" value={locale} />
             {/* aria-hidden matters here. visually-hidden only moves this off
                 screen, so a screen reader met a fourth field, "Leave this
-                empty", among three required ones. Filling it makes Netlify
+                empty", among three required ones. Filling it makes Web3Forms
                 classify the message as spam and drop it, while the visitor
                 still sees the confirmation, because that is driven by ?sent=1
                 alone. A stranger’s message vanished and nobody was told.
@@ -89,7 +113,7 @@ const social = church.social.filter((s) => s.status !== 'unverified');
             <p class="visually-hidden" aria-hidden="true">
               <label>
                 {locale === 'en' ? 'Leave this empty' : '请留空'}
-                <input name="bot-field" tabindex="-1" autocomplete="off" />
+                <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" />
               </label>
             </p>
 
@@ -215,6 +239,15 @@ const social = church.social.filter((s) => s.status !== 'unverified');
 
   <script is:inline>
     (function () {
+      /* Web3Forms needs an absolute return URL, and the build only knows the
+         canonical one. While the domain still points at the old site that
+         would land anyone who submits on Squarespace, so point it at whatever
+         origin the visitor is actually on. Runs before any click is possible. */
+      try {
+        var back = document.querySelector('input[name="redirect"][data-return-to]');
+        if (back) back.value = location.origin + back.getAttribute('data-return-to');
+      } catch (e) {}
+
       function reveal() {
         try {
           if (new URLSearchParams(location.search).get('sent') !== '1') return;

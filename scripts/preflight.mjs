@@ -184,6 +184,19 @@ const bigImages = files
 for (const f of bigImages)
   warn(`${(statSync(f).size / 1024).toFixed(0)} KB image  ${relative(DIST, f)}`);
 
+/* ------------------------------------------------- 8b. the contact form */
+// The form posts to Web3Forms and carries its access key in the page source.
+// With the placeholder still in place the form renders perfectly and silently
+// throws every message away, which is the worst failure available to the only
+// contact route this church publishes. Fail, do not warn.
+for (const f of pages) {
+  if (read(f).includes('WEB3FORMS_ACCESS_KEY_HERE'))
+    fail(
+      `contact form still carries the placeholder access key  ${relative(DIST, f)}` +
+        '  —  get a free key at web3forms.com and set contact.formKey in church.yaml',
+    );
+}
+
 /* ------------------------------------------------------------- 9. privacy
    The Wednesday prayer meeting is in a member's home. That address is kept out
    of this repository on purpose, because the repo is public and git history

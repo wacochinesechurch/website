@@ -24,16 +24,56 @@ If the org or repo name is different, change it in **two** places:
 
 They must match or the CMS will not be able to save.
 
-## 2. Connect Netlify — 10 min
+## 2. Connect Cloudflare Pages — 10 min
 
-New site → import from GitHub → pick the repo. Netlify reads `netlify.toml`,
-so the build command, publish directory, security headers and cache rules are
-already set. Accept the defaults and deploy.
+**Why Cloudflare rather than Netlify.** Netlify now prices by credits, and a
+production deploy costs a flat 15 of them against 300 a month on the free
+plan. That is twenty deploys a month, for a site whose HTML is identical
+whether it took one second or one minute to build. Twenty went in a single
+afternoon of edits, and deploys then stopped with five commits unpublished
+and the site frozen on an older version. The daily rebuild in section 4 made
+it worse: 15 credits a day is 450 a month, so the free plan could never have
+survived a month even with nobody touching the repo.
 
-You will get a URL like `wacochinesechurch.netlify.app`. **That is the staging
-URL.** Send it round. Every page on it declares a canonical pointing at
-`www.wacochinesechurch.org`, so even if Google crawls the staging URL it will
-credit the real domain rather than treating it as a duplicate.
+Cloudflare Pages counts builds, not deploys: 500 a month free, with unlimited
+bandwidth and requests. The same daily rebuild is about 6% of that.
+
+Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect
+to Git** → pick `wacochinesechurch/website`. Then:
+
+| Setting | Value |
+|---|---|
+| Framework preset | Astro |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Node version | read from `.node-version` (22) |
+
+Headers and redirects need no configuration: `public/_headers` and
+`public/_redirects` are copied into `dist` and Cloudflare reads both, exactly
+as Netlify did. That is deliberate, so the site is not welded to either host.
+
+You will get a URL like `wacochinesechurch.pages.dev`. **That is the staging
+URL.** The real domain still points at Squarespace and stays there until the
+church has looked at this one.
+
+### What does not come across
+
+**The contact form.** It used to post to Netlify Forms, which exists only on
+Netlify. It now posts to Web3Forms, which is free and needs no account: enter
+the church's address at web3forms.com and an access key arrives by email. Put
+it in `src/content/settings/church.yaml` under `contact.formKey`. The key is
+public by design, because it can only ever send to the address it was
+registered to.
+
+Until you do that, `npm run preflight` **fails**. That is on purpose: the form
+renders perfectly with the placeholder in place and throws every message
+silently away, and this is the only contact route the church publishes.
+
+**Language negotiation at `/`.** The old `_redirects` had a rule keyed on
+Accept-Language. Cloudflare cannot do conditional redirects, and the rule was
+only ever a fallback: the gate page does the negotiation, and does it better,
+because it can read the visitor's saved choice. The rule is gone and nothing
+was lost.
 
 ## 3. Turn on CMS sign-in — 10 min
 

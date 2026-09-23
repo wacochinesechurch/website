@@ -29,12 +29,26 @@ jobs:
   rebuild:
     runs-on: ubuntu-latest
     steps:
-      - name: Ask Netlify to rebuild
+      - name: Ask the host to rebuild
+        env:
+          # Cloudflare Pages: a Deploy hook, from the project's Settings →
+          # Builds & deployments. Netlify: a Build hook, from Build & deploy.
+          # Either one is a URL you POST to, so the same step serves both, and
+          # the old secret name keeps working so nothing breaks mid-move.
+          HOOK: ${{ secrets.DEPLOY_HOOK_URL || secrets.NETLIFY_BUILD_HOOK }}
         run: |
-          if [ -z "${{ secrets.NETLIFY_BUILD_HOOK }}" ]; then
-            echo "::error::NETLIFY_BUILD_HOOK secret is not set — the nightly rebuild is doing nothing."
-            echo "Add it under Settings → Secrets and variables → Actions."
+          if [ -z "$HOOK" ]; then
+            echo "::error::No deploy hook set. The daily rebuild is doing nothing."
+            echo "Add DEPLOY_HOOK_URL under Settings → Secrets and variables → Actions."
             exit 1
           fi
-          code=$(curl -fsS -o /dev/null -w '%{http_code}' -X POST -d '{}' "${{ secrets.NETLIFY_BUILD_HOOK }}")
-          echo "Netlify responded $code"
+          code=$(curl -fsS -o /dev/null -w '%{http_code}' -X POST -d '{}' "$HOOK")
+          echo "Host responded $code"
+          echo
+          echo "A 2xx means the hook was ACCEPTED, not that anything was published."
+          echo "On Netlify's credit pricing this job alone cost 15 credits a day,"
+          echo "450 a month against a free allowance of 300, so it guaranteed the"
+          echo "free plan would stop deploying around day 20 even with no commits."
+          echo "Cloudflare Pages counts builds instead: 500 a month free, so daily"
+          echo "is about 6% of it. Check the host's own deploy list before trusting"
+          echo "a green tick here."

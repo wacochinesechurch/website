@@ -193,6 +193,12 @@
     # invent one, the site simply does not offer a phone route.
     phone: ""
     phoneStatus: unverified
+    # Web3Forms access key for the contact form. Free and needs no account:
+    # enter the church's address at web3forms.com and the key arrives by
+    # email. Safe in the page source, because it can only send TO that
+    # address. Replace the placeholder or the form will not work, and
+    # `npm run preflight` will refuse to pass until you do.
+    formKey: WEB3FORMS_ACCESS_KEY_HERE
 
   # ---------------------------------------------------------------------------
   # SOCIAL / MEDIA CHANNELS — only channels confirmed to belong to WCC.
