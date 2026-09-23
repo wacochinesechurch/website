@@ -139,6 +139,29 @@
   :lang(zh) body,
   :lang(zh) {
     line-height: var(--lh-prose-cjk);
+
+    /* 中文与西文之间的间距.
+       text-autospace inserts the quarter-em that belongs between Chinese and
+       Latin, so 在Baylor读书 is spaced correctly without anyone having to
+       type the space by hand. Measured: it widens that string from 219.8px
+       to 228.8px at 36px, which is the quarter em. Browsers without it fall
+       back to no spacing, which is what we had before.
+
+       text-spacing-trim handles punctuation sitting against a line edge. It
+       changed nothing measurable on the samples here, because that case is
+       rare in this copy, but it is the correct declaration and costs nothing.
+
+       NOT set here: font-feature-settings: 'chws'. The font's contextual
+       half-width spacing would be the proper fix for the hole a 。opens in a
+       large heading, and scripts/subset-fonts.py now keeps `chws` and `halt`
+       in the subset so it is there to be used. But it has no measurable
+       effect in the browser: with the family forced to Noto Serif SC, 科。这
+       measures 300px with the feature on and 300px with it off. Declaring it
+       would be decoration. The heading problem was solved in the copy
+       instead, by not putting 句号 in headings, which is what GB/T 15834 says
+       anyway. */
+    text-spacing-trim: trim-start;
+    text-autospace: normal;
   }
 
   /* --- headings ------------------------------------------------------- */

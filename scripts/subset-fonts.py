@@ -63,9 +63,19 @@ for name, src, family, weight, style, which in JOBS:
     if not os.path.exists(src):
         print(f"  ✗ missing source {src}"); continue
     out = f"public/fonts/{name}.woff2"
+    # CJK needs two features the Latin faces do not, and losing them is
+    # invisible until you look at a large heading and wonder why it reads
+    # badly. `chws` is contextual half-width spacing: it is what compresses
+    # the empty half of a full-width 。or ，so a Chinese line does not open a
+    # hole after every stop. `halt` supplies the half-width forms it needs to
+    # do that. The old list omitted both, so every Chinese heading on this
+    # site has been set without punctuation compression from the beginning.
+    cjk = which in ("brand", "rest")
+    feats = ("kern,liga,calt,locl,ccmp,mark,chws,halt" if cjk
+             else "kern,liga,calt,locl")
     r = subprocess.run([sys.executable, "-m", "fontTools.subset", src,
                         f"--text-file=/tmp/wcc-{which}.txt", "--flavor=woff2",
-                        "--layout-features=kern,liga,calt,locl", "--desubroutinize",
+                        f"--layout-features={feats}", "--desubroutinize",
                         "--no-hinting", f"--output-file={out}"], capture_output=True, text=True)
     if r.returncode != 0:
         print(f"  ✗ {name}: {r.stderr[-160:]}"); continue
