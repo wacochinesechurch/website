@@ -160,11 +160,14 @@ last one did.
 ## 5. Before switching the domain
 
 - [ ] `npm run build && npm run preflight` passes
-- [ ] Work through `/en/review` — 24 items, and the ones at the top are the
-      ones a visitor actually trips over. Note that the page under-reports:
-      it lists what is flagged `unverified`, but not what is flagged
-      `needs-review`, so the mission statement is live without appearing
-      there. The full list, as sent to the church, runs to 45 questions
+- [ ] Work through `/en/review` — 25 items, and the ones at the top are the
+      ones a visitor actually trips over. The page used to under-report: two
+      of its eight loops tested `=== 'unverified'` while the rest tested
+      `!== 'verified'`, so published-but-unconfirmed content never appeared
+      and the mission statement was live while listed nowhere. Fixed. The
+      fuller list, as sent to the church, runs to 45 questions — the review
+      page can only see what is flagged in the repository, and a good many of
+      those 45 are about things outside it
 - [ ] Confirm someone watches **wacochinesechurch@gmail.com**. It is the only
       contact route, and it now also receives requests for the Wednesday
       prayer meeting address
