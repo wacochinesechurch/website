@@ -38,6 +38,49 @@ import { glob, file } from 'astro/loaders';
    prices or shut down.
    ========================================================================= */
 
+/**
+ * Content edited through the CMS arrives with a shape the schema has to
+ * tolerate, and it is not the shape you would guess.
+ *
+ * When a volunteer saves an entry without filling in an OPTIONAL object field,
+ * Sveltia does not omit the key and does not write `{}`. It writes `null`:
+ *
+ *   src/lib/services/contents/fields/object/defaults.js
+ *     if (!required || Array.isArray(types)) {
+ *       content[keyPath] = null;   // "Enable validation"
+ *
+ * and `omit_empty_optional_fields` defaults to false, so that null is
+ * serialized into the file. Zod's `.optional()` accepts only `undefined`, and
+ * `.default()` only fires on `undefined`, so a null fails both and the build
+ * stops with "Expected object, received null".
+ *
+ * public/admin/config.yml now sets `omit_empty_optional_fields: true`, which
+ * makes the CMS omit the key instead. This preprocess is the second line of
+ * defence: it accepts null AND absent, and it also covers every file already
+ * in the repository that predates the flag. Two fixes for one fault is
+ * deliberate — the first depends on a third-party default we do not control,
+ * and the cost of this one being wrong is a church volunteer's first edit
+ * taking the website down.
+ */
+const nullToEmpty = (shape: z.ZodTypeAny) =>
+  z.preprocess((v) => (v === null || v === undefined ? {} : v), shape);
+
+/**
+ * A focal point for art-directed cropping, as percentages.
+ *
+ * Written by the CMS as `focus: null` whenever a volunteer picks a photograph
+ * but never drags the focal marker — which is most of the time. `.default()`
+ * does not fire on null, so it has to be normalised before validation rather
+ * than after. Centre is the right fallback: it is what an untouched crop does.
+ */
+const focusPoint = z.preprocess(
+  (v) => (v === null || v === undefined ? { x: 50, y: 50 } : v),
+  z.object({
+    x: z.number().min(0).max(100),
+    y: z.number().min(0).max(100),
+  }),
+);
+
 /** A string that exists in both languages. Both required — no half entries. */
 const bi = z.object({
   en: z.string(),
@@ -45,16 +88,20 @@ const bi = z.object({
 });
 
 /** Bilingual, but a translation may legitimately not exist yet. */
-const biSoft = z.object({
-  en: z.string().default(''),
-  zh: z.string().default(''),
-});
+const biSoft = nullToEmpty(
+  z.object({
+    en: z.string().default(''),
+    zh: z.string().default(''),
+  }),
+);
 
 /** Rich text in both languages (Markdown allowed). */
-const biBody = z.object({
-  en: z.string().default(''),
-  zh: z.string().default(''),
-});
+const biBody = nullToEmpty(
+  z.object({
+    en: z.string().default(''),
+    zh: z.string().default(''),
+  }),
+);
 
 /**
  * Verification status, carried by anything a visitor might act on.
@@ -99,18 +146,21 @@ const churchDate = () =>
     return v;
   }, z.coerce.date());
 
-const image = z
-  .object({
-    src: z.string(),
-    /** Alt text is bilingual and REQUIRED. Accessibility is not optional. */
-    alt: biSoft,
-    credit: z.string().optional(),
-    /** Focal point for art-directed cropping, as percentages. */
-    focus: z
-      .object({ x: z.number().min(0).max(100), y: z.number().min(0).max(100) })
-      .default({ x: 50, y: 50 }),
-  })
-  .optional();
+const image = z.preprocess(
+  // Same null trap as above: an event saved with no photograph writes
+  // `image: null`, and the focus sub-object writes `focus: null` even when a
+  // photograph IS chosen, because the volunteer never dragged the focal point.
+  (v) => (v === null ? undefined : v),
+  z
+    .object({
+      src: z.string(),
+      /** Alt text is bilingual and REQUIRED. Accessibility is not optional. */
+      alt: biSoft,
+      credit: z.string().optional(),
+      focus: focusPoint,
+    })
+    .optional(),
+);
 
 /* -------------------------------------------------------------------------
    SETTINGS — the facts that appear everywhere.
@@ -406,12 +456,12 @@ const moments = defineCollection({
   loader: glob({ base: 'src/content/moments', pattern: ['**/*.{md,mdx}', '!**/README.md'] }),
   schema: z.object({
     caption: bi,
+    /* Required: a moment without a photograph is not a moment. `focus`
+       carries the same null tolerance as everywhere else — see focusPoint. */
     image: z.object({
       src: z.string(),
       alt: biSoft,
-      focus: z
-        .object({ x: z.number(), y: z.number() })
-        .default({ x: 50, y: 50 }),
+      focus: focusPoint,
     }),
     date: churchDate().optional(),
     tags: z

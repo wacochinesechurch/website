@@ -68,6 +68,21 @@ backend:
   # base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
 
 # Lets an editor preview changes on a branch before they go live.
+# Do not write `null` for an optional field a volunteer left alone.
+#
+# Sveltia's default is to write it. Its object-field default generator does
+#   if (!required || Array.isArray(types)) { content[keyPath] = null }
+# and with this flag off that null is serialized straight into the file. Astro
+# validates content with Zod, whose .optional() accepts only `undefined`, so
+# the build then stops with "Expected object, received null" — triggered by a
+# volunteer simply not filling in a field the form told them was optional.
+#
+# With this on, the key is omitted instead. src/content.config.ts also accepts
+# null directly, because this flag is a third-party default we do not control
+# and because it cannot help files written before it was set.
+output:
+  omit_empty_optional_fields: true
+
 publish_mode: editorial_workflow
 
 # The church's 15 photographs live in src/assets/moments. Pointing the picker
@@ -592,11 +607,15 @@ collections:
                   - { <<: *verification, name: emailStatus, label: 'Email confirmed?' }
                   - { name: phone, label: 'Phone', widget: string, required: false }
                   - { <<: *verification, name: phoneStatus, label: 'Phone confirmed?', default: unverified }
-                  # The Web3Forms key that switches the contact form on. It MUST be
-                  # declared here even though nobody will type it often: a field the
-                  # CMS does not know about is dropped from the file on the first save,
-                  # and dropping this one would silently turn the contact form off
-                  # again, with no error anywhere to say why.
+                  # The Web3Forms key that switches the contact form on.
+                  #
+                  # Declared so a volunteer can paste the key in without a developer,
+                  # which is what docs/DEPLOY.md promises. (An earlier note here claimed
+                  # an undeclared field would be DELETED on save. That was wrong:
+                  # Sveltia's serializer ends with "Move the remainder, if any" and
+                  # copies every key it does not recognise straight through. This field
+                  # is declared because it should be editable, not because anything was
+                  # ever at risk.)
                   - { name: formKey, label: 'Contact form key (Web3Forms)', widget: string, required: false, hint: 'Public by design — it is visible in the page source. Leave as WEB3FORMS_ACCESS_KEY_HERE until a real key arrives; the form stays hidden until then.' }
 
               - name: social

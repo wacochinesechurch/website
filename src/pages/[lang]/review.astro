@@ -120,7 +120,10 @@ for (const m of ministries) {
 
 /* --- FAQ ------------------------------------------------------------- */
 for (const f of faqs) {
-  if (f.data.status === 'unverified')
+  /* Same correction as the pages loop below: a published-but-unconfirmed
+     answer belongs on this list too. Nothing is `needs-review` in the FAQ
+     today, so this changes no rows — it stops the next one going missing. */
+  if (f.data.status !== 'verified')
     push({
       area: 'Visit FAQ',
       item: `${f.data.question.en} / ${f.data.question.zh}`,
@@ -130,14 +133,23 @@ for (const f of faqs) {
     });
 }
 
-/* --- pages ----------------------------------------------------------- */
+/* --- pages -----------------------------------------------------------
+   Tested with `!== 'verified'`, like every other loop above, because this
+   page's whole promise is that anything not yet confirmed appears here.
+   It used to test `=== 'unverified'`, which quietly excluded a whole status:
+   the mission statement on /about was live, marked `needs-review`, and listed
+   nowhere. Published-but-unconfirmed is exactly the case this checklist is
+   for — arguably more than unwritten text, because a visitor is reading it. */
 for (const p of pages) {
-  if (p.data.status === 'unverified')
+  if (p.data.status !== 'verified')
     push({
       area: 'Pages',
       item: `${p.data.title.en} / ${p.data.title.zh}`,
-      status: 'unverified',
-      why: 'Section exists in the design but no approved text has been written. Nothing is invented; the section simply doesn’t render.',
+      status: p.data.status,
+      why:
+        p.data.status === 'unverified'
+          ? 'Section exists in the design but no approved text has been written. Nothing is invented; the section simply doesn’t render.'
+          : 'This text is live on the site, but nobody at the church has confirmed the wording. Read it, correct it if needed, then set it to “verified”.',
       where: `src/content/pages/${p.id}.md`,
     });
 }
