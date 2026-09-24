@@ -65,6 +65,22 @@ import { glob, file } from 'astro/loaders';
 const nullToEmpty = (shape: z.ZodTypeAny) =>
   z.preprocess((v) => (v === null || v === undefined ? {} : v), shape);
 
+/**
+ * A focal point for art-directed cropping, as percentages.
+ *
+ * Written by the CMS as `focus: null` whenever a volunteer picks a photograph
+ * but never drags the focal marker — which is most of the time. `.default()`
+ * does not fire on null, so it has to be normalised before validation rather
+ * than after. Centre is the right fallback: it is what an untouched crop does.
+ */
+const focusPoint = z.preprocess(
+  (v) => (v === null || v === undefined ? { x: 50, y: 50 } : v),
+  z.object({
+    x: z.number().min(0).max(100),
+    y: z.number().min(0).max(100),
+  }),
+);
+
 /** A string that exists in both languages. Both required — no half entries. */
 const bi = z.object({
   en: z.string(),
@@ -141,14 +157,7 @@ const image = z.preprocess(
       /** Alt text is bilingual and REQUIRED. Accessibility is not optional. */
       alt: biSoft,
       credit: z.string().optional(),
-      /** Focal point for art-directed cropping, as percentages. */
-      focus: z.preprocess(
-        (v) => (v === null || v === undefined ? { x: 50, y: 50 } : v),
-        z.object({
-          x: z.number().min(0).max(100),
-          y: z.number().min(0).max(100),
-        }),
-      ),
+      focus: focusPoint,
     })
     .optional(),
 );
@@ -447,12 +456,12 @@ const moments = defineCollection({
   loader: glob({ base: 'src/content/moments', pattern: ['**/*.{md,mdx}', '!**/README.md'] }),
   schema: z.object({
     caption: bi,
+    /* Required: a moment without a photograph is not a moment. `focus`
+       carries the same null tolerance as everywhere else — see focusPoint. */
     image: z.object({
       src: z.string(),
       alt: biSoft,
-      focus: z
-        .object({ x: z.number(), y: z.number() })
-        .default({ x: 50, y: 50 }),
+      focus: focusPoint,
     }),
     date: churchDate().optional(),
     tags: z
