@@ -31,11 +31,11 @@ jobs:
     steps:
       - name: Ask the host to rebuild
         env:
-          # Cloudflare Pages: a Deploy hook, from the project's Settings →
-          # Builds & deployments. Netlify: a Build hook, from Build & deploy.
-          # Either one is a URL you POST to, so the same step serves both, and
-          # the old secret name keeps working so nothing breaks mid-move.
-          HOOK: ${{ secrets.DEPLOY_HOOK_URL || secrets.NETLIFY_BUILD_HOOK }}
+          # A Cloudflare Pages Deploy hook, from the project's Settings → Build
+          # → Deploy hooks. It is just a URL you POST to, so any host that
+          # offers the same thing (Netlify calls it a Build hook) drops in
+          # without touching this file.
+          HOOK: ${{ secrets.DEPLOY_HOOK_URL }}
         run: |
           if [ -z "$HOOK" ]; then
             echo "::error::No deploy hook set. The daily rebuild is doing nothing."
@@ -46,9 +46,11 @@ jobs:
           echo "Host responded $code"
           echo
           echo "A 2xx means the hook was ACCEPTED, not that anything was published."
-          echo "On Netlify's credit pricing this job alone cost 15 credits a day,"
-          echo "450 a month against a free allowance of 300, so it guaranteed the"
-          echo "free plan would stop deploying around day 20 even with no commits."
-          echo "Cloudflare Pages counts builds instead: 500 a month free, so daily"
-          echo "is about 6% of it. Check the host's own deploy list before trusting"
-          echo "a green tick here."
+          echo "Check Cloudflare's own Deployments list before trusting a green"
+          echo "tick here."
+          echo
+          echo "Cost: one build a day out of 500 free a month, about 6%. This"
+          echo "used to run against Netlify, where a deploy cost a flat 15"
+          echo "credits out of 300 a month — 450 a month for this job alone, so"
+          echo "the free plan could not survive a month even with nobody"
+          echo "touching the repo. That is why the site moved."

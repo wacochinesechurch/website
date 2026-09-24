@@ -53,6 +53,7 @@ model separates the two and makes expiry automatic. See `DESIGN.md` and the `REA
 | **Parking**: a large lot directly in front of the church's front door | Confirmed by the church, 21 Sep 2026 |
 | **Arrive around five to ten minutes before 11 a.m.**; 11:00 is when it begins | Confirmed by the church, 21 Sep 2026 |
 | Non-denominational | Absence of any denominational claim in all church-controlled text, plus client confirmation |
+| **No one is arranged to meet a visitor at the door.** The site used to promise this at the foot of every page in both languages — it was written into the design, not reported by anyone. The church confirms it does not usually happen and was never promised, so the sentence has been removed (confirmed 23 Sep 2026). Writing ahead is still offered, but promises only that the church will know to expect you | Church, 23 Sep 2026 |
 
 ---
 

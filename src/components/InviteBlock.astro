@@ -43,11 +43,25 @@ const sunday = church.gatherings.find((g) => g.id === 'sunday');
           }
         </h2>
 
+        {/* This used to end by offering to arrange for someone to meet a
+            visitor at the door. The church does not do that and never agreed
+            to it — it was written into the design, not reported by anyone —
+            and it appeared at the foot of every page in both languages, which
+            made it the most concrete promise the site made to a first-time
+            visitor. Confirmed with the church on 23 September 2026 and
+            removed. Please do not put it back without someone at the church
+            agreeing to keep it every Sunday.
+
+            What remains is true and commits nobody. Writing ahead is still
+            offered, properly, where it belongs: the “Email us” button sits
+            directly below this, /visit answers “Can I tell someone I’m coming
+            first?”, and both promise only that the church will know to expect
+            you — which is something it can actually keep. */}
         <p class="invite__body">
           {
             locale === 'en'
-              ? 'You don’t need to believe anything in particular, know anyone, or bring anything. Turn up on a Sunday, or write first and we’ll arrange for someone to meet you at the door.'
-              : '您不必先相信什么，不必认识谁，也不必带任何东西。您可以在主日直接前来；也可以先写信给我们，我们会安排人在门口迎接您。'
+              ? 'You don’t need to believe anything in particular, know anyone, or bring anything. Turn up on a Sunday.'
+              : '您不必先相信什么，不必认识谁，也不必带任何东西。您可以在主日直接前来。'
           }
         </p>
 
